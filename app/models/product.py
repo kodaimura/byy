@@ -9,8 +9,8 @@ def get_by(where: {str:any}) -> [{str:any}]:
 		where
 	)
 
-def insert(values: {str:any}):
-	db.insert("product", values)
+def insert_and_get_rowid(values: {str:any}):
+	return db.insert_and_get_rowid("product", values)
 
 def update(values: {str:any}, where: {str:any}):
 	db.update("product", values, where)

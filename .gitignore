@@ -5,3 +5,4 @@ myvenv
 __pycache__/
 *.db
 *.sqlite3
+img

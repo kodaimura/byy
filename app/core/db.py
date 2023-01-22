@@ -32,6 +32,22 @@ def insert(table: str, values: {str:any}):
 	con.commit()
 
 
+def insert_and_get_rowid(table: str, values: {str:any}):
+	con = get_dbcon()
+	cur = con.cursor()
+	keys = values.keys()
+
+	sql = "insert into " + table + "(" + ",".join(keys) 
+	sql += ") values(:" + ",:".join(keys) + ");"
+
+	cur.execute(sql, values)
+	cur.execute("select last_insert_rowid();")
+	rowid = cur.fetchall()[0][0]
+	con.commit()
+
+	return rowid
+
+
 def update(table: str, values: {str:any}, where: {str:any}):
 	con = get_dbcon()
 	cur = con.cursor()

@@ -16,7 +16,7 @@ def get_tax():
 	)[0]['value']
 
 def update_admin_password(password):
-	return db.update(
+	db.update(
 		"general",
 		{"value" : password}, 
 		{"key1" : "admin-password"}

@@ -9,6 +9,7 @@ config = dotenv_values("config/env/{}.env".format(env))
 
 APP_HOST = config["APP_HOST"]
 APP_PORT = config["APP_PORT"]
+APP_URL = APP_HOST + ("" if (APP_PORT == "") else (":" + APP_PORT))
 
 DB_NAME = config["DB_NAME"]
 DB_HOST = config["DB_HOST"]

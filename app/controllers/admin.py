@@ -12,7 +12,11 @@ from flask_jwt_extended import (
 	unset_access_cookies,
 	jwt_required
 )
+import os
+import config.config as config
 import models.general as general
+import models.product as product
+import models.category as category
 
 bp_admin = Blueprint("bp_admin", __name__, template_folder="templates", url_prefix='/admin')
 
@@ -45,17 +49,6 @@ def admin_logout():
     unset_access_cookies(response)
     return response
 
-@bp_admin.get("/products")
-@jwt_required()
-def admin_page():
-	return render_template("admin-products.html")
-
-
-@bp_admin.post("/products")
-@jwt_required()
-def register_product():
-	return render_template("admin-products.html")
-
 
 @bp_admin.get("/general")
 @jwt_required()
@@ -76,9 +69,9 @@ def update_admin_password():
 	print(password)
 	try:
 		general.update_admin_password(password)
-		return "success", 200
+		return "", 200
 	except:
-		return "error", 500
+		return "", 500
 
 
 @bp_admin.post("/tax")
@@ -87,7 +80,38 @@ def update_tax():
 	tax = request.json["tax"]
 	try:
 		general.update_tax(tax)
-		return "success", 200
+		return "", 200
 	except:
-		return "error", 500
+		return "", 500
 
+
+@bp_admin.get("/products")
+@jwt_required()
+def admin_page():
+	products = product.get_by({})
+	categories = category.get_by({})
+	return render_template(
+		"admin-products.html",
+		products=products,
+		categories=categories
+	)
+
+
+@bp_admin.post("/products")
+@jwt_required()
+def register_product():
+	print(request.form)
+	print(request.files)
+	
+	product_id  = product.insert_and_get_rowid(request.form)
+
+	img = request.files["img"]
+	_, ext = os.path.splitext(img.filename)
+	img_name = "product-" + str(product_id) + ext
+
+	img.save(os.path.join("./static/img", img_name))
+
+	img_url = config.APP_URL + "/img/" + img_name
+	product.update({"img_url":img_url}, {"id":product_id})
+
+	return redirect("/admin/products")
