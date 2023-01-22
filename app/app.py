@@ -22,6 +22,7 @@ app.config["JWT_SECRET_KEY"] = conf.JWT_SECRET_KEY
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] =  conf.JWT_ACCESS_TOKEN_EXPIRES
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_COOKIE_SECURE"] = conf.JWT_COOKIE_SECURE
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
 
 jwt = JWTManager(app)
@@ -45,6 +46,7 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 @jwt.unauthorized_loader
 def custom_unauthorized_response(_err):
+    print(_err)
     return redirect("/admin/login")
 
 
