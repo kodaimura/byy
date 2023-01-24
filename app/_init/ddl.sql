@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS product (
 	display_flg TEXT NOT NULL DEFAULT '1',
 	stock_flg TEXT NOT NULL DEFAULT '1',
 	recommend_flg TEXT NOT NULL DEFAULT '0',
-	img_url TEXT,
+	img_name TEXT,
 	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );

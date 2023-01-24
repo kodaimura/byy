@@ -46,7 +46,6 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 @jwt.unauthorized_loader
 def custom_unauthorized_response(_err):
-    print(_err)
     return redirect("/admin/login")
 
 

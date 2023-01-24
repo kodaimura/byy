@@ -2,10 +2,10 @@ import core.db as db
 
 
 def get_by(where: {str:any}) -> [{str:any}]:
-	db.select("product",
+	return db.select("product",
 		["id", "product_name", "category_id", "price",
 		 "comment", "quantity", "production_area",
-		 "display_flg", "stock_flg", "recommend_flg", "img_url"], 
+		 "display_flg", "stock_flg", "recommend_flg", "img_name"], 
 		where
 	)
 

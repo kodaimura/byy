@@ -4,34 +4,90 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title></title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="px-3">
 	<div class="wrapper">
 	<h2>管理者用</h2>
-	{{products}}
-  <form method="POST" enctype="multipart/form-data">
-    <label for="product_name">商品名</label>
-   	<input type="text" name="product_name" required="required">
-   	<label for="category_id">分類</label>
-   	<select name="category_id">
+	<div class="nav category-tabs mb-3">
+		{% for c in categories %}
+    		<a href="#{{c.id}}" class="nav-item category-tab" data-bs-toggle="tab">{{c.category_name}}</a>
+   	{% endfor %}
+	</div>
+	<div class="tab-content mb-4">
+	{% for c in categories %}
+	<div id="{{c.id}}" class="tab-pane">
+		<div class="row mx-1">
+    {% for p in products %}
+    	{% if p.category_id == c.id %}
+			<div class="card col-6">
+				<img src="/static/img/{{p.img_name}}" class="rounded mt-2">
+				<div class="card-body">
+					<h5 class="card-title">{{p.product_name}} ({{p.production_area}}産)</h5>
+					<div class="text-end h5">
+						<small class="text-muted"> {{p.quantity}}</small>
+						<span>¥{{p.price}}</span>
+						<span>(¥{{(p.price * 1.1)|int}})</span>
+					</div>
+    			<div class="card-text"></div>
+    			<div>{{p.comment}}</div>
+    			<hr>
+    			<div class="row">
+    				<button type="button" class="btn btn-primary rounded-pill col">編集</button>
+    				&nbsp;&nbsp;&nbsp;
+    				<button type="button" class="btn btn-danger rounded-pill col">削除</button>
+    			</div>
+  			</div>
+			</div>
+			{% endif %}
+  	{% endfor %}
+  	</div>
+  </div>
+  {% endfor %}
+  </div>
+
+  <hr>
+  <h4>商品追加</h4>
+  <form method="POST" enctype="multipart/form-data" class="mx-3 px-4 py-3 card bg-light">
+  	<div class="mb-2">
+    	<label for="product_name" class="form-label">商品名</label>
+   		<input type="text" class="form-control" name="product_name" required="required">
+   	</div>
+   	<div class="mb-2">
+   		<label for="category_id">分類</label>
+   		<select name="category_id" class="form-select">
    		{% for c in categories %}
    			<option value="{{c.id}}" label="{{c.category_name}}"></option>
    		{% endfor %}
-   	</select>
-   	数量・価格
-   	<input type="text" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
-   	<label for="quantity">あたり</label>
-   	<input type="number" name="price" required="required">
-   	<label for="price">円</label>
-   	<label for="production_area">産地</label>
-   	<input type="text" name="production_area">
-   	<label for="comment">コメント</label>
-   	<textarea name="comment" rows="5" cols="33"></textarea>
-   	<label for="img">画像</label>
-   	<input type="file" name="img">
-   	<input type="submit" value="登録"></input>
+   		</select>
+   	</div>
+   	<div class="mb-2">
+   		<label for="production_area">産地</label>
+   		<input type="text" class="form-control" name="production_area">
+   	</div>
+   	<div class="row mb-2">
+   		<div class="col-md-6">
+   			<label for="quantity">数量</label>
+   			<input type="text" class="form-control" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
+   		</div>
+   		<div class="col-md-6">
+   			<label for="price">価格 (税抜)</label>
+   			<input type="number" class="form-control" name="price" required="required">
+   		</div>
+   	</div>
+   	<div class="mb-2">
+   		<label for="comment">コメント</label>
+   		<textarea name="comment" class="form-control" rows="5" cols="33"></textarea>
+   	</div>
+   	<div class="mb-2">
+   		<label for="img">画像</label>
+   		<input type="file" class="form-control" name="img">
+   	</div>
+   	<input type="submit" class="btn btn-primary btn-lg" value="登録">
   </form>
-  </div>
+	</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>

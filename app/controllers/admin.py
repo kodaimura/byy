@@ -13,7 +13,6 @@ from flask_jwt_extended import (
 	jwt_required
 )
 import os
-import config.config as config
 import models.general as general
 import models.product as product
 import models.category as category
@@ -100,9 +99,6 @@ def admin_page():
 @bp_admin.post("/products")
 @jwt_required()
 def register_product():
-	print(request.form)
-	print(request.files)
-	
 	product_id  = product.insert_and_get_rowid(request.form)
 
 	img = request.files["img"]
@@ -110,8 +106,6 @@ def register_product():
 	img_name = "product-" + str(product_id) + ext
 
 	img.save(os.path.join("./static/img", img_name))
-
-	img_url = config.APP_URL + "/img/" + img_name
-	product.update({"img_url":img_url}, {"id":product_id})
+	product.update({"img_name":img_name}, {"id":product_id})
 
 	return redirect("/admin/products")
