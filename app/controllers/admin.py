@@ -109,3 +109,9 @@ def register_product():
 	product.update({"img_name":img_name}, {"id":product_id})
 
 	return redirect("/admin/products")
+
+@bp_admin.post("/products/<product_id>")
+@jwt_required()
+def update_product(product_id):
+	product.update(request.json, {"id":product_id})
+	return "", 200
