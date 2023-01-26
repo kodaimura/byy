@@ -34,14 +34,14 @@
 				<div class="card-img-overlay">
 					{% if p.stock_flg == 0 %}
 					<span class="fs-2 fw-bold text-danger bg-warning badge position-absolute top-0 start-0">品切れ</span>
-					{% elif recommend_flg == 1 %}
+					{% elif p.recommend_flg == 1 %}
 					<span class="fs-5 fw-bold text-light bg-danger badge position-absolute top-0 end-0"><i>おすすめ</i></span>
 					{% endif %}
 				</div>
 				<div class="card-body">
-					<div class="card-title h5">{{p.product_name}} <span class="small">({{p.production_area}}産)</span></div>
+					<div class="card-title h5">{{p.product_name}}<span class="small">({{p.production_area}}産)</span></div>
 					<div class="text-end h5 text-danger">
-						<small class="text-muted"> {{p.quantity}}</small>
+						<small class="text-muted"> {{p.quantity}} </small>
 						<span>¥{{p.price}}</span>
 						<span>(¥{{(p.price * 1.1)|int}})</span>
 					</div>
@@ -49,9 +49,9 @@
     			<hr>
     			<div class="row">
     				<button class="btn btn-primary rounded-pill col" data-bs-toggle="modal" 
-    				data-bs-target="#updateModal" onclick="setupModal({{p}})">編集</button>
+    				data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">編集</button>
     				&nbsp;&nbsp;&nbsp;
-    				<button class="btn btn-danger rounded-pill col">削除</button>
+    				<button class="btn btn-danger rounded-pill col" style="z-index:1">削除</button>
     			</div>
   			</div>
 			</div>
