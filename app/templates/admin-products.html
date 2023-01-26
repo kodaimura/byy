@@ -32,10 +32,14 @@
 			<div class="card col-6 bg-light">
 				<img src="/static/img/{{p.img_name}}" class="rounded mt-2">
 				<div class="card-img-overlay">
-					{% if p.stock_flg == 0 %}
+					{% if p.stock_flg == '0' %}
 					<span class="fs-2 fw-bold text-danger bg-warning badge position-absolute top-0 start-0">品切れ</span>
-					{% elif p.recommend_flg == 1 %}
+					{% endif %}
+					{% if p.recommend_flg == '1' %}
 					<span class="fs-5 fw-bold text-light bg-danger badge position-absolute top-0 end-0"><i>おすすめ</i></span>
+					{% endif %}
+					{% if p.display_flg == '0' %}
+					<span class="fs-2 fw-bold text-light bg-dark badge position-absolute top-50 start-50 translate-middle">非表示</span>
 					{% endif %}
 				</div>
 				<div class="card-body">
@@ -134,8 +138,31 @@
    						<input type="text" class="form-control" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
    					</div>
    					<div class="col-md-6">
-   						<label for="price">価格 (税抜)</label>
+   						<label for="price" class="text-success">価格 (税抜)</label>
    						<input type="number" class="form-control" name="price" required="required">
+   					</div>
+   				</div>
+   				<div class="row mb-1">
+   					<div class="col-md-4">
+   						<label for="stock_flg" class="text-success">在庫</label>
+   						<select name="stock_flg" class="form-select">
+   							<option value="1" label="あり"></option>
+   							<option value="0" label="なし(品切れ)"></option>
+   						</select>
+   					</div>
+   					<div class="col-md-4">
+   						<label for="recommend_flg">通常/おすすめ</label>
+   						<select name="recommend_flg" class="form-select">
+   							<option value="0" label="通常"></option>
+   							<option value="1" label="おすすめ"></option>
+   						</select>
+   					</div>
+   					<div class="col-md-4">
+   						<label for="display_flg">表示/非表示</label>
+   						<select name="display_flg" class="form-select">
+   							<option value="1" label="表示"></option>
+   							<option value="0" label="非表示"></option>
+   						</select>
    					</div>
    				</div>
    				<div class="mb-1">
@@ -161,6 +188,9 @@
   		form.production_area.value = product.production_area
   		form.quantity.value = product.quantity
   		form.price.value = product.price
+  		form.stock_flg.value = product.stock_flg
+  		form.recommend_flg.value = product.recommend_flg
+  		form.display_flg.value = product.display_flg
   		form.comment.value = product.comment
   	}
 
@@ -172,6 +202,9 @@
   		const production_area = form.production_area.value
   		const quantity = form.quantity.value
   		const price = form.price.value
+  		const stock_flg = form.stock_flg.value
+  		const recommend_flg = form.recommend_flg.value
+  		const display_flg = form.display_flg.value
   		const comment = form.comment.value
 
   		//現在のスクロール位置
@@ -182,7 +215,8 @@
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-        	product_name, category_id, production_area, quantity, price, comment
+        	product_name, category_id, production_area, quantity, price, 
+        	stock_flg, recommend_flg, display_flg, comment
         })
       }).then(response => {
       	console.log(response);
