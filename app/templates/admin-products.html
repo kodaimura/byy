@@ -55,7 +55,8 @@
     				<button class="btn btn-primary rounded-pill col" data-bs-toggle="modal" 
     				data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">編集</button>
     				&nbsp;&nbsp;&nbsp;
-    				<button class="btn btn-danger rounded-pill col" onclick="deleteProduct({{p.id}})" style="z-index:1">削除</button>
+    				<button class="btn btn-danger rounded-pill col" 
+    				onclick="deleteProduct({{p.id}})" style="z-index:1">削除</button>
     			</div>
   			</div>
 			</div>
@@ -70,7 +71,7 @@
   <form method="POST" enctype="multipart/form-data" class="mx-3 px-4 py-3 card bg-light">
   	<div class="mb-2">
     	<label for="product_name" class="form-label">商品名</label>
-   		<input type="text" class="form-control" name="product_name" required="required">
+   		<input type="text" class="form-control" name="product_name" required>
    	</div>
    	<div class="mb-2">
    		<label for="category_id">分類</label>
@@ -91,7 +92,7 @@
    		</div>
    		<div class="col-md-6">
    			<label for="price">価格 (税抜)</label>
-   			<input type="number" class="form-control" name="price" required="required">
+   			<input type="number" class="form-control" name="price" required>
    		</div>
    	</div>
    	<div class="mb-2">
@@ -100,9 +101,9 @@
    	</div>
    	<div class="mb-4">
    		<label for="img">画像</label>
-   		<input type="file" class="form-control" name="img">
+   		<input type="file" class="form-control" name="img" required>
    	</div>
-   	<input type="submit" class="btn btn-primary btn-lg" value="登録">
+   	<input type="submit" class="btn btn-primary" value="登録">
   </form>
 	</div>
 	<!-- 更新モーダル start -->
@@ -118,7 +119,7 @@
         	<input type="hidden" name="product_id">
   				<div class="mb-1">
     				<label for="product_name" class="form-label">商品名</label>
-   					<input type="text" class="form-control" name="product_name" required="required">
+   					<input type="text" class="form-control" name="product_name">
    				</div>
    				<div class="mb-1">
    					<label for="category_id">分類</label>
@@ -139,7 +140,7 @@
    					</div>
    					<div class="col-md-6">
    						<label for="price" class="text-success">価格 (税抜)</label>
-   						<input type="number" class="form-control" name="price" required="required">
+   						<input type="number" class="form-control" name="price">
    					</div>
    				</div>
    				<div class="row mb-1">
@@ -169,11 +170,18 @@
    					<label for="comment">コメント</label>
    					<textarea name="comment" class="form-control" rows="5" cols="33"></textarea>
    				</div>
+        	<input type="button" class="btn btn-primary" id="send" value="更新">
+  			</form>
+  			<form name="imgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light">
+  				<input type="hidden" name="id">
+      		<div class="mb-3">
+   					<label for="img">画像</label>
+   					<input type="file" class="form-control" name="img" required>
+   				</div>
+   				<input type="submit" class="btn btn-success" value="画像変更">
   			</form>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" id="send">更新</button>
-      </div>
+      
     </div>
   	</div>
 	</div>
@@ -201,6 +209,8 @@
   		form.recommend_flg.value = product.recommend_flg
   		form.display_flg.value = product.display_flg
   		form.comment.value = product.comment
+
+  		document.forms.imgForm.id.value = product.id
   	}
 
   	document.getElementById('send').addEventListener('click', () => {

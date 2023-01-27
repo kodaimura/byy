@@ -65,7 +65,6 @@ def general_page():
 @jwt_required()
 def update_admin_password():
 	password = request.json["password"]
-	print(password)
 	try:
 		general.update_admin_password(password)
 		return "", 200
@@ -100,15 +99,10 @@ def admin_page():
 @jwt_required()
 def register_product():
 	product_id  = product.insert_and_get_rowid(request.form)
-
 	img = request.files["img"]
-	_, ext = os.path.splitext(img.filename)
-	img_name = "product-" + str(product_id) + ext
-
-	img.save(os.path.join("./static/img", img_name))
-	product.update({"img_name":img_name}, {"id":product_id})
-
+	save_product_img(product_id, img)
 	return redirect("/admin/products")
+
 
 @bp_admin.post("/products/<product_id>")
 @jwt_required()
@@ -116,11 +110,33 @@ def update_product(product_id):
 	product.update(request.json, {"id":product_id})
 	return "", 200
 
+
 @bp_admin.delete("/products/<product_id>")
 @jwt_required()
 def delete_product(product_id):
-	img_name = product.get_img_name({"id":product_id})
-	if len(img_name) == 1:
+	result = product.get_img_name({"id":product_id})
+	if len(result) == 1:
 		product.delete({"id":product_id})
-		os.remove("./static/img/" + img_name[0]["img_name"])
+		os.remove("./static/img/" + result[0]["img_name"])
 	return "", 200
+
+
+@bp_admin.post("/products/img")
+@jwt_required()
+def update_product_img():
+	product_id = request.form.get("id")
+	result = product.get_img_name({"id":product_id})
+	if len(result) == 1:
+		os.remove("./static/img/" + result[0]["img_name"])
+
+	img = request.files["img"]
+	save_product_img(product_id, img)
+	return redirect("/admin/products")
+
+
+def save_product_img(product_id, img):
+	_, ext = os.path.splitext(img.filename)
+	img_name = "product-" + str(product_id) + ext
+
+	img.save(os.path.join("./static/img", img_name))
+	product.update({"img_name":img_name}, {"id":product_id})
