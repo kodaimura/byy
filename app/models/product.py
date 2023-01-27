@@ -16,4 +16,10 @@ def update(values: {str:any}, where: {str:any}):
 	db.update("product", values, where)
 
 def delete(where: {str:any}):
-	db.update("product", where)
+	db.delete("product", where)
+
+def get_img_name(where: {str:any}) -> [{str:any}]:
+	return db.select("product",
+		["img_name"], 
+		where
+	)

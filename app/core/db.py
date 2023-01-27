@@ -68,7 +68,7 @@ def delete(table: str, where: {str:any}):
 	con = get_dbcon()
 	cur = con.cursor()
 
-	sql = "delete " + table + " " + make_sql_where(where) + ";"
+	sql = "delete from " + table + " " + make_sql_where(where) + ";"
 
 	cur.execute(sql)
 	con.commit()

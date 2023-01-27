@@ -55,7 +55,7 @@
     				<button class="btn btn-primary rounded-pill col" data-bs-toggle="modal" 
     				data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">編集</button>
     				&nbsp;&nbsp;&nbsp;
-    				<button class="btn btn-danger rounded-pill col" style="z-index:1">削除</button>
+    				<button class="btn btn-danger rounded-pill col" onclick="deleteProduct({{p.id}})" style="z-index:1">削除</button>
     			</div>
   			</div>
 			</div>
@@ -180,6 +180,15 @@
 	<!-- 更新モーダル end -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   <script type="text/javascript">
+  	const deleteProduct = (id) => {
+  		if (window.confirm("削除しますか？")) {
+  			fetch(`/admin/products/${id}`, {method: 'DELETE'})
+  			.then(response => {
+        	window.location.reload();
+      	});  
+  		}
+  	}
+
   	const setupModal = (product) => {
   		const form = document.forms.updateForm;
   		form.product_id.value = product.id
@@ -219,7 +228,6 @@
         	stock_flg, recommend_flg, display_flg, comment
         })
       }).then(response => {
-      	console.log(response);
         window.location.reload();
       });      
     })

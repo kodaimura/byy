@@ -115,3 +115,12 @@ def register_product():
 def update_product(product_id):
 	product.update(request.json, {"id":product_id})
 	return "", 200
+
+@bp_admin.delete("/products/<product_id>")
+@jwt_required()
+def delete_product(product_id):
+	img_name = product.get_img_name({"id":product_id})
+	if len(img_name) == 1:
+		product.delete({"id":product_id})
+		os.remove("./static/img/" + img_name[0]["img_name"])
+	return "", 200
