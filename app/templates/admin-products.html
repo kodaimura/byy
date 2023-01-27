@@ -30,27 +30,28 @@
     {% for p in products %}
     	{% if p.category_id == c.id %}
 			<div class="card col-6 bg-light">
-				<img src="/static/img/{{p.img_name}}" class="rounded mt-2">
+				<img src="/static/img/{{p.img_name}}" class="rounded">
 				<div class="card-img-overlay">
 					{% if p.stock_flg == '0' %}
-					<span class="fs-2 fw-bold text-danger bg-warning badge position-absolute top-0 start-0">品切れ</span>
+					<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ</span>
 					{% endif %}
 					{% if p.recommend_flg == '1' %}
 					<span class="fs-5 fw-bold text-light bg-danger badge position-absolute top-0 end-0"><i>おすすめ</i></span>
 					{% endif %}
 					{% if p.display_flg == '0' %}
-					<span class="fs-2 fw-bold text-light bg-dark badge position-absolute top-50 start-50 translate-middle">非表示</span>
+					<span class="fs-4 fw-bold text-light bg-dark badge position-absolute top-0">非表示</span>
 					{% endif %}
 				</div>
 				<div class="card-body">
-					<div class="card-title h5">{{p.product_name}}<span class="small">({{p.production_area}}産)</span></div>
-					<div class="text-end h5 text-danger">
-						<small class="text-muted"> {{p.quantity}} </small>
+					<div class="card-title fw-bold lh-1">{{p.product_name}}<span class="small">({{p.production_area}}産)</span></div>
+					<div class="text-end fw-bolder fs-5 text-danger lh-1">
+						<small class="text-muted fs-6"> {{p.quantity}} </small>
 						<span>¥{{p.price}}</span>
 						<span>(¥{{(p.price * 1.1)|int}})</span>
 					</div>
+					<hr class="text-success">
     			<div class="card-text fs-6 lh-1">{{p.comment}}</div>
-    			<hr>
+    			<hr class="text-success">
     			<div class="row">
     				<button class="btn btn-primary rounded-pill col" data-bs-toggle="modal" 
     				data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">編集</button>
