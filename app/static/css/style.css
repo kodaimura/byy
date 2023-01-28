@@ -10,7 +10,7 @@
 	display: block;
 	text-align: left;
 	color: #333;
-	background-color: #fef7f0;
+	background-color: #ffcb72;
 	text-decoration: none;
 	padding-top: 7px;
 	padding-bottom: 7px;
@@ -27,4 +27,8 @@
 .category-tabs .active {
 	color: #fff;
 	background-color: #333;
+}
+
+.w-60 {
+	width: 60%;
 }
