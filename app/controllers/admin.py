@@ -117,7 +117,7 @@ def delete_product(product_id):
 	result = product.get_img_name({"id":product_id})
 	if len(result) == 1:
 		product.delete({"id":product_id})
-		os.remove("./static/img/" + result[0]["img_name"])
+		os.remove("./static/img/tmp/" + result[0]["img_name"])
 	return "", 200
 
 
@@ -127,7 +127,7 @@ def update_product_img():
 	product_id = request.form.get("id")
 	result = product.get_img_name({"id":product_id})
 	if len(result) == 1:
-		os.remove("./static/img/" + result[0]["img_name"])
+		os.remove("./static/img/tmp/" + result[0]["img_name"])
 
 	img = request.files["img"]
 	save_product_img(product_id, img)
@@ -138,5 +138,5 @@ def save_product_img(product_id, img):
 	_, ext = os.path.splitext(img.filename)
 	img_name = "product-" + str(product_id) + ext
 
-	img.save(os.path.join("./static/img", img_name))
+	img.save(os.path.join("./static/img/tmp", img_name))
 	product.update({"img_name":img_name}, {"id":product_id})

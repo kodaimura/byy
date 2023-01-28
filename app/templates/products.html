@@ -8,9 +8,13 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="px-2 bg-light">
+<body class="bg-light">
+	<nav class="navbar navbar-light" style="background-color:#00db95;">
+		<span class="navbar-brand px-3">
+			<img src="/static/img/baka_logo.png" alt="バカ安八百屋" width="150" height="auto">
+		</spa>
+	</nav>
 	<div class="container">
-	<h2>商品ページ</h2>
 	<!-- おすすめ商品カルーセル -->
 	<div id="recommendCarousel" class="carousel slide mb-5 carousel-dark" data-bs-ride="carousel">
   	<div class="carousel-inner">
@@ -21,7 +25,7 @@
 				<div class="carousel-item">
   			{% endif %}
 					<div class="card w-60 mx-auto">
-						<img src="/static/img/{{p.img_name}}" class="rounded">
+						<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 						<div class="card-img-overlay">
 							{% if p.stock_flg == '0' %}
 							<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ<span>
@@ -84,7 +88,7 @@
     	{% for p in products %}
     		{% if p.category_id == c.id %}
 				<div class="card col-6">
-					<img src="/static/img/{{p.img_name}}" class="rounded">
+					<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 					<div class="card-img-overlay">
 						{% if p.stock_flg == '0' %}
 						<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ</span>
