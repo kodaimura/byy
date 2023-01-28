@@ -32,3 +32,8 @@
 .w-60 {
 	width: 60%;
 }
+
+.material-icons {
+	display: inline-flex;
+	vertical-align: middle;
+}
