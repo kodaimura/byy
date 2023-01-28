@@ -20,7 +20,7 @@
 				{% else %}
 				<div class="carousel-item">
   			{% endif %}
-					<div class="card w-60 mx-auto position-relative">
+					<div class="card w-60 mx-auto">
 						<img src="/static/img/{{p.img_name}}" class="rounded">
 						<div class="card-img-overlay">
 							{% if p.stock_flg == '0' %}
@@ -28,19 +28,19 @@
 							{% endif %}
 						</div>
 						<div class="card-body position-relative pb-5">
-							<div class="card-title fw-bold lh-1">
+							<div class="card-title fw-bold lh-1 fs-5">
 								{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 							</div>
-							<div class="text-end fw-bolder fs-5 text-danger lh-1">
-								<small class="text-muted fs-6"> {{p.quantity}} </small>
+							<div class="text-end fw-bolder fs-2 text-danger lh-1">
+								<small class="text-muted fs-5"> {{p.quantity}} </small>
 								<span>¥{{p.price}}</span>
 								<span>(¥{{(p.price * 1.1)|int}})</span>
 							</div>
 							<hr class="text-success my-2">
-    					<div class="card-text fs-6 lh-1">{{p.comment}}</div>
+    					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
     					<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    						<button class="btn btn-warning rounded-pill btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#" style="z-index:1">
+    						<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#" style="z-index:1;font-size:0.7rem">
     							&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     						</button>
     					</div>
@@ -97,16 +97,16 @@
 						<div class="card-title fw-bold lh-1">
 							{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 						</div>
-						<div class="text-end fw-bolder fs-5 text-danger lh-1">
+						<div class="text-end fw-bolder fs-4 text-danger lh-1">
 							<small class="text-muted fs-6"> {{p.quantity}} </small>
 							<span>¥{{p.price}}</span>
 							<span>(¥{{(p.price * 1.1)|int}})</span>
 						</div>
 						<hr class="text-success my-2">
-    				<div class="card-text fs-6 lh-1">{{p.comment}}</div>
+    				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
     				<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#" style="z-index:1">
+    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#" style="z-index:1;font-size:0.7rem">
     						&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     					</button>
     				</div>

@@ -27,23 +27,23 @@
 								<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ</span>
 								{% endif %}
 							</div>
-							<div class="card-body">
-								<div class="card-title fw-bold lh-1">
+							<div class="card-body position-relative pb-5">
+								<div class="card-title fw-bold lh-1 fs-5">
 									{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 								</div>
-								<div class="text-end fw-bolder fs-5 text-danger lh-1">
-									<small class="text-muted fs-6"> {{p.quantity}} </small>
+								<div class="text-end fw-bolder fs-2 text-danger lh-1">
+									<small class="text-muted fs-5"> {{p.quantity}} </small>
 									<span>¥{{p.price}}</span>
 									<span>(¥{{(p.price * 1.1)|int}})</span>
 								</div>
-								<hr class="text-success">
-								<div class="card-text fs-6 lh-1">{{p.comment}}</div>
-								<hr class="text-success">
-								<div class="row">
-									<button class="btn btn-primary rounded-pill col" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">編集</button>
-									<button class="btn btn-danger rounded-pill col" onclick="deleteProduct({{p.id}})" style="z-index:1">削除</button>
-								</div>
-							</div>
+								<hr class="text-success my-2">
+    						<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
+    						<hr class="text-success my-2">
+    						<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3">
+    							<button class="btn btn-primary rounded-pill col text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">&nbsp;&nbsp;編集&nbsp;&nbsp;</button>&nbsp;&nbsp;
+    							<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.id}})" style="z-index:1">&nbsp;&nbsp;削除&nbsp;&nbsp;</button>
+    						</div>
+  						</div>
 						</div>
 					</div>
 				{% endif %}
@@ -96,21 +96,22 @@
 						<span class="fs-4 fw-bold text-light bg-dark badge position-absolute top-0">非表示</span>
 						{% endif %}
 					</div>
-					<div class="card-body">
+  				<div class="card-body position-relative pb-5">
 						<div class="card-title fw-bold lh-1">
 							{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 						</div>
-						<div class="text-end fw-bolder fs-5 text-danger lh-1">
+						<div class="text-end fw-bolder fs-4 text-danger lh-1">
 							<small class="text-muted fs-6"> {{p.quantity}} </small>
 							<span>¥{{p.price}}</span>
 							<span>(¥{{(p.price * 1.1)|int}})</span>
 						</div>
-						<hr class="text-success">
-    				<div class="card-text fs-6 lh-1">{{p.comment}}</div>
-    				<hr class="text-success">
-    				<div class="row">
-    					<button class="btn btn-primary rounded-pill col" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">編集</button>
-    					<button class="btn btn-danger rounded-pill col" onclick="deleteProduct({{p.id}})" style="z-index:1">削除</button>
+						<hr class="text-success my-2">
+    				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
+    				<hr class="text-success my-2">
+    				<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3 gap-2">
+    					<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p}})" style="z-index:1">&nbsp;&nbsp;編集&nbsp;&nbsp;</button>
+    					<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.id}})" style="z-index:1">
+    					&nbsp;&nbsp;削除&nbsp;&nbsp;</button>
     				</div>
   				</div>
 				</div>
