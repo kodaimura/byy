@@ -130,10 +130,10 @@
     	<div class="modal-content">
       	<div class="modal-header">
         	<h5 class="modal-title">個数入力</h5>
-        	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        	<button type="button" class="btn-close" id="modalClose" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
       	<input type="hidden" id="modalProductId">
-      	<div class="modal-body">
+      	<div class="modal-body position-relative">
       		<div id="modalImg"></div>
 					<div>
 						<div class="fw-bold fs-3">
@@ -149,14 +149,16 @@
     					<button onclick="countDown()" style="font-size:0.7rem">
     						<span class="material-icons">remove</span>
     					</button>
-    					<input type="number" id="orderQuantity" min="0" max="99" value="0">
+    					<input type="number" id="orderQuantity" min="0" max="99" value="0">個
     					<button onclick="countUp()" style="font-size:0.7rem">
     						<span class="material-icons">add</span>
     					</button>
-    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="	modal" data-bs-target="#addCartModal" style="z-index:1;">
+    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="	modal" data-bs-target="#addCartModal" style="z-index:1;" onclick="addToCart()">
     						&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     					</button>
     				</div>
+  				</div>
+  				<div id="modalMessage" class="position-absolute top-50 start-50 translate-middle">
   				</div>
       	</div>
     	</div>
@@ -178,7 +180,7 @@
   	}
 
   	const setupModal = (product) => {
-  		const form = document.forms.updateForm;
+  		document.getElementById("orderQuantity").value = 0
   		document.getElementById("modalProductId").value = product.id
   		document.getElementById("modalImg").innerHTML = `<img src="/static/img/tmp/${product.img_name}" class="rounded mx-auto d-block">`
   		document.getElementById("modalProductName").innerHTML = product.product_name
@@ -188,36 +190,43 @@
   		document.getElementById("modalTaxPrice").innerHTML = `(¥${Math.round(product.price * 1.1)})`
   	}
 
-  	document.getElementById('send').addEventListener('click', () => {
-      const form = document.forms.updateForm;
-      const id = form.product_id.value
-      const product_name = form.product_name.value
-  		const category_id = form.category_id.value
-  		const production_area = form.production_area.value
-  		const quantity = form.quantity.value
-  		const price = form.price.value
-  		const stock_flg = form.stock_flg.value
-  		const recommend_flg = form.recommend_flg.value
-  		const display_flg = form.display_flg.value
-  		const comment = form.comment.value
+  	const addToCart = () => {
+  		const id = document.getElementById("modalProductId").value
+  		const name = document.getElementById("modalProductName").innerHTML
+  		const area = document.getElementById("modalProductionArea").innerHTML
+  		const price = document.getElementById("modalPrice").innerHTML
+  		const oq = document.getElementById("orderQuantity").value
 
-  		//現在のスクロール位置
-  		positionY = window.pageYOffset;
-    	localStorage.setItem('positionY', positionY);
+  		const order = {
+  			"id": id,
+  			"product_name": name,
+  			"production_area": area,
+  			"price": price,
+  			"order_quantity": oq
+  		}
 
-      fetch(`/admin/products/${id}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-        	product_name, category_id, production_area, quantity, price, 
-        	stock_flg, recommend_flg, display_flg, comment
-        })
-      }).then(response => {
-        window.location.reload();
-      });      
-    })
+  		let orders = JSON.parse(localStorage.getItem('order'))
+  		orders.push(order)
+
+  		if (oq > 0) {
+  			localStorage.setItem('order', JSON.stringify(orders))
+  			document.getElementById("modalMessage").innerHTML = 
+  			`<div class="alert alert-info">カートに追加しました<div>`
+  			setTimeout(() => {
+  				document.getElementById("modalClose").click()
+  				document.getElementById("modalMessage").innerHTML = ""
+  			}, 2500)
+  		} else {
+  			document.getElementById("modalMessage").innerHTML = 
+  			`<div class="alert alert-danger">個数を入力してください<div>`
+  			setTimeout(() => {
+  				document.getElementById("modalMessage").innerHTML = ""
+  			}, 6000)
+  		}
+  	}
 
     window.addEventListener('DOMContentLoaded', (event) => {
+    	localStorage.setItem('order', "[]")
     	const positionY = localStorage.getItem('positionY');
     	if (positionY !== null) {
         scrollTo(0, positionY);
