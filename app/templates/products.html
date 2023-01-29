@@ -156,7 +156,7 @@
     			<button onclick="countUp()" style="font-size:0.7rem">
     				<span class="material-icons">add</span>
     			</button>
-    			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="	modal" data-bs-target="#addCartModal" style="z-index:1;" onclick="addToCart()">
+    			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#addCartModal" style="z-index:1;" onclick="addToCart()">
     				&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     			</button>
   			</div>
@@ -167,7 +167,7 @@
 	</div>
 	<!-- カート追加モーダル -->
 
-	<!-- 注文内認モーダル -->
+	<!-- 注文確認モーダル -->
 	<div class="modal fade" id="confirmOrderModal">
   	<div class="modal-dialog">
     	<div class="modal-content">
@@ -178,7 +178,7 @@
       	<div class="modal-body" id="confirmOrderModalBody">
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-info rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="	modal" data-bs-target="#addCartModal" style="z-index:1;" onclick="addToCart()">
+					<button class="btn btn-info rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#howToPayAndReceiveModal" style="z-index:1;" onclick="setupHowToPayAndReceiveModal()">
 						&nbsp;&nbsp;支払・受取設定へ&nbsp;&nbsp;
 					</button>
   			</div>
@@ -186,6 +186,63 @@
   	</div>
 	</div>
 	<!-- 注文確認モーダル -->
+
+	<!-- 支払・受取設定モーダル -->
+	<div class="modal fade" id="howToPayAndReceiveModal">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      	<div class="modal-header">
+        	<h5 class="modal-title">支払・受取設定</h5>
+        	<button type="button" class="btn-close" id="modalClose" data-bs-dismiss="modal" aria-label="Close"></button>
+      	</div>
+      	<form method="POST" onsubmit="return finalizeOrder()" name="howToPayAndReceiveForm">
+      		<div class="modal-body">
+      			<div class="mb-1">
+   						<label for="receive_time">時間</label>
+   						<select name="receive_time" class="form-select">
+   							<option value="10:00 〜 11:00" label="10:00 〜 11:00"></option>
+   							<option value="11:00 〜 12:00" label="11:00 〜 12:00"></option>
+   							<option value="12:00 〜 13:00" label="12:00 〜 13:00"></option>
+   							<option value="13:00 〜 14:00" label="13:00 〜 14:00"></option>
+   							<option value="14:00 〜 15:00" label="14:00 〜 15:00"></option>
+   							<option value="15:00 〜 16:00" label="15:00 〜 16:00"></option>
+   							<option value="16:00 〜 17:00" label="16:00 〜 17:00"></option>
+   							<option value="17:00 〜 18:00" label="17:00 〜 18:00"></option>
+   							<option value="18:00 〜 19:00" label="18:00 〜 19:00"></option>
+   						</select>
+   					</div>
+      			<div class="mb-1">
+   						<label for="how_to_pay">支払方法</label>
+   						<select name="how_to_pay" class="form-select">
+   							<option value="現金" label="現金"></option>
+   							<option value="PayPay" label="PayPay"></option>
+   						</select>
+   					</div>
+   					<div class="mb-1">
+   						<label for="how_to_receive">受取方法</label>
+   						<select name="how_to_receive" class="form-select">
+   							<option value="ドライブスルー" label="ドライブスルー"></option>
+   							<option value="配達" label="配達"></option>
+   						</select>
+   					</div>
+   					<div class="mb-1">
+   						<label for="address">住所 <span class="text-danger small">※配達のお客様のみ</span></label>
+   						<input type="text" name="address" class="form-control">
+   					</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary rounded-pill btn-sm text-nowrap text-white" style="z-index:1;">
+							&nbsp;&nbsp;注文確定&nbsp;&nbsp;
+						</button>
+  				</div>
+  			</form>
+  			<div id="modalMessage2" class="position-absolute top-50 start-50 translate-middle">
+  			</div>
+    	</div>
+  	</div>
+	</div>
+	<!-- 支払・受取設定モーダル -->
+
 	</div>
 
 	<div>
@@ -286,6 +343,38 @@
    		<table>`
 
    		document.getElementById("confirmOrderModalBody").innerHTML = contents
+  	}
+
+  	const finalizeOrder = () => {
+  		const form = document.forms.howToPayAndReceiveForm;
+  		if (form.how_to_receive.value == "配達" && form.address.value.trim() == "") {
+  			document.getElementById("modalMessage2").innerHTML = 
+  			`<div class="alert alert-danger">配達の場合は住所を入力してください<div>`;
+  			form.address.focus();
+  			setTimeout(() => {
+  				document.getElementById("modalMessage2").innerHTML = ""
+  			}, 3000)
+
+  			return false
+  		} else {
+  			localStorage.setItem("how_to_pay", form.how_to_pay.value)
+  			localStorage.setItem("how_to_receive", form.how_to_receive.value)
+  			localStorage.setItem("address", form.address.value.trim())
+  			return true
+  		}
+  	}
+
+  	const setupHowToPayAndReceiveModal = () => {
+  		const form = document.forms.howToPayAndReceiveForm;
+
+  		form.how_to_pay.value = (localStorage.getItem("how_to_pay") == "PayPay")? "PayPay" : "現金";
+  		if (localStorage.getItem("how_to_receive") == "配達") {
+  			form.how_to_receive.value = "配達"
+  			form.address.value = localStorage.getItem("address")
+  		} else {
+  			form.how_to_receive.value = "ドライブスルー"
+  			form.address.value = ""
+  		}
   	}
 
     window.addEventListener('DOMContentLoaded', (event) => {
