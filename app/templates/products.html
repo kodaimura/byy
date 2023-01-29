@@ -44,7 +44,7 @@
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
     					<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    						<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#" style="z-index:1;font-size:0.7rem">
+    						<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#addCartModal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p}})">
     							&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     						</button>
     					</div>
@@ -110,7 +110,7 @@
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
     				<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#" style="z-index:1;font-size:0.7rem">
+    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#addCartModal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p}})">
     						&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     					</button>
     				</div>
@@ -124,90 +124,106 @@
   </div>
   <!-- 商品一覧 -->
 
-	<!-- 更新モーダル -->
-	<div class="modal fade" id="updateModal">
-  	<div class="modal-dialog modal-fullscreen">
+	<!-- カート追加モーダル -->
+	<div class="modal fade" id="addCartModal">
+  	<div class="modal-dialog">
     	<div class="modal-content">
       	<div class="modal-header">
-        	<h5 class="modal-title">更新</h5>
+        	<h5 class="modal-title">個数入力</h5>
         	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
+      	<input type="hidden" id="modalProductId">
       	<div class="modal-body">
-      		<!-- 商品情報更新フォーム -->
-        	<form name="updateForm" onsubmit="return false" class="mx-3 px-4 py-3 card bg-light">
-        		<input type="hidden" name="product_id">
-  					<div class="mb-1">
-    					<label for="product_name" class="form-label">商品名</label>
-   						<input type="text" class="form-control" name="product_name">
-   					</div>
-   					<div class="mb-1">
-   						<label for="category_id">分類</label>
-   						<select name="category_id" class="form-select">
-   							{% for c in categories %}
-   							<option value="{{c.id}}" label="{{c.category_name}}"></option>
-   							{% endfor %}
-   						</select>
-   					</div>
-   					<div class="mb-1">
-   						<label for="production_area">産地</label>
-   						<input type="text" class="form-control" name="production_area">
-   					</div>
-   					<div class="row mb-1">
-   						<div class="col-md-6">
-   							<label for="quantity">数量</label>
-   							<input type="text" class="form-control" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
-   						</div>
-   						<div class="col-md-6">
-   							<label for="price" class="text-success">価格 (税抜)</label>
-   							<input type="number" class="form-control" name="price">
-   						</div>
-   					</div>
-   					<div class="row mb-1">
-   						<div class="col-md-4">
-   							<label for="stock_flg" class="text-success">在庫</label>
-   							<select name="stock_flg" class="form-select">
-   								<option value="1" label="あり"></option>
-   								<option value="0" label="なし(品切れ)"></option>
-   							</select>
-   						</div>
-   						<div class="col-md-4">
-   							<label for="recommend_flg">通常/おすすめ</label>
-   							<select name="recommend_flg" class="form-select">
-   								<option value="0" label="通常"></option>
-   								<option value="1" label="おすすめ"></option>
-   							</select>
-   						</div>
-   						<div class="col-md-4">
-   							<label for="display_flg">表示/非表示</label>
-   							<select name="display_flg" class="form-select">
-   								<option value="1" label="表示"></option>
-   								<option value="0" label="非表示"></option>
-   							</select>
-   						</div>
-   					</div>
-   					<div class="mb-1">
-   						<label for="comment">コメント</label>
-   						<textarea name="comment" class="form-control" rows="5" cols="33"></textarea>
-   					</div>
-        		<input type="button" class="btn btn-primary" id="send" value="更新">
-  				</form>
-  				<!-- 商品情報更新フォーム -->
-  				<!-- 商品画像更新フォーム -->
-  				<form name="imgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light">
-  					<input type="hidden" name="id">
-      			<div class="mb-3">
-   						<label for="img">画像</label>
-   						<input type="file" class="form-control" name="img" required>
-   					</div>
-   					<input type="submit" class="btn btn-success" value="画像変更">
-  				</form>
-  				<!-- 商品画像更新フォーム -->
+      		<div id="modalImg"></div>
+					<div>
+						<div class="fw-bold fs-3">
+							<span id="modalProductName"></span>
+							<span class="small" id="modalProductionArea"></span>
+						</div>
+						<div class="text-end fw-bolder fs-3 text-danger">
+							<small class="text-muted fs-5" id="modalQuantity"></small>
+							<span id="modalPrice"></span>
+							<span id="modalTaxPrice"></span>
+						</div>
+    				<div class="modal-footer">
+    					<button onclick="countDown()" style="font-size:0.7rem">
+    						<span class="material-icons">remove</span>
+    					</button>
+    					<input type="number" id="orderQuantity" min="0" max="99" value="0">
+    					<button onclick="countUp()" style="font-size:0.7rem">
+    						<span class="material-icons">add</span>
+    					</button>
+    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="	modal" data-bs-target="#addCartModal" style="z-index:1;">
+    						&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
+    					</button>
+    				</div>
+  				</div>
       	</div>
     	</div>
   	</div>
 	</div>
-	<!-- 更新モーダル -->
+	<!-- カート追加モーダル -->
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+  	const countDown = () => {
+  		let input = document.getElementById("orderQuantity")
+  		input.value = (isNaN(input.value) || input.value == "" || input.value == "0")? 
+  		0 : parseInt(input.value) - 1
+  	}
+
+  	const countUp = () => {
+  		let input = document.getElementById("orderQuantity")
+  		input.value = (isNaN(input.value) || input.value == "")? 1 : parseInt(input.value) + 1
+  	}
+
+  	const setupModal = (product) => {
+  		const form = document.forms.updateForm;
+  		document.getElementById("modalProductId").value = product.id
+  		document.getElementById("modalImg").innerHTML = `<img src="/static/img/tmp/${product.img_name}" class="rounded mx-auto d-block">`
+  		document.getElementById("modalProductName").innerHTML = product.product_name
+  		document.getElementById("modalProductionArea").innerHTML = `(${product.production_area}産)`
+  		document.getElementById("modalQuantity").innerHTML = product.quantity
+  		document.getElementById("modalPrice").innerHTML = `¥${product.price}`
+  		document.getElementById("modalTaxPrice").innerHTML = `(¥${Math.round(product.price * 1.1)})`
+  	}
+
+  	document.getElementById('send').addEventListener('click', () => {
+      const form = document.forms.updateForm;
+      const id = form.product_id.value
+      const product_name = form.product_name.value
+  		const category_id = form.category_id.value
+  		const production_area = form.production_area.value
+  		const quantity = form.quantity.value
+  		const price = form.price.value
+  		const stock_flg = form.stock_flg.value
+  		const recommend_flg = form.recommend_flg.value
+  		const display_flg = form.display_flg.value
+  		const comment = form.comment.value
+
+  		//現在のスクロール位置
+  		positionY = window.pageYOffset;
+    	localStorage.setItem('positionY', positionY);
+
+      fetch(`/admin/products/${id}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+        	product_name, category_id, production_area, quantity, price, 
+        	stock_flg, recommend_flg, display_flg, comment
+        })
+      }).then(response => {
+        window.location.reload();
+      });      
+    })
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+    	const positionY = localStorage.getItem('positionY');
+    	if (positionY !== null) {
+        scrollTo(0, positionY);
+        localStorage.removeItem('positionY');
+    	}
+		});
+  </script>
 </body>
 </html>
