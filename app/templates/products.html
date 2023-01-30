@@ -149,13 +149,13 @@
 					</div>
 				</div>
     		<div class="modal-footer">
-    			<button onclick="countDown()" style="font-size:0.7rem">
+    			<button onclick="countDown('orderQuantity')">
     				<span class="material-icons">remove</span>
     			</button>
-    			<input type="number" id="orderQuantity" min="0" max="99" value="0">個
-    			<button onclick="countUp()" style="font-size:0.7rem">
+    			<input type="number" id="orderQuantity" min="0" max="99" value="0">
+    			<button onclick="countUp('orderQuantity')">
     				<span class="material-icons">add</span>
-    			</button>
+    			</button>個
     			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="addToCart()">
     				&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     			</button>
@@ -178,6 +178,9 @@
       	<div class="modal-body" id="modal2Body">
 				</div>
 				<div class="modal-footer">
+					<button class="btn btn-secondary rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal4" style="z-index:1;" onclick="setupModal4()">
+						&nbsp;&nbsp;変更&nbsp;&nbsp;
+					</button>
 					<button class="btn btn-info rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal3" style="z-index:1;" onclick="setupModal3()">
 						&nbsp;&nbsp;支払・受取設定へ&nbsp;&nbsp;
 					</button>
@@ -243,6 +246,27 @@
 	</div>
 	<!-- 支払・受取設定モーダル -->
 
+	<!-- 注文変更モーダル -->
+	<div class="modal fade" id="modal4">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      	<div class="modal-header">
+        	<h5 class="modal-title">注文変更</h5>
+        	<button type="button" class="btn-close" id="modal4Close" data-bs-dismiss="modal" aria-label="Close"></button>
+      	</div>
+      	<div class="modal-body" id="modal4Body">
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal2" style="z-index:1;" onclick="cartUpdateAndSetUpModal2()">
+						&nbsp;&nbsp;保存&nbsp;&nbsp;
+					</button>
+  			</div>
+    	</div>
+  	</div>
+	</div>
+	<!-- 注文変更モーダル -->
+
+
 	</div>
 
 	<div>
@@ -254,14 +278,14 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   <script type="text/javascript">
-  	const countDown = () => {
-  		let input = document.getElementById("orderQuantity")
+  	const countDown = (id) => {
+  		let input = document.getElementById(id)
   		input.value = (isNaN(input.value) || input.value == "" || input.value == "0")? 
   		0 : parseInt(input.value) - 1
   	}
 
-  	const countUp = () => {
-  		let input = document.getElementById("orderQuantity")
+  	const countUp = (id) => {
+  		let input = document.getElementById(id)
   		input.value = (isNaN(input.value) || input.value == "")? 1 : parseInt(input.value) + 1
   	}
 
@@ -281,9 +305,12 @@
   		const name = document.getElementById("modalProductName").innerHTML
   		const area = document.getElementById("modalProductionArea").innerHTML
   		const price = document.getElementById("modalPrice").innerHTML
-  		const oq = document.getElementById("orderQuantity").value
+  		const oq = parseInt(document.getElementById("orderQuantity").value)
 
-  		const order = {
+  		const orders0 = JSON.parse(localStorage.getItem('order'))
+  		let orders = []
+
+  		let order = {
   			"id": id,
   			"product_name": name,
   			"production_area": area,
@@ -291,7 +318,14 @@
   			"order_quantity": oq
   		}
 
-  		let orders = JSON.parse(localStorage.getItem('order'))
+  		for (let o of orders0) {
+  			if (o.id == id) {
+  				order.order_quantity += o.order_quantity
+  			} else {
+  				orders.push(o)
+  			}
+  		}
+  		
   		orders.push(order)
 
   		if (oq > 0) {
@@ -317,19 +351,19 @@
   		let contents = 
   		`<table class="table">
   			<thead>
-  				<tr><th>商品</th><th>個数</th><th>価格</th><th>税込</th></tr>
+  				<tr><th>商品</th><th>個数</th><th>価格(税込)</th><th>小計</th></tr>
   			</thead>
   			<tbody>`
 
   		let priceSum = 0
   		for (const order of orders) {
-  			priceSum += parseInt(order.price)
+  			priceSum += (parseInt(order.price) * parseInt(order.order_quantity))
   			contents += 
   			`<tr>
   				<td>${order.product_name} (${order.production_area})</td>
   				<td>${order.order_quantity}</td>
-  				<td>¥${order.price}</td>
   				<td>¥${Math.round(order.price * 1.1)}</td>
+  				<td>¥${Math.round(order.price * 1.1) * order.order_quantity}</td>
   			</tr>`
    		}
 
@@ -375,6 +409,71 @@
   			form.how_to_receive.value = "ドライブスルー"
   			form.address.value = ""
   		}
+  	}
+
+  	const setupModal4 = () => {
+  		const orders = JSON.parse(localStorage.getItem('order'))
+
+  		let contents = 
+  		`<table class="table">
+  			<thead>
+  				<tr><th></th><th>商品</th><th>個数</th><th></th><th></th><th></th></tr>
+  			</thead>
+  			<tbody id="modal4TBody">`
+
+  		let priceSum = 0
+  		for (let i = 0; i < orders.length; i++) {
+  			priceSum += parseInt(orders[i].price)
+  			contents += 
+  			`<tr>
+  				<td><input type="hidden" value="${orders[i].id}"></td>
+  				<td>${orders[i].product_name} (${orders[i].production_area})</td>
+  				<td>
+  				<button onclick="countDown('oq${i}')">
+    				<span class="material-icons">remove</span>
+    			</button>
+    			<input type="number" id="oq${i}" min="0" max="99" value="${orders[i].order_quantity}">
+    			<button onclick="countUp('oq${i}')">
+    				<span class="material-icons">add</span>
+    			</button>
+  				</td>
+  				<td><input type="hidden" value="${orders[i].product_name}"></td>
+  				<td><input type="hidden" value="${orders[i].production_area}"></td>
+  				<td><input type="hidden" value="${orders[i].price}"></td>
+  			</tr>`
+   		}
+
+   		contents += 
+   		`	</tbody>
+   		<table>`
+
+   		document.getElementById("modal4Body").innerHTML = contents
+  	}
+
+  	const cartUpdateAndSetUpModal2 = () => {
+  		let orders = []
+
+  		const table = document.getElementById("modal4TBody")
+  		for (let row of table.rows) {
+  			let id = row.children[0].children[0].value
+  		 	let oq = row.children[2].children[1].value
+  		 	let name = row.children[3].children[0].value
+  			let area = row.children[4].children[0].value
+  			let price = row.children[5].children[0].value
+
+  			let order = {
+  				"id": id,
+  				"product_name": name,
+  				"production_area": area,
+  				"price": price,
+  				"order_quantity": oq
+  			}
+  			if (oq != 0) {
+  				orders.push(order)
+  			}
+  		}
+  		localStorage.setItem('order', JSON.stringify(orders))
+  		setupModal2()
   	}
 
     window.addEventListener('DOMContentLoaded', (event) => {
