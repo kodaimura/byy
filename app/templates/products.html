@@ -46,7 +46,7 @@
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
     					<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    						<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#addCartModal" style="z-index:1;font-size:0.7rem" onclick="setupAddCartModal({{p}})">
+    						<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p}})">
     							&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     						</button>
     					</div>
@@ -112,7 +112,7 @@
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
     				<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#addCartModal" style="z-index:1;font-size:0.7rem" onclick="setupAddCartModal({{p}})">
+    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p}})">
     						&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     					</button>
     				</div>
@@ -127,7 +127,7 @@
   <!-- 商品一覧 -->
 
 	<!-- カート追加モーダル -->
-	<div class="modal fade" id="addCartModal">
+	<div class="modal fade" id="modal">
   	<div class="modal-dialog">
     	<div class="modal-content">
       	<div class="modal-header">
@@ -135,7 +135,7 @@
         	<button type="button" class="btn-close" id="modalClose" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
       	<input type="hidden" id="modalProductId">
-      	<div class="modal-body position-relative">
+      	<div class="modal-body">
       		<div id="modalImg"></div>
 					<div>
 						<div class="fw-bold fs-3">
@@ -156,7 +156,7 @@
     			<button onclick="countUp()" style="font-size:0.7rem">
     				<span class="material-icons">add</span>
     			</button>
-    			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#addCartModal" style="z-index:1;" onclick="addToCart()">
+    			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="addToCart()">
     				&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     			</button>
   			</div>
@@ -168,17 +168,17 @@
 	<!-- カート追加モーダル -->
 
 	<!-- 注文確認モーダル -->
-	<div class="modal fade" id="confirmOrderModal">
+	<div class="modal fade" id="modal2">
   	<div class="modal-dialog">
     	<div class="modal-content">
       	<div class="modal-header">
         	<h5 class="modal-title">注文確認</h5>
-        	<button type="button" class="btn-close" id="modalClose" data-bs-dismiss="modal" aria-label="Close"></button>
+        	<button type="button" class="btn-close" id="modal2Close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
-      	<div class="modal-body" id="confirmOrderModalBody">
+      	<div class="modal-body" id="modal2Body">
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-info rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#howToPayAndReceiveModal" style="z-index:1;" onclick="setupHowToPayAndReceiveModal()">
+					<button class="btn btn-info rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal3" style="z-index:1;" onclick="setupModal3()">
 						&nbsp;&nbsp;支払・受取設定へ&nbsp;&nbsp;
 					</button>
   			</div>
@@ -188,14 +188,14 @@
 	<!-- 注文確認モーダル -->
 
 	<!-- 支払・受取設定モーダル -->
-	<div class="modal fade" id="howToPayAndReceiveModal">
+	<div class="modal fade" id="modal3">
   	<div class="modal-dialog">
     	<div class="modal-content">
       	<div class="modal-header">
         	<h5 class="modal-title">支払・受取設定</h5>
-        	<button type="button" class="btn-close" id="modalClose" data-bs-dismiss="modal" aria-label="Close"></button>
+        	<button type="button" class="btn-close" id="modal3Close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
-      	<form method="POST" onsubmit="return finalizeOrder()" name="howToPayAndReceiveForm">
+      	<form method="POST" onsubmit="return finalizeOrder()" name="modal3Form">
       		<div class="modal-body">
       			<div class="mb-1">
    						<label for="receive_time">時間</label>
@@ -236,7 +236,7 @@
 						</button>
   				</div>
   			</form>
-  			<div id="modalMessage2" class="position-absolute top-50 start-50 translate-middle">
+  			<div id="modal3Message" class="position-absolute top-50 start-50 translate-middle">
   			</div>
     	</div>
   	</div>
@@ -248,7 +248,7 @@
 	<div>
 		<img src="/static/img/baka_footer.png" style="width:100%;height:auto">
 	</div>
-	<div class="fixed-bottom" data-bs-toggle="modal" data-bs-target="#confirmOrderModal" onclick="setupConfirmOrderModal()" >
+	<div class="fixed-bottom" data-bs-toggle="modal" data-bs-target="#modal2" onclick="setupModal2()">
 		<img src="/static/img/baka_cart.png" style="width:100%;height:auto">
 	</div>
 
@@ -265,7 +265,7 @@
   		input.value = (isNaN(input.value) || input.value == "")? 1 : parseInt(input.value) + 1
   	}
 
-  	const setupAddCartModal = (product) => {
+  	const setupModal = (product) => {
   		document.getElementById("orderQuantity").value = 0
   		document.getElementById("modalProductId").value = product.id
   		document.getElementById("modalImg").innerHTML = `<img src="/static/img/tmp/${product.img_name}" class="rounded mx-auto d-block">`
@@ -307,11 +307,11 @@
   			`<div class="alert alert-danger">個数を入力してください<div>`
   			setTimeout(() => {
   				document.getElementById("modalMessage").innerHTML = ""
-  			}, 6000)
+  			}, 2000)
   		}
   	}
 
-  	const setupConfirmOrderModal = () => {
+  	const setupModal2 = () => {
   		const orders = JSON.parse(localStorage.getItem('order'))
 
   		let contents = 
@@ -342,17 +342,17 @@
    			</tfooter>
    		<table>`
 
-   		document.getElementById("confirmOrderModalBody").innerHTML = contents
+   		document.getElementById("modal2Body").innerHTML = contents
   	}
 
   	const finalizeOrder = () => {
-  		const form = document.forms.howToPayAndReceiveForm;
+  		const form = document.forms.modal3Form;
   		if (form.how_to_receive.value == "配達" && form.address.value.trim() == "") {
-  			document.getElementById("modalMessage2").innerHTML = 
+  			document.getElementById("modal3Message").innerHTML = 
   			`<div class="alert alert-danger">配達の場合は住所を入力してください<div>`;
   			form.address.focus();
   			setTimeout(() => {
-  				document.getElementById("modalMessage2").innerHTML = ""
+  				document.getElementById("modal3Message").innerHTML = ""
   			}, 3000)
 
   			return false
@@ -364,8 +364,8 @@
   		}
   	}
 
-  	const setupHowToPayAndReceiveModal = () => {
-  		const form = document.forms.howToPayAndReceiveForm;
+  	const setupModal3 = () => {
+  		const form = document.forms.modal3Form;
 
   		form.how_to_pay.value = (localStorage.getItem("how_to_pay") == "PayPay")? "PayPay" : "現金";
   		if (localStorage.getItem("how_to_receive") == "配達") {
