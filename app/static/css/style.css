@@ -37,3 +37,16 @@
 	display: inline-flex;
 	vertical-align: middle;
 }
+
+.circle {
+	top:33%;
+    left:16%;
+	position: absolute;
+	width: 6%;
+}
+
+.circle-inside {
+    width: 100%;
+    padding-top: 100%;
+    border-radius: 50%;
+}

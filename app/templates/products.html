@@ -149,13 +149,9 @@
 					</div>
 				</div>
     		<div class="modal-footer">
-    			<button onclick="countDown('orderQuantity')">
-    				<span class="material-icons">remove</span>
-    			</button>
+    			<button onclick="countDown('orderQuantity')">ー</button>
     			<input type="number" id="orderQuantity" min="0" max="99" value="0">
-    			<button onclick="countUp('orderQuantity')">
-    				<span class="material-icons">add</span>
-    			</button>個
+    			<button onclick="countUp('orderQuantity')">＋</button>個
     			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="addToCart()">
     				&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     			</button>
@@ -273,6 +269,7 @@
 		<img src="/static/img/baka_footer.png" style="width:100%;height:auto">
 	</div>
 	<div class="fixed-bottom" data-bs-toggle="modal" data-bs-target="#modal2" onclick="setupModal2()">
+		<div class="circle" id="circle"></div>
 		<img src="/static/img/baka_cart.png" style="width:100%;height:auto">
 	</div>
 
@@ -332,6 +329,8 @@
 
   		if (oq > 0) {
   			localStorage.setItem('order', JSON.stringify(orders))
+  			displayCircle()
+
   			document.getElementById("modalMessage").innerHTML = 
   			`<div class="alert alert-info">カートに追加しました<div>`
   			setTimeout(() => {
@@ -353,7 +352,7 @@
   		let contents = 
   		`<table class="table">
   			<thead>
-  				<tr><th>商品</th><th>個数</th><th>価格(税込)</th><th>小計</th></tr>
+  				<tr><th>商品</th><th>個数</th><th>小計</th></tr>
   			</thead>
   			<tbody>`
 
@@ -364,7 +363,6 @@
   			`<tr>
   				<td>${order.product_name} (${order.production_area})</td>
   				<td>${order.order_quantity}</td>
-  				<td>¥${Math.round(order.price * 1.1)}</td>
   				<td>¥${Math.round(order.price * 1.1) * order.order_quantity}</td>
   			</tr>`
    		}
@@ -373,7 +371,7 @@
    		`	</tbody>
    			<tfooter>
    				<tr>
-   					<td>合計(税込)</td></td><td><td></td><td class="text-danger">¥${Math.round(priceSum * 1.1)}</td>
+   					<td>合計(税込)</td><td></td><td class="text-danger">¥${Math.round(priceSum * 1.1)}</td>
    				</tr>
    			</tfooter>
    		<table>`
@@ -432,13 +430,9 @@
   				<td><input type="hidden" value="${orders[i].id}"></td>
   				<td>${orders[i].product_name} (${orders[i].production_area})</td>
   				<td>
-  				<button onclick="countDown('oq${i}')">
-    				<span class="material-icons">remove</span>
-    			</button>
+  				<button onclick="countDown('oq${i}')">ー</button>
     			<input type="number" id="oq${i}" min="0" max="99" value="${orders[i].order_quantity}">
-    			<button onclick="countUp('oq${i}')">
-    				<span class="material-icons">add</span>
-    			</button>
+    			<button onclick="countUp('oq${i}')">＋</button>
   				</td>
   				<td><input type="hidden" value="${orders[i].product_name}"></td>
   				<td><input type="hidden" value="${orders[i].production_area}"></td>
@@ -476,6 +470,7 @@
   			}
   		}
   		localStorage.setItem('order', JSON.stringify(orders))
+  		displayCircle()
   		setupModal2()
   	}
 
@@ -487,6 +482,12 @@
         localStorage.removeItem('positionY');
     	}
 		});
+
+		const displayCircle = () => {
+			document.getElementById("circle").innerHTML = 
+			(localStorage.getItem('order') != "[]")? 
+			`<div class="circle-inside bg-success"></div>` : "";
+		}
   </script>
 </body>
 </html>
