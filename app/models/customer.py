@@ -3,7 +3,8 @@ import core.db as db
 
 def get_by(where: {str:any}) -> [{str:any}]:
 	return db.select("customer",
-		["customer_id", "customer_name", "visits_count", "cumulative_payment"], 
+		["customer_id", "customer_name", "visits_count", 
+		 "cumulative_payment", "update_at"], 
 		where
 	)
 
