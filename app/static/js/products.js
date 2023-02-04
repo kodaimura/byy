@@ -143,11 +143,11 @@ const finalizeOrder = () => {
     localStorage.setItem("how_to_pay", form.how_to_pay.value)
     localStorage.setItem("how_to_receive", form.how_to_receive.value)
     localStorage.setItem("address", form.address.value.trim())
-    
+    /* 
     if(liff.isInClient()){
       liff.init({liffId})
       .then(()=>{
-        const idToken = liff.getIDToken();
+        const accessToken = liff.getAccessToken();
         const orders = JSON.parse(localStorage.getItem('order'))
 
         let userName = ''
@@ -191,14 +191,23 @@ const finalizeOrder = () => {
           window.alert('申し訳ありません。注文に失敗しました。');
         });
       })
-
+*/
+      fetch(`/orders`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          order: localStorage.getItem('order'),
+          access_token: "eyJhbGciOiJIUzI1NiJ9.hen_y_RWMU-D6mD0gV3OEtDyrW-0sNV8PmMZQyTPPathty1POUz0c_yCv8XpXRA6P6hasP3z-cLoH2VOdyhex7KHkZ2HTojQu9LjLscW67Bv0xLfSE32SFmTJDBzpt42.3v5GSi97_M48pdktjYhgGOOiyjAx1r_m721hlnb8KbQ"
+        })
+      })
+/*
     } else {
       document.getElementById("modal3Message").innerHTML = 
       `<div class="alert alert-danger">注文できません<div>`;
       setTimeout(() => {
         document.getElementById("modal3Message").innerHTML = ""
       }, 3000)
-    }
+    }*/
   }
 }
 

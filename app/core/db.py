@@ -64,6 +64,44 @@ def update(table: str, values: {str:any}, where: {str:any}):
 	con.commit()
 
 
+def upsert(table: str, values: {str:any}):
+	con = get_dbcon()
+	cur = con.cursor()
+	keys = values.keys()
+
+	sql = "replace into " + table + "(" + ",".join(keys) 
+	sql += ") values(:" + ",:".join(keys) + ");"
+
+	cur.execute(sql, values)
+	con.commit()
+
+
+def multi_upsert(table: str, values: [{str:any}]):
+	con = get_dbcon()
+	cur = con.cursor()
+	keys = values.keys()
+
+	sql = "replace into " + table + "(" + ",".join(keys) 
+	sql += ") values(:" + ",:".join(keys) + ");"
+
+	cur.executemany(sql, values)
+	con.commit()
+
+
+def execute(sql: str, values: {str:any}):
+	con = get_dbcon()
+	cur = con.cursor()
+	cur.execute(sql, values)
+	con.commit()
+
+
+def multi_execute(sql: str, values: [{str:any}]):
+	con = get_dbcon()
+	cur = con.cursor()
+	cur.executemany(sql, values)
+	con.commit()
+
+
 def delete(table: str, where: {str:any}):
 	con = get_dbcon()
 	cur = con.cursor()

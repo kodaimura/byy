@@ -30,6 +30,25 @@ CREATE TABLE IF NOT EXISTS product (
 	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );
 
+CREATE TABLE IF NOT EXISTS order_history (
+	customer_id TEXT,
+	product_id INTEGER,
+	count INTEGER NOT NULL DEFAULT 0,
+	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
+	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
+	PRIMARY KEY(customer_id, product_id)
+);
+
+CREATE TABLE IF NOT EXISTS customer (
+	customer_id TEXT,
+	customer_name TEXT,
+	visits_count INTEGER NOT NULL DEFAULT 0,
+	cumulative_payment INTEGER NOT NULL DEFAULT 0,
+	create_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
+	update_at TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
+	PRIMARY KEY(customer_id)
+);
+
 
 CREATE TRIGGER IF NOT EXISTS trg_general_upd AFTER UPDATE ON general
 BEGIN
@@ -52,3 +71,16 @@ BEGIN
 	WHERE rowid == NEW.rowid;
 END;
 
+CREATE TRIGGER IF NOT EXISTS trg_customer_upd AFTER UPDATE ON customer
+BEGIN
+	UPDATE customer
+	SET update_at = DATETIME('now', 'localtime')
+	WHERE rowid == NEW.rowid;
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_order_history_upd AFTER UPDATE ON order_history
+BEGIN
+	UPDATE order_history
+	SET update_at = DATETIME('now', 'localtime')
+	WHERE rowid == NEW.rowid;
+END;
