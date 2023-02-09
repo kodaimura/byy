@@ -1,8 +1,4 @@
-myvenv
-
-*.env
 .DS_Store
-__pycache__/
-*.db
-*.sqlite3
+*.log
 tmp
+vendor
