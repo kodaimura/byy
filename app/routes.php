@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Application\Controllers\ProductController;
+use App\Application\Controllers\AdminController;
 use App\Application\Controllers\CustomerController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -27,11 +27,11 @@ return function (App $app) {
         //$grp->get('/admin', ListUsersAction::class);
 
         $grp->group('/products', function (Group $grp1) {
-            $grp1->get('', ProductController::class. ':productsPage');
-            $grp1->post('', ProductController::class. ':registerProduct');
-            $grp1->post('/img', ProductController::class. ':updateImg');
-            $grp1->post('/{product_id}', ProductController::class. ':updateProduct');
-            $grp1->delete('/{product_id}', ProductController::class. ':deleteProduct');
+            $grp1->get('', AdminController::class. ':productsPage');
+            $grp1->post('', AdminController::class. ':registerProduct');
+            $grp1->post('/img', AdminController::class. ':updateImg');
+            $grp1->post('/{product_id}', AdminController::class. ':updateProduct');
+            $grp1->delete('/{product_id}', AdminController::class. ':deleteProduct');
         });
     });
 };

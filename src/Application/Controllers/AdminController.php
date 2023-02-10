@@ -12,7 +12,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
 
-class ProductController
+class AdminController
 {
     public function __construct(ContainerInterface $app)
     {
