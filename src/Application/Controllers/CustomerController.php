@@ -17,9 +17,15 @@ use Slim\Views\Twig;
 
 class CustomerController extends BaseController
 {
-    public function __construct(ContainerInterface $app, LoggerInterface $logger) 
+    protected ProductRepository $productRep;
+    protected CategoryRepository $categoryRep;
+    protected GeneralRepository $generalRep;
+    protected CustomerRepository $customerRep;
+    protected OrderRepository $orderRep;
+
+    public function __construct(ContainerInterface $app) 
     {
-        parent::__construct($app, $logger);
+        parent::__construct($app->get(LoggerInterface::class));
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->customerRep = $app->get(CustomerRepository::class);

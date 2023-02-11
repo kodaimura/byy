@@ -6,11 +6,6 @@ namespace App\Application\Controllers;
 
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
-use App\Application\Repositories\ProductRepository;
-use App\Application\Repositories\CategoryRepository;
-use App\Application\Repositories\CustomerRepository;
-use App\Application\Repositories\OrderRepository;
-use App\Application\Repositories\GeneralRepository;
 
 class BaseController
 {
@@ -18,15 +13,8 @@ class BaseController
 
     protected LoggerInterface $logger;
 
-    protected ProductRepository $productRep;
-    protected CategoryRepository $categoryRep;
-    protected GeneralRepository $generalRep;
-    protected CustomerRepository $customerRep;
-    protected OrderRepository $orderRep;
-
-    public function __construct(ContainerInterface $app, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
-        $this->app = $app;
         $this->logger = $logger;
     }
 }

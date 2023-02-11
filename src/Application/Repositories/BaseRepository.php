@@ -18,9 +18,8 @@ class BaseRepository
 
     protected PDO $db;
 
-	public function __construct(ContainerInterface $app, LoggerInterface $logger, PDO $db)
+	public function __construct(LoggerInterface $logger, PDO $db)
     {
-        $this->app = $app;
         $this->logger = $logger;
         $this->db = $db;
     }

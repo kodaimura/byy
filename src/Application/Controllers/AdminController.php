@@ -18,9 +18,13 @@ use Firebase\JWT\JWT;
 class AdminController extends BaseController
 {
 
-    public function __construct(ContainerInterface $app, LoggerInterface $logger) 
+    protected ProductRepository $productRep;
+    protected CategoryRepository $categoryRep;
+    protected GeneralRepository $generalRep;
+
+    public function __construct(ContainerInterface $app) 
     {
-        parent::__construct($app, $logger);
+        parent::__construct($app->get(LoggerInterface::class));
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->generalRep = $app->get(GeneralRepository::class);
