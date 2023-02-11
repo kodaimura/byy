@@ -7,15 +7,11 @@ namespace App\Application\Repositories;
 use \PDO;
 use Psr\Container\ContainerInterface;
 
-class CategoryRepository
+class CategoryRepository extends BaseRepository
 {
-	public function __construct(ContainerInterface $app)
-    {
-        $this->app = $app;
-    }
-
+	
     public function getAll() {
-    	return $this->app->get(PDO::class)
+    	return $this->db
     	->query(
     		"SELECT 
     			id, 
@@ -26,8 +22,7 @@ class CategoryRepository
     }
 
     public function update($category) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+        $stmt = $this->db->prepare(
     		"UPDATE category SET
     			category_name = :category_name
 		 	 WHERE id = :id"

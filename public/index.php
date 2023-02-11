@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-//use App\Application\Handlers\HttpErrorHandler;
-//use App\Application\Handlers\ShutdownHandler;
+use App\Application\Handlers\HttpErrorHandler;
+use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
@@ -57,7 +57,7 @@ $logErrorDetails = $settings->get('logErrorDetails');
 // Create Request object from globals
 $serverRequestCreator = ServerRequestCreatorFactory::create();
 $request = $serverRequestCreator->createServerRequestFromGlobals();
-/*
+
 // Create Error Handler
 $responseFactory = $app->getResponseFactory();
 $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
@@ -65,7 +65,7 @@ $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
 // Create Shutdown Handler
 $shutdownHandler = new ShutdownHandler($request, $errorHandler, $displayErrorDetails);
 register_shutdown_function($shutdownHandler);
-*/
+
 // Add Routing Middleware
 $app->addRoutingMiddleware();
 
@@ -74,7 +74,7 @@ $app->addBodyParsingMiddleware();
 
 // Add Error Middleware
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
-//$errorMiddleware->setDefaultErrorHandler($errorHandler);
+$errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 // Add Jwt Middleware
 $app->add(new Tuupola\Middleware\JwtAuthentication([

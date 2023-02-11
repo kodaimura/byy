@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace App\Application\Controllers;
 
-use \PDO;
-use Psr\Log\LoggerInterface;
+use App\Application\Controllers\BaseController;
 use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
 use App\Application\Repositories\CustomerRepository;
 use App\Application\Repositories\OrderRepository;
 use App\Application\Repositories\GeneralRepository;
+use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
 
-class CustomerController
+class CustomerController extends BaseController
 {
-    public function __construct(ContainerInterface $app)
+    public function __construct(ContainerInterface $app, LoggerInterface $logger) 
     {
-        $this->app = $app;
-        $this->logger = $app->get(LoggerInterface::class);
+        parent::__construct($app, $logger);
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->customerRep = $app->get(CustomerRepository::class);

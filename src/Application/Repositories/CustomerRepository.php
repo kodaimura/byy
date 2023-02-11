@@ -7,16 +7,11 @@ namespace App\Application\Repositories;
 use \PDO;
 use Psr\Container\ContainerInterface;
 
-class CustomerRepository
+class CustomerRepository extends BaseRepository
 {
-	public function __construct(ContainerInterface $app)
-    {
-        $this->app = $app;
-    }
 
     public function getById($customer_id) {
-    	$db = $this->app->get(PDO::class);
-    	$stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"SELECT 
     			customer_id,
     			customer_name,
@@ -41,8 +36,7 @@ class CustomerRepository
     }
 
     public function insert($values) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"INSERT INTO customer (
     			customer_id,
     			customer_name, 
@@ -62,8 +56,7 @@ class CustomerRepository
     }
 
     public function update($values) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"UPDATE customer SET
     			customer_name = :customer_name,
     			visits_count = visits_count + 1,

@@ -6,19 +6,12 @@ namespace App\Application\Repositories;
 
 use \PDO;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 
-class GeneralRepository
+class GeneralRepository extends BaseRepository
 {
-	public function __construct(ContainerInterface $app)
-    {
-        $this->app = $app;
-        $this->logger = $app->get(LoggerInterface::class);
-    }
 
     public function getOneByKey1($key1) {
-        $db = $this->app->get(PDO::class);
-    	$stmt = $db->prepare(
+        $stmt = $this->db->prepare(
             "SELECT value FROM general WHERE key1 = :key1"
         );
         $stmt->bindValue(':key1', $key1, PDO::PARAM_STR);
@@ -27,8 +20,7 @@ class GeneralRepository
     }
 
     public function updateByKey1($key1, $value) {
-        $db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+        $stmt = $this->db->prepare(
             "UPDATE general SET value = :value WHERE key1 = :key1"
         );
         $stmt->bindValue(':value', $value, PDO::PARAM_STR);

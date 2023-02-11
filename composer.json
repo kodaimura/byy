@@ -1,7 +1,6 @@
 {
     "require": {
         "firebase/php-jwt": "^5.5",
-        "monolog/monolog": "^3.2",
         "php-di/php-di": "^7.0",
         "slim/psr7": "^1.6",
         "slim/slim": "4.*",

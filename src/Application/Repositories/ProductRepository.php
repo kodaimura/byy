@@ -7,15 +7,11 @@ namespace App\Application\Repositories;
 use \PDO;
 use Psr\Container\ContainerInterface;
 
-class ProductRepository
+class ProductRepository extends BaseRepository
 {
-	public function __construct(ContainerInterface $app)
-    {
-        $this->app = $app;
-    }
 
     public function getLineup() {
-    	return $this->app->get(PDO::class)
+    	return $this->db
     	->query(
     		"SELECT 
     			id, 
@@ -37,7 +33,7 @@ class ProductRepository
     }
 
     public function getAll() {
-    	return $this->app->get(PDO::class)
+    	return $this->db
     	->query(
     		"SELECT 
     			id, 
@@ -59,7 +55,7 @@ class ProductRepository
     }
 
     public function getRecommends() {
-    	return $this->app->get(PDO::class)
+    	return $this->db
     	->query(
     		"SELECT 
     			id, 
@@ -82,8 +78,7 @@ class ProductRepository
     }
 
     public function getById($id) {
-    	$db = $this->app->get(PDO::class);
-    	$stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"SELECT 
     			id, 
     			product_name, 
@@ -106,8 +101,7 @@ class ProductRepository
     }
 
     public function insertAndGetRowId($product) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+        $stmt = $this->db->prepare(
     		"INSERT INTO product (
     			product_name, 
     			category_id, 
@@ -135,13 +129,12 @@ class ProductRepository
     	$stmt->bindValue(':recommend_flg', $product['recommend_flg'], PDO::PARAM_STR);
     	$stmt->execute();
 
-        $result = $db->query("SELECT LAST_INSERT_ID()")->fetch();
+        $result = $this->db->query("SELECT LAST_INSERT_ID()")->fetch();
         return $result[0];
     }
 
     public function updateImgNameById($product_id, $img_name) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+        $stmt = $this->db->prepare(
     		"UPDATE product SET
     		 	img_name = :img_name
     		 WHERE id = :id"
@@ -152,8 +145,7 @@ class ProductRepository
     }
 
     public function getImgNameById($product_id) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"SELECT img_name 
     		 FROM product
     		 WHERE id = :id"
@@ -165,8 +157,7 @@ class ProductRepository
     }
 
     public function update($product) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"UPDATE product SET
     			product_name = :product_name,
     			category_id = :category_id,
@@ -195,8 +186,7 @@ class ProductRepository
     }
 
     public function deleteById($id) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"DELETE FROM product WHERE id = :id"
     	);
     	$stmt->bindValue(':id', $id, PDO::PARAM_INT);

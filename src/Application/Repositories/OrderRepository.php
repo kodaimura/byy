@@ -7,16 +7,11 @@ namespace App\Application\Repositories;
 use \PDO;
 use Psr\Container\ContainerInterface;
 
-class OrderRepository
+class OrderRepository extends BaseRepository
 {
-	public function __construct(ContainerInterface $app)
-    {
-        $this->app = $app;
-    }
 
     public function get($customer_id, $product_id) {
-    	$db = $this->app->get(PDO::class);
-    	$stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"SELECT 
     			customer_id,
     			product_id,
@@ -41,8 +36,7 @@ class OrderRepository
     }
 
     public function insert($values) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"INSERT INTO order_history (
     			customer_id,
                 product_id,
@@ -60,8 +54,7 @@ class OrderRepository
     }
 
     public function update($values) {
-    	$db = $this->app->get(PDO::class);
-        $stmt = $db->prepare(
+    	$stmt = $this->db->prepare(
     		"UPDATE order_history SET
     			count = count + :count
 		 	 WHERE customer_id = :customer_id

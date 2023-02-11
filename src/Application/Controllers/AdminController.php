@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Application\Controllers;
 
-use \PDO;
-use Psr\Log\LoggerInterface;
+use App\Application\Controllers\BaseController;
 use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
 use App\Application\Repositories\GeneralRepository;
+use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Cookies;
 use Slim\Views\Twig;
 use Firebase\JWT\JWT;
 
-class AdminController
+class AdminController extends BaseController
 {
-    public function __construct(ContainerInterface $app)
+
+    public function __construct(ContainerInterface $app, LoggerInterface $logger) 
     {
-        $this->app = $app;
-        $this->logger = $app->get(LoggerInterface::class);
+        parent::__construct($app, $logger);
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->generalRep = $app->get(GeneralRepository::class);
