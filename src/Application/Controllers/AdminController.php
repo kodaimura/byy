@@ -36,7 +36,9 @@ class AdminController
     public function login($request, $response, $args): Response
     {
         $password = $request->getParsedBody()['password'];
-        if ($password === 'admin') {
+        $correct_password = $this->generalRep->getOneByKey1('admin-password');
+
+        if ($password === $correct_password) {
             $token = JWT::encode(['name' => 'wakamiya'], 'supersecretkeyyoushouldnotcommittogithub', 'HS256');
             $cookies = (new Cookies())
             ->set('token', [
