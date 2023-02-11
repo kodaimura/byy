@@ -147,7 +147,7 @@ const finalizeOrder = () => {
     if(!liff.isInClient()){
       //liff.init({liffId})
       //.then(()=>{
-        const accessToken = "eyJhbGciOiJIUzI1NiJ9.Wm9Q7iL1rj6kG3p-d7TGx_d2EEWh5BENuRR6F1zmXDWMDqo92I1cdPnRF4We9TlNZaAbH2I7t9JHrGLMFi1aOU7bC8yjkggVFSlD6BFc5XB9QJdny8Qs--aAcgY3IsAn.4e11GALQmVfmNjqE4p7rBcyfzrew4tKtQL2sdyGaYe8"//liff.getAccessToken();
+        const accessToken = "eyJhbGciOiJIUzI1NiJ9.R21OMMpyft6AhuAs5X1JNMr60ifruzW10kPoNPy8Xfj9ka7u1epKvcJ2b-FsovIulRPzatmgI0DbI-msbCYcQdL5Qul6cD-XFyVSGwTG7BhteN5Mcb_xqi3NQMCNTtIc.D6-ON6F7y6Kqq7JsUw42C_Qsia4E1QzzKGllFE2fjkQ"//liff.getAccessToken();
         const orders = JSON.parse(localStorage.getItem('order'))
 
         let userName = ''

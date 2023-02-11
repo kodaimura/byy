@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
 use App\Application\Repositories\CustomerRepository;
+use App\Application\Repositories\OrderRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
@@ -22,6 +23,7 @@ class CustomerController
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->customerRep = $app->get(CustomerRepository::class);
+        $this->orderRep = $app->get(OrderRepository::class);
     }
 
     public function lineupPage($request, $response, $args): Response
@@ -42,7 +44,7 @@ class CustomerController
    public function order($request, $response, $args): Response
    {
         $access_token = ($request->getParsedBody())['access_token'];
-        $orders = ($request->getParsedBody())['order'];
+        $orders = json_decode(($request->getParsedBody())['order']);
         $header = [('Authorization: Bearer ' . $access_token)];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
@@ -57,11 +59,21 @@ class CustomerController
             $userId = $res['userId'];
             $userName = $res['displayName'];
 
+            $total_price = 0;
+            foreach ($orders as $order) {
+                $this->orderRep->upsert([
+                    'customer_id' => $userId,
+                    'product_id' => $order->{'id'},
+                    'count' => $order->{'order_quantity'}
+                ]);
+                $total_price += intval($order->{'order_quantity'}) * intval($order->{'price'});
+            }
+            
             $this->customerRep->upsert([
                 'customer_id' => $userId,
                 'customer_name' => $userName,
                 'visits_count' => 1,
-                'cumulative_payment' => 0
+                'cumulative_payment' => $total_price
             ]);
         }
 
