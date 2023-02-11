@@ -39,7 +39,7 @@
 								<div class="text-end fw-bolder fs-2 text-danger lh-1">
 									<small class="text-muted fs-5"> {{p.quantity}} </small>
 									<span>¥{{p.price}}</span>
-									<span>(¥{{p.price * 1.1}})</span>
+									<span>(¥{{(p.price * tax_rate)|round}})</span>
 								</div>
 								<hr class="text-success my-2">
     						<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
@@ -108,7 +108,7 @@
 						<div class="text-end fw-bolder fs-4 text-danger lh-1">
 							<small class="text-muted fs-6"> {{p.quantity}} </small>
 							<span>¥{{p.price}}</span>
-							<span>(¥{{p.price * 1.1}})</span>
+							<span>(¥{{(p.price * tax_rate)|round}})</span>
 						</div>
 						<hr class="text-success my-2">
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>

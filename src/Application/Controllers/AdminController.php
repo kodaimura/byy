@@ -90,11 +90,13 @@ class AdminController
 
         $products = $this->productRep->getAll();
         $categories = $this->categoryRep->getAll();
+        $tax = $this->generalRep->getOneByKey1('tax');
 
         $twig = Twig::create('../templates');
         $response = $twig->render($response, 'products.html', [
             'categories' => $categories,
-            'products' => $products
+            'products' => $products,
+            'tax_rate' => (1 + intval($tax)/100)
         ]);
         return $response;
     }

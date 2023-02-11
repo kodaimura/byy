@@ -10,6 +10,7 @@ use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
 use App\Application\Repositories\CustomerRepository;
 use App\Application\Repositories\OrderRepository;
+use App\Application\Repositories\GeneralRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
@@ -24,6 +25,7 @@ class CustomerController
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->customerRep = $app->get(CustomerRepository::class);
         $this->orderRep = $app->get(OrderRepository::class);
+        $this->generalRep = $app->get(GeneralRepository::class);
     }
 
     public function lineupPage($request, $response, $args): Response
@@ -31,12 +33,14 @@ class CustomerController
         $products = $this->productRep->getLineup();
         $recommends = $this->productRep->getRecommends();
         $categories = $this->categoryRep->getAll();
+        $tax = $this->generalRep->getOneByKey1('tax');
 
         $twig = Twig::create('../templates');
         $response = $twig->render($response, 'lineup.html', [
             'categories' => $categories,
             'products' => $products,
-            'recommends' => $recommends
+            'recommends' => $recommends,
+            'tax_rate' => (1 + intval($tax) / 100)
         ]);
         return $response;
     }
@@ -68,7 +72,7 @@ class CustomerController
                 ]);
                 $total_price += intval($order->{'order_quantity'}) * intval($order->{'price'});
             }
-            
+
             $this->customerRep->upsert([
                 'customer_id' => $userId,
                 'customer_name' => $userName,

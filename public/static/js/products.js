@@ -1,4 +1,6 @@
 const liffId = '1657838706-OK1dZMXG';
+const taxRate = parseFloat(document.getElementById('tax_rate').value);
+
 
 window.addEventListener('DOMContentLoaded', () => {
  if(liff.isInClient()){
@@ -46,7 +48,7 @@ const setupModal = (product) => {
   document.getElementById("modalProductionArea").innerHTML = `${product.production_area}産`
   document.getElementById("modalQuantity").innerHTML = product.quantity
   document.getElementById("modalPrice").innerHTML = `${product.price}`
-  document.getElementById("modalTaxPrice").innerHTML = `${Math.round(product.price * 1.1)}`
+  document.getElementById("modalTaxPrice").innerHTML = `${Math.round(product.price * taxRate)}`
 }
 
 const addToCart = () => {
@@ -113,7 +115,7 @@ const setupModal2 = () => {
     `<tr>
       <td>${order.product_name} (${order.production_area})</td>
       <td>${order.order_quantity}</td>
-      <td>¥${Math.round(order.price * 1.1) * order.order_quantity}</td>
+      <td>¥${order.price * order.order_quantity}</td>
     </tr>`
   }
 
@@ -121,7 +123,7 @@ const setupModal2 = () => {
   ` </tbody>
     <tfooter>
       <tr>
-        <td>合計(税込)</td><td></td><td class="text-danger">¥${Math.round(priceSum * 1.1)}</td>
+        <td>合計(税込)</td><td></td><td class="text-danger">¥${Math.round(priceSum * taxRate)}</td>
       </tr>
     </tfooter>
   <table>`
@@ -174,7 +176,7 @@ const finalizeOrder = () => {
 
         message += 
         `----------------
-         お支払い金額: ${Math.round(priceSum * 1.1)}円（税込）
+         お支払い金額: ${Math.round(priceSum * taxRate)}円（税込）
          お支払い方法: ${form.how_to_pay.value}
         `
 
