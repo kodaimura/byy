@@ -30,7 +30,8 @@ class ProductRepository
 		 		recommend_flg, 
 		 		img_name 
 		 	 FROM product
-		 	 WHERE display_flg = '1'"
+		 	 WHERE display_flg = '1'
+		 	 ORDER BY seq"
     	)
         ->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -49,8 +50,10 @@ class ProductRepository
 		 		display_flg, 
 		 		stock_flg, 
 		 		recommend_flg, 
-		 		img_name 
-		 	 FROM product"
+		 		img_name,
+		 		seq
+		 	 FROM product
+		 	 ORDER BY seq"
     	)
         ->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -69,9 +72,11 @@ class ProductRepository
 		 		display_flg, 
 		 		stock_flg, 
 		 		recommend_flg, 
-		 		img_name 
+		 		img_name,
+		 		seq
 		 	 FROM product
-		 	 WHERE display_flg = '1' AND recommend_flg = '1'"
+		 	 WHERE display_flg = '1' AND recommend_flg = '1'
+		 	 ORDER BY seq"
     	)
         ->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -90,7 +95,8 @@ class ProductRepository
 		 		display_flg, 
 		 		stock_flg, 
 		 		recommend_flg, 
-		 		img_name 
+		 		img_name,
+		 		seq
 		 	 FROM product
 		 	 WHERE id = :id"
     	);
@@ -170,7 +176,8 @@ class ProductRepository
 		 		production_area = :production_area,
 		 		display_flg = :display_flg,
 		 		stock_flg = :stock_flg,
-		 		recommend_flg = :recommend_flg
+		 		recommend_flg = :recommend_flg,
+		 		seq = :seq
 		 	 WHERE id = :id"
     	);
     	$stmt->bindValue(':product_name', $product['product_name'], PDO::PARAM_STR);
@@ -182,6 +189,7 @@ class ProductRepository
     	$stmt->bindValue(':display_flg', $product['display_flg'], PDO::PARAM_STR);
     	$stmt->bindValue(':stock_flg', $product['stock_flg'], PDO::PARAM_STR);
     	$stmt->bindValue(':recommend_flg', $product['recommend_flg'], PDO::PARAM_STR);
+    	$stmt->bindValue(':seq', $product['seq'], PDO::PARAM_INT);
     	$stmt->bindValue(':id', $product['id'], PDO::PARAM_INT);
     	$stmt->execute();
     }

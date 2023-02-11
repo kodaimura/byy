@@ -26,7 +26,6 @@
 								{% elseif p.stock_flg == '0' %}
 								<img src="/static/img/urikire_widget_img.png" class="w-100">
 								{% endif %}
-								
 							</div>
 							<div class="card-body position-relative pb-5">
 								<div class="card-title fw-bold lh-1 fs-5">
@@ -237,6 +236,10 @@
    									<option value="0" label="非表示"></option>
    								</select>
    							</div>
+   							<div class="col-md-4 mb-1">
+   								<label for="seq">表示順</label>
+   								<input type="number" class="form-control" name="seq">
+   							</div>
    						</div>
    						<div class="mb-1">
    							<label for="comment">コメント</label>
@@ -286,9 +289,10 @@
   		form.stock_flg.value = product.stock_flg
   		form.recommend_flg.value = product.recommend_flg
   		form.display_flg.value = product.display_flg
+  		form.seq.value = product.seq
   		form.comment.value = product.comment
 
-  		document.forms.imgForm.id.value = product.id
+  		document.forms.updateImgForm.id.value = product.id
   	}
 
   	document.getElementById('send').addEventListener('click', () => {
@@ -302,6 +306,7 @@
   		const stock_flg = form.stock_flg.value
   		const recommend_flg = form.recommend_flg.value
   		const display_flg = form.display_flg.value
+  		const seq = form.seq.value
   		const comment = form.comment.value
 
   		//現在のスクロール位置
@@ -313,7 +318,7 @@
     		headers: {'Content-Type': 'application/json'},
     		body: JSON.stringify({
         		product_name, category_id, production_area, quantity, price, 
-        		stock_flg, recommend_flg, display_flg, comment
+        		stock_flg, recommend_flg, display_flg, seq, comment
         	})
       	}).then(response => {
       		window.location.reload();
