@@ -64,10 +64,12 @@ class AdminController
     {
         $password = $this->generalRep->getOneByKey1('admin-password');
         $tax = $this->generalRep->getOneByKey1('tax');
+        $categories = $this->categoryRep->getAll();
         $twig = Twig::create('../templates');
         $response = $twig->render($response, 'general.html', [
             'password' => $password,
-            'tax' => $tax
+            'tax' => $tax,
+            'categories' => $categories
         ]);
         return $response;
     }
@@ -85,6 +87,16 @@ class AdminController
         $tax = $request->getParsedBody()['tax'];
         $this->generalRep->updateByKey1('tax', $tax);
         return $response;
+    }
+
+    public function updateCategory($request, $response, $args): Response
+    {
+        $category = $request->getParsedBody();
+        $category['id'] = $args['category_id'];
+        $this->categoryRep->update($category);
+        return $response
+        ->withHeader('Location', '../general')
+        ->withStatus(302);
     }
 
     public function productsPage($request, $response, $args): Response
