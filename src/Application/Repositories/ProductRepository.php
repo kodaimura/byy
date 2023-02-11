@@ -168,6 +168,8 @@ class ProductRepository
 		 		comment = :comment,
 		 		quantity = :quantity,
 		 		production_area = :production_area,
+		 		display_flg = :display_flg,
+		 		stock_flg = :stock_flg,
 		 		recommend_flg = :recommend_flg
 		 	 WHERE id = :id"
     	);
@@ -177,6 +179,8 @@ class ProductRepository
     	$stmt->bindValue(':comment', $product['comment'], PDO::PARAM_STR);
     	$stmt->bindValue(':quantity', $product['quantity'], PDO::PARAM_STR);
     	$stmt->bindValue(':production_area', $product['production_area'], PDO::PARAM_STR);
+    	$stmt->bindValue(':display_flg', $product['display_flg'], PDO::PARAM_STR);
+    	$stmt->bindValue(':stock_flg', $product['stock_flg'], PDO::PARAM_STR);
     	$stmt->bindValue(':recommend_flg', $product['recommend_flg'], PDO::PARAM_STR);
     	$stmt->bindValue(':id', $product['id'], PDO::PARAM_INT);
     	$stmt->execute();
