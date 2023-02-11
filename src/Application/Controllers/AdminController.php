@@ -103,12 +103,14 @@ class AdminController
     {
 
         $products = $this->productRep->getAll();
+        $recommends = $this->productRep->getRecommends();
         $categories = $this->categoryRep->getAll();
         $tax = $this->generalRep->getOneByKey1('tax');
 
         $twig = Twig::create('../templates');
         $response = $twig->render($response, 'products.html', [
             'categories' => $categories,
+            'recommends' => $recommends,
             'products' => $products,
             'tax_rate' => (1 + intval($tax)/100)
         ]);

@@ -11,42 +11,40 @@
 	<!-- おすすめ商品カルーセル -->
 	<div id="recommendCarousel" class="carousel slide mb-5 carousel-dark" data-bs-ride="carousel">
   	<div class="carousel-inner">
-  		{% for p in products %}
-  			{% if p.recommend_flg == "1" %}
-  				{% if loop.index == 1 %}
-					<div class="carousel-item active">
-					{% else %}
-					<div class="carousel-item">
-  				{% endif %}
-						<div class="card w-60 mx-auto">
-							<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
-							<div class="card-img-overlay">
-								{% if p.display_flg == '0' %}
-								<span class="fs-1 fw-bold text-light bg-dark badge position-absolute top-0">非表示</span>
-								{% elseif p.stock_flg == '0' %}
-								<img src="/static/img/urikire_widget_img.png" class="w-100">
-								{% endif %}
-							</div>
-							<div class="card-body position-relative pb-5">
-								<div class="card-title fw-bold lh-1 fs-5">
-									{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
-								</div>
-								<div class="text-end fw-bolder fs-2 text-danger lh-1">
-									<small class="text-muted fs-5"> {{p.quantity}} </small>
-									<span>¥{{p.price}}</span>
-									<span>(¥{{(p.price * tax_rate)|round}})</span>
-								</div>
-								<hr class="text-success my-2">
-    						<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
-    						<hr class="text-success my-2">
-    						<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    							<button class="btn btn-primary rounded-pill col text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">&nbsp;&nbsp;編集&nbsp;&nbsp;</button>&nbsp;&nbsp;
-    							<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.id}})" style="z-index:1">&nbsp;&nbsp;削除&nbsp;&nbsp;</button>
-    						</div>
-  						</div>
+  		{% for p in recommends %}
+  			{% if loop.index == 1 %}
+				<div class="carousel-item active">
+				{% else %}
+				<div class="carousel-item">
+  			{% endif %}
+					<div class="card w-60 mx-auto">
+						<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
+						<div class="card-img-overlay">
+							{% if p.display_flg == '0' %}
+							<span class="fs-1 fw-bold text-light bg-dark badge position-absolute top-0">非表示</span>
+							{% elseif p.stock_flg == '0' %}
+							<img src="/static/img/urikire_widget_img.png" class="w-100">
+							{% endif %}
 						</div>
+						<div class="card-body position-relative pb-5">
+							<div class="card-title fw-bold lh-1 fs-5">
+								{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
+							</div>
+							<div class="text-end fw-bolder fs-2 text-danger lh-1">
+								<small class="text-muted fs-5"> {{p.quantity}} </small>
+								<span>¥{{p.price}}</span>
+								<span>(¥{{(p.price * tax_rate)|round}})</span>
+							</div>
+							<hr class="text-success my-2">
+    					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
+    					<hr class="text-success my-2">
+    					<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3">
+    						<button class="btn btn-primary rounded-pill col text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">&nbsp;&nbsp;編集&nbsp;&nbsp;</button>&nbsp;&nbsp;
+    							<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.id}})" style="z-index:1">&nbsp;&nbsp;削除&nbsp;&nbsp;</button>
+    					</div>
+  					</div>
 					</div>
-				{% endif %}
+				</div>
 			{% endfor %}
   	</div>
   	<button class="carousel-control-prev" type="button" data-bs-target="#recommendCarousel" data-bs-slide="prev">
@@ -185,13 +183,19 @@
       		<!-- 商品情報更新フォーム -->
         	<form name="updateForm" onsubmit="return false" class="mx-3 px-4 py-3 card bg-light">
         		<input type="hidden" name="product_id">
-        		<div class="mb-1">
-   						<label for="category_id">分類</label>
-   						<select name="category_id" class="form-select">
-   							{% for c in categories %}
-   							<option value="{{c.id}}" label="{{c.category_name}}"></option>
-   							{% endfor %}
-   						</select>
+        		<div class="row">
+        			<div class="col-md-9 mb-1">
+   							<label for="category_id">分類</label>
+   							<select name="category_id" class="form-select">
+   								{% for c in categories %}
+   								<option value="{{c.id}}" label="{{c.category_name}}"></option>
+   								{% endfor %}
+   							</select>
+   						</div>
+   						<div class="col-md-3 mb-1">
+   							<label for="seq">ソート (昇順)</label>
+   							<input type="number" class="form-control" name="seq">
+   						</div>
    					</div>
    					<div class="mb-1">
    						<label for="product_name">商品名</label>
@@ -222,23 +226,19 @@
    					</div>
    					<div id="product_detail" class="d-none">
    						<div class="row">
-   							<div class="col-md-4 mb-1">
+   							<div class="col-md-6 mb-1">
    								<label for="recommend_flg">通常/おすすめ</label>
    								<select name="recommend_flg" class="form-select">
    									<option value="0" label="通常"></option>
    									<option value="1" label="おすすめ"></option>
    								</select>
    							</div>
-   							<div class="col-md-4 mb-1">
+   							<div class="col-md-6 mb-1">
    								<label for="display_flg">表示/非表示</label>
    								<select name="display_flg" class="form-select">
    									<option value="1" label="表示"></option>
    									<option value="0" label="非表示"></option>
    								</select>
-   							</div>
-   							<div class="col-md-4 mb-1">
-   								<label for="seq">表示順</label>
-   								<input type="number" class="form-control" name="seq">
    							</div>
    						</div>
    						<div class="mb-1">
@@ -261,7 +261,7 @@
   				<!-- 商品画像更新フォーム -->
       	</div>
       	<div class="modal-footer">
-        	<button type="button" onclick="switchShowDetail()" id="switch-Button">詳細表示</button>
+        	<button type="button" onclick="switchShowDetail()" id="switch-Button">すべて表示</button>
       	</div>
     	</div>
   	</div>
@@ -341,7 +341,7 @@
 			} else {
 				document.forms.updateImgForm.classList.add('d-none');
 				document.getElementById('product_detail').classList.add('d-none');
-				document.getElementById('switch-Button').innerHTML = '詳細表示'
+				document.getElementById('switch-Button').innerHTML = 'すべて表示'
 			}
 			
 		}
