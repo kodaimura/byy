@@ -18,7 +18,7 @@
 						<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 						<div class="card-img-overlay">
 							{% if p.stock_flg == '0' %}
-							<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ<span>
+							<img src="/static/img/urikire_widget_img.png" class="w-100">
 							{% endif %}
 						</div>
 						<div class="card-body position-relative pb-5">
@@ -34,9 +34,15 @@
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
     					<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
+    						{% if p.stock_flg == '0' %}
+    						<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" disabled>
+    							&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
+    						</button>
+    						{% else %}
     						<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p|json_encode()}})">
     							&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     						</button>
+    						{% endif %}
     					</div>
   					</div>
 					</div>
@@ -81,10 +87,7 @@
 					<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 					<div class="card-img-overlay">
 						{% if p.stock_flg == '0' %}
-						<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ</span>
-						{% endif %}
-						{% if p.recommend_flg == '1' %}
-						<span class="fs-5 fw-bold text-light bg-danger badge position-absolute top-0 end-0"><i>おすすめ</i></span>
+						<img src="/static/img/urikire_widget_img.png" class="w-100">
 						{% endif %}
 					</div>
 					<div class="card-body position-relative pb-5">
@@ -100,9 +103,15 @@
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
     				<div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
+    					{% if p.stock_flg == '0' %}
+    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" disabled>
+    						&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
+    					</button>
+    					{% else %}
     					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p|json_encode()}})">
     						&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     					</button>
+    					{% endif %}
     				</div>
   				</div>
 				</div>

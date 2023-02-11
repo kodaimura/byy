@@ -3,21 +3,19 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-	<div class="wrapper">
+	<div class="container">
 	<h2>管理者用</h2>
-	<div class="form-wrapper">
-	<div class="error">
-		{{error}}
-	</div>
-  	<form method="POST">
-    	<div class="form-item">
-     		<label for="password">パスワード</label>
-    		<input type="password" name="password" required="required">
-    	</div>
-    	<div class="button-wrapper">
-    		<input type="submit" id="signin" value="ログイン"></input>
+  	<form method="POST" class="mx-4 px-4 py-3 bg-light card">
+  		<div class="text-danger">{{error}}</div>
+     	<label for="password" class="form-label">パスワード</label>
+     	<div class="row">
+     		<div class="col-8">
+     			<input type="password" class="form-control" name="password" required="required">
+     		</div>
+     		<div class="col-4">
+     			<input type="submit" class="btn btn-secondary" value="ログイン"></input>
+     		</div>
     	</div>
   	</form>
-  </div>
-  </div>
+  	</div>
 {% endblock %}

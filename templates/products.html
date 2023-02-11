@@ -3,8 +3,11 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+	
 	<div class="container">
-	<h2>管理者用</h2>
+	<a href="general" class="fs-5 btn btn-secondary">その他設定</a>
+	<hr>
+	<h2>商品登録・更新</h2>
 	<!-- おすすめ商品カルーセル -->
 	<div id="recommendCarousel" class="carousel slide mb-5 carousel-dark" data-bs-ride="carousel">
   	<div class="carousel-inner">
@@ -18,9 +21,12 @@
 						<div class="card w-60 mx-auto">
 							<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 							<div class="card-img-overlay">
-								{% if p.stock_flg == '0' %}
-								<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ</span>
+								{% if p.display_flg == '0' %}
+								<span class="fs-1 fw-bold text-light bg-dark badge position-absolute top-0">非表示</span>
+								{% elseif p.stock_flg == '0' %}
+								<img src="/static/img/urikire_widget_img.png" class="w-100">
 								{% endif %}
+								
 							</div>
 							<div class="card-body position-relative pb-5">
 								<div class="card-title fw-bold lh-1 fs-5">
@@ -81,15 +87,12 @@
 				<div class="card col-6">
 					<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 					<div class="card-img-overlay">
-						{% if p.stock_flg == '0' %}
-						<span class="fs-4 fw-bold text-danger bg-warning badge position-absolute top-0">品切れ</span>
-						{% endif %}
-						{% if p.recommend_flg == '1' %}
-						<span class="fs-5 fw-bold text-light bg-danger badge position-absolute top-0 end-0"><i>おすすめ</i></span>
-						{% endif %}
 						{% if p.display_flg == '0' %}
-						<span class="fs-4 fw-bold text-light bg-dark badge position-absolute top-0">非表示</span>
+						<span class="fs-1 fw-bold text-light bg-dark badge position-absolute top-0">非表示</span>
+						{% elseif p.stock_flg == '0' %}
+						<img src="/static/img/urikire_widget_img.png" class="w-100">
 						{% endif %}
+						
 					</div>
   				<div class="card-body position-relative pb-5">
 						<div class="card-title fw-bold lh-1">
@@ -122,12 +125,8 @@
 
   <!-- 商品追加フォーム -->
   <h4>商品追加</h4>
-  <form method="POST" enctype="multipart/form-data" class="mx-3 px-4 py-3 card bg-light">
-  	<div class="mb-2">
-    	<label for="product_name" class="form-label">商品名</label>
-   		<input type="text" class="form-control" name="product_name" required>
-   	</div>
-   	<div class="mb-2">
+  <form method="POST" enctype="multipart/form-data" class="mx-3 px-4 py-3 card bg-light mb-5">
+   	<div class="mb-1">
    		<label for="category_id">分類</label>
    		<select name="category_id" class="form-select">
    			{% for c in categories %}
@@ -135,28 +134,36 @@
    			{% endfor %}
    		</select>
    	</div>
-   	<div class="mb-2">
-   		<label for="production_area">産地</label>
-   		<input type="text" class="form-control" name="production_area">
+   	<div class="mb-1">
+   		<label for="product_name">商品名</label>
+   		<input type="text" class="form-control" name="product_name" required>
    	</div>
-   	<div class="row mb-2">
-   		<div class="col-md-6">
+   	<div class="row">
+   		<div class="col-md-6 mb-6">
+   			<label for="production_area">産地</label>
+   			<input type="text" class="form-control" name="production_area">
+   		</div>
+   		<div class="col-md-6 mb-6">
    			<label for="quantity">数量</label>
    			<input type="text" class="form-control" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
    		</div>
-   		<div class="col-md-6">
+   	</div>
+   	<div class="row">
+   		<div class="col-md-6 mb-1">
    			<label for="price">価格 (税抜)</label>
    			<input type="number" class="form-control" name="price" required>
    		</div>
    	</div>
-   	<div class="mb-2">
-   		<label for="recommend_flg">通常/おすすめ</label>
-   		<select name="recommend_flg" class="form-select">
-   			<option value="0" label="通常"></option>
-   			<option value="1" label="おすすめ"></option>
-   		</select>
-   	</div>
-   	<div class="mb-2">
+   	<div class="row">
+   		<div class="mb-1 col-md-6">
+   			<label for="recommend_flg">通常/おすすめ</label>
+   			<select name="recommend_flg" class="form-select">
+   				<option value="0" label="通常"></option>
+   				<option value="1" label="おすすめ"></option>
+   			</select>
+   		</div>
+   </div>
+   	<div class="mb-1">
    		<label for="comment">コメント</label>
    		<textarea name="comment" class="form-control" rows="5" cols="33"></textarea>
    	</div>
@@ -179,11 +186,7 @@
       		<!-- 商品情報更新フォーム -->
         	<form name="updateForm" onsubmit="return false" class="mx-3 px-4 py-3 card bg-light">
         		<input type="hidden" name="product_id">
-  					<div class="mb-1">
-    					<label for="product_name" class="form-label">商品名</label>
-   						<input type="text" class="form-control" name="product_name">
-   					</div>
-   					<div class="mb-1">
+        		<div class="mb-1">
    						<label for="category_id">分類</label>
    						<select name="category_id" class="form-select">
    							{% for c in categories %}
@@ -192,51 +195,59 @@
    						</select>
    					</div>
    					<div class="mb-1">
-   						<label for="production_area">産地</label>
-   						<input type="text" class="form-control" name="production_area">
+   						<label for="product_name">商品名</label>
+   						<input type="text" class="form-control" name="product_name" required>
    					</div>
-   					<div class="row mb-1">
-   						<div class="col-md-6">
+  					<div class="row">
+   						<div class="col-md-6 mb-1">
+   							<label for="production_area">産地</label>
+   							<input type="text" class="form-control" name="production_area">
+   						</div>
+   						<div class="col-md-6 mb-1">
    							<label for="quantity">数量</label>
    							<input type="text" class="form-control" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
    						</div>
-   						<div class="col-md-6">
+   					</div>
+   					<div class="row">
+   						<div class="col-md-6 mb-1">
    							<label for="price" class="text-success">価格 (税抜)</label>
    							<input type="number" class="form-control" name="price">
    						</div>
-   					</div>
-   					<div class="row mb-1">
-   						<div class="col-md-4">
+   						<div class="col-md-6 mb-1">
    							<label for="stock_flg" class="text-success">在庫</label>
    							<select name="stock_flg" class="form-select">
    								<option value="1" label="あり"></option>
-   								<option value="0" label="なし(品切れ)"></option>
-   							</select>
-   						</div>
-   						<div class="col-md-4">
-   							<label for="recommend_flg">通常/おすすめ</label>
-   							<select name="recommend_flg" class="form-select">
-   								<option value="0" label="通常"></option>
-   								<option value="1" label="おすすめ"></option>
-   							</select>
-   						</div>
-   						<div class="col-md-4">
-   							<label for="display_flg">表示/非表示</label>
-   							<select name="display_flg" class="form-select">
-   								<option value="1" label="表示"></option>
-   								<option value="0" label="非表示"></option>
+   								<option value="0" label="なし(売り切れ)"></option>
    							</select>
    						</div>
    					</div>
-   					<div class="mb-1">
-   						<label for="comment">コメント</label>
-   						<textarea name="comment" class="form-control" rows="5" cols="33"></textarea>
+   					<div id="product_detail" class="d-none">
+   						<div class="row">
+   							<div class="col-md-4 mb-1">
+   								<label for="recommend_flg">通常/おすすめ</label>
+   								<select name="recommend_flg" class="form-select">
+   									<option value="0" label="通常"></option>
+   									<option value="1" label="おすすめ"></option>
+   								</select>
+   							</div>
+   							<div class="col-md-4 mb-1">
+   								<label for="display_flg">表示/非表示</label>
+   								<select name="display_flg" class="form-select">
+   									<option value="1" label="表示"></option>
+   									<option value="0" label="非表示"></option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="mb-1">
+   							<label for="comment">コメント</label>
+   							<textarea name="comment" class="form-control" rows="5" cols="33"></textarea>
+   						</div>
    					</div>
-        		<input type="button" class="btn btn-primary" id="send" value="更新">
+        		<input type="button" class="btn btn-primary mt-3" id="send" value="更新">
   				</form>
   				<!-- 商品情報更新フォーム -->
   				<!-- 商品画像更新フォーム -->
-  				<form name="imgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light">
+  				<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light d-none">
   					<input type="hidden" name="id">
       				<div class="mb-3">
    						<label for="img">画像</label>
@@ -245,6 +256,9 @@
    					<input type="submit" class="btn btn-success" value="画像変更">
   				</form>
   				<!-- 商品画像更新フォーム -->
+      	</div>
+      	<div class="modal-footer">
+        	<button type="button" onclick="switchShowDetail()" id="switch-Button">詳細表示</button>
       	</div>
     	</div>
   	</div>
@@ -312,6 +326,20 @@
         	scrollTo(0, positionY);
         	localStorage.removeItem('positionY');
     	}
-	});
+		});
+
+		const switchShowDetail = () => {
+			if (document.getElementById('product_detail').classList.contains("d-none")) {
+				document.forms.updateImgForm.classList.remove('d-none');
+				document.getElementById('product_detail').classList.remove('d-none');
+				document.getElementById('switch-Button').innerHTML = '簡易表示'
+			} else {
+				document.forms.updateImgForm.classList.add('d-none');
+				document.getElementById('product_detail').classList.add('d-none');
+				document.getElementById('switch-Button').innerHTML = '詳細表示'
+			}
+			
+		}
+
   </script>
 {% endblock %}
