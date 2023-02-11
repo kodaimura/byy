@@ -76,6 +76,15 @@ $app->addBodyParsingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
 //$errorMiddleware->setDefaultErrorHandler($errorHandler);
 
+// Add Jwt Middleware
+$app->add(new Tuupola\Middleware\JwtAuthentication([
+	"path" => ["/wakamiya/admin"],
+	"secure" => true,
+	"algorithm" => ["HS256"],
+    "relaxed" => ["localhost"],
+    "secret" => "supersecretkeyyoushouldnotcommittogithub"
+]));
+
 // Run App & Emit Response
 $response = $app->handle($request);
 $responseEmitter = new ResponseEmitter();

@@ -10,7 +10,9 @@ use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Cookies;
 use Slim\Views\Twig;
+use Firebase\JWT\JWT;
 
 class AdminController
 {
@@ -20,6 +22,40 @@ class AdminController
         $this->logger = $app->get(LoggerInterface::class);
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
+    }
+
+    public function loginPage($request, $response, $args): Response
+    {
+
+        $twig = Twig::create('../templates');
+        $response = $twig->render($response, 'login.html', []);
+        return $response;
+    }
+
+    public function login($request, $response, $args): Response
+    {
+        $password = $request->getParsedBody()['password'];
+        $this->logger->info($password);
+        if ($password === 'admin') {
+            $token = JWT::encode(['name' => 'wakamiya'], 'supersecretkeyyoushouldnotcommittogithub', 'HS256');
+            $cookies = (new Cookies())
+            ->set('token', [
+                'value'   => $token,
+                'path'    => '/',
+                'expires' => time() + 30 * 24 * 3600,
+            ]);
+            return $response
+            ->withHeader('Location', 'admin/products')
+            ->withHeader('Set-Cookie', $cookies->toHeaders())
+            ->withStatus(302);
+
+        } else {
+            $twig = Twig::create('../templates');
+            $response = $twig->render($response, 'login.html', [
+                'error' => 'パスワードが異なります。'
+            ]);
+            return $response;
+        }
     }
 
     public function productsPage($request, $response, $args): Response

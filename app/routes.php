@@ -24,14 +24,17 @@ return function (App $app) {
         $grp->get('', CustomerController::class. ':lineupPage');
         $grp->post('/orders', CustomerController::class. ':order');
 
-        //$grp->get('/admin', ListUsersAction::class);
+        $grp->get('/login', AdminController::class. ':loginPage');
+        $grp->post('/login', AdminController::class. ':login');
 
-        $grp->group('/products', function (Group $grp1) {
-            $grp1->get('', AdminController::class. ':productsPage');
-            $grp1->post('', AdminController::class. ':registerProduct');
-            $grp1->post('/img', AdminController::class. ':updateImg');
-            $grp1->post('/{product_id}', AdminController::class. ':updateProduct');
-            $grp1->delete('/{product_id}', AdminController::class. ':deleteProduct');
+        $grp->group('/admin', function (Group $grp1) {
+            $grp1->group('/products', function(Group $grp2) {
+                $grp2->get('', AdminController::class. ':productsPage');
+                $grp2->post('', AdminController::class. ':registerProduct');
+                $grp2->post('/img', AdminController::class. ':updateImg');
+                $grp2->post('/{product_id}', AdminController::class. ':updateProduct');
+                $grp2->delete('/{product_id}', AdminController::class. ':deleteProduct');
+            });
         });
     });
 };
