@@ -8,6 +8,7 @@ use \PDO;
 use Psr\Log\LoggerInterface;
 use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
+use App\Application\Repositories\GeneralRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Cookies;
@@ -22,11 +23,11 @@ class AdminController
         $this->logger = $app->get(LoggerInterface::class);
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
+        $this->generalRep = $app->get(GeneralRepository::class);
     }
 
     public function loginPage($request, $response, $args): Response
     {
-
         $twig = Twig::create('../templates');
         $response = $twig->render($response, 'login.html', []);
         return $response;
@@ -35,7 +36,6 @@ class AdminController
     public function login($request, $response, $args): Response
     {
         $password = $request->getParsedBody()['password'];
-        $this->logger->info($password);
         if ($password === 'admin') {
             $token = JWT::encode(['name' => 'wakamiya'], 'supersecretkeyyoushouldnotcommittogithub', 'HS256');
             $cookies = (new Cookies())
@@ -56,6 +56,33 @@ class AdminController
             ]);
             return $response;
         }
+    }
+
+    public function generalPage($request, $response, $args): Response
+    {
+        $password = $this->generalRep->getOneByKey1('admin-password');
+        $tax = $this->generalRep->getOneByKey1('tax');
+        $twig = Twig::create('../templates');
+        $response = $twig->render($response, 'general.html', [
+            'password' => $password,
+            'tax' => $tax
+        ]);
+        return $response;
+    }
+
+    public function updatePassword($request, $response, $args): Response
+    {
+        $password = $request->getParsedBody()['password'];
+        $this->generalRep->updateByKey1('admin-password', $password);
+        return $response;
+
+    }
+
+    public function updateTax($request, $response, $args): Response
+    {
+        $tax = $request->getParsedBody()['tax'];
+        $this->generalRep->updateByKey1('tax', $tax);
+        return $response;
     }
 
     public function productsPage($request, $response, $args): Response
