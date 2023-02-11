@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
    })
  } else {
   document.getElementById('hello-customer').innerHTML = 
-  `WEBブラウザから購入することはできません。`
+  `WEBブラウザから注文することはできません。`
  }
 });
 
