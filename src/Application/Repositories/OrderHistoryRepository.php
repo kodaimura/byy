@@ -7,7 +7,7 @@ namespace App\Application\Repositories;
 use \PDO;
 use Psr\Container\ContainerInterface;
 
-class OrderRepository extends BaseRepository
+class OrderHistoryRepository extends BaseRepository
 {
 
     public function get($customer_id, $product_id) {
@@ -15,7 +15,7 @@ class OrderRepository extends BaseRepository
     		"SELECT 
     			customer_id,
     			product_id,
-    			count
+    			order_count
 		 	 FROM order_history
 		 	 WHERE customer_id = :customer_id
                AND product_id = :product_id"
@@ -23,7 +23,7 @@ class OrderRepository extends BaseRepository
     	$stmt->bindValue(':customer_id', $customer_id, PDO::PARAM_STR);
         $stmt->bindValue(':product_id', $product_id, PDO::PARAM_INT);
     	$stmt->execute();
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function upsert($values) {
@@ -40,27 +40,27 @@ class OrderRepository extends BaseRepository
     		"INSERT INTO order_history (
     			customer_id,
                 product_id,
-                count
+                order_count
 		 	 ) VALUES (
 		 	 	:customer_id,
 		 	 	:product_id,
-		 	 	:count
+		 	 	:order_count
 		 	 )"
     	);
     	$stmt->bindValue(':customer_id', $values['customer_id'], PDO::PARAM_STR);
         $stmt->bindValue(':product_id', $values['product_id'], PDO::PARAM_INT);
-        $stmt->bindValue(':count', $values['count'], PDO::PARAM_INT);
+        $stmt->bindValue(':order_count', $values['order_count'], PDO::PARAM_INT);
     	$stmt->execute();
     }
 
     public function update($values) {
     	$stmt = $this->db->prepare(
     		"UPDATE order_history SET
-    			count = count + :count
+    			order_count = order_count + :order_count
 		 	 WHERE customer_id = :customer_id
                AND product_id = :product_id"
     	);
-        $stmt->bindValue(':count', $values['count'], PDO::PARAM_INT);
+        $stmt->bindValue(':order_count', $values['order_count'], PDO::PARAM_INT);
     	$stmt->bindValue(':customer_id', $values['customer_id'], PDO::PARAM_STR);
         $stmt->bindValue(':product_id', $values['product_id'], PDO::PARAM_INT);
     	$stmt->execute();

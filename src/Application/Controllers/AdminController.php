@@ -96,7 +96,7 @@ class AdminController extends BaseController
     public function updateCategory($request, $response, $args): Response
     {
         $category = $request->getParsedBody();
-        $category['id'] = $args['category_id'];
+        $category['category_id'] = $args['category_id'];
         $this->categoryRep->update($category);
         return $response
         ->withHeader('Location', '../general')
@@ -107,7 +107,7 @@ class AdminController extends BaseController
     {
 
         $products = $this->productRep->getAll();
-        $recommends = $this->productRep->getRecommends();
+        $recommends = $this->productRep->getRecommendAll();
         $categories = $this->categoryRep->getAll();
         $tax = $this->generalRep->getOneByKey1('tax');
 
@@ -139,7 +139,7 @@ class AdminController extends BaseController
     public function updateProduct($request, $response, $args): Response
     {
         $product = $request->getParsedBody();
-        $product['id'] = $args['product_id'];
+        $product['product_id'] = $args['product_id'];
         $this->productRep->update($product);
         
         return $response;
@@ -157,7 +157,7 @@ class AdminController extends BaseController
 
     public function updateImg($request, $response, $args): Response
     {
-        $product_id = ($request->getParsedBody())['id'];
+        $product_id = ($request->getParsedBody())['product_id'];
         $img_name = $this->productRep->getImgNameById($product_id);
         unlink('../public/static/img/tmp/' . $img_name);
 

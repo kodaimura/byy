@@ -31,16 +31,16 @@
 								{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 							</div>
 							<div class="text-end fw-bolder fs-2 text-danger lh-1">
-								<small class="text-muted fs-5"> {{p.quantity}} </small>
-								<span>¥{{p.price}}</span>
-								<span>(¥{{(p.price * tax_rate)|round}})</span>
+								<small class="text-muted fs-5"> {{p.unit_quantity}} </small>
+								<span>¥{{p.unit_price}}</span>
+								<span>(¥{{(p.unit_price * tax_rate)|round}})</span>
 							</div>
 							<hr class="text-success my-2">
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
     					<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3">
     						<button class="btn btn-primary rounded-pill col text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">&nbsp;&nbsp;編集&nbsp;&nbsp;</button>&nbsp;&nbsp;
-    							<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.id}})" style="z-index:1">&nbsp;&nbsp;削除&nbsp;&nbsp;</button>
+    							<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">&nbsp;&nbsp;削除&nbsp;&nbsp;</button>
     					</div>
   					</div>
 					</div>
@@ -62,9 +62,9 @@
 	<div class="nav category-tabs mb-3">
 		{% for c in categories %}
 			{% if loop.index == 1 %}
-			<a href="#{{c.id}}" class="nav-item category-tab active" data-bs-toggle="tab">{{c.category_name}}</a>
+			<a href="#{{c.category_id}}" class="nav-item category-tab active" data-bs-toggle="tab">{{c.category_name}}</a>
 			{% else %}
-    	<a href="#{{c.id}}" class="nav-item category-tab" data-bs-toggle="tab">{{c.category_name}}</a>
+    	<a href="#{{c.category_id}}" class="nav-item category-tab" data-bs-toggle="tab">{{c.category_name}}</a>
     	{% endif %}
    	{% endfor %}
 	</div>
@@ -74,13 +74,13 @@
 	<div class="tab-content mb-4">
 	{% for c in categories %}
 		{% if loop.index == 1 %}
-		<div id="{{c.id}}" class="tab-pane active show">
+		<div id="{{c.category_id}}" class="tab-pane active show">
 		{% else %}
-		<div id="{{c.id}}" class="tab-pane">
+		<div id="{{c.category_id}}" class="tab-pane">
   	{% endif %}
 			<div class="row">
     	{% for p in products %}
-    		{% if p.category_id == c.id %}
+    		{% if p.category_id == c.category_id %}
 				<div class="card col-6">
 					<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 					<div class="card-img-overlay">
@@ -96,16 +96,16 @@
 							{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 						</div>
 						<div class="text-end fw-bolder fs-4 text-danger lh-1">
-							<small class="text-muted fs-6"> {{p.quantity}} </small>
-							<span>¥{{p.price}}</span>
-							<span>(¥{{(p.price * tax_rate)|round}})</span>
+							<small class="text-muted fs-6"> {{p.unit_quantity}} </small>
+							<span>¥{{p.unit_price}}</span>
+							<span>(¥{{(p.unit_price * tax_rate)|round}})</span>
 						</div>
 						<hr class="text-success my-2">
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
     				<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3 gap-2">
     					<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">&nbsp;&nbsp;編集&nbsp;&nbsp;</button>
-    					<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.id}})" style="z-index:1">
+    					<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">
     					&nbsp;&nbsp;削除&nbsp;&nbsp;</button>
     				</div>
   				</div>
@@ -127,7 +127,7 @@
    		<label for="category_id">分類</label>
    		<select name="category_id" class="form-select">
    			{% for c in categories %}
-   			<option value="{{c.id}}" label="{{c.category_name}}"></option>
+   			<option value="{{c.category_id}}" label="{{c.category_name}}"></option>
    			{% endfor %}
    		</select>
    	</div>
@@ -141,14 +141,14 @@
    			<input type="text" class="form-control" name="production_area">
    		</div>
    		<div class="col-md-6 mb-6">
-   			<label for="quantity">数量</label>
-   			<input type="text" class="form-control" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
+   			<label for="unit_quantity">数量</label>
+   			<input type="text" class="form-control" name="unit_quantity" placeholder="1袋, 1/2カット, 1本, etc">
    		</div>
    	</div>
    	<div class="row">
    		<div class="col-md-6 mb-1">
-   			<label for="price">価格 (税抜)</label>
-   			<input type="number" class="form-control" name="price" required>
+   			<label for="unit_price">価格 (税抜)</label>
+   			<input type="number" class="form-control" name="unit_price" required>
    		</div>
    	</div>
    	<div class="row">
@@ -188,7 +188,7 @@
    							<label for="category_id">分類</label>
    							<select name="category_id" class="form-select">
    								{% for c in categories %}
-   								<option value="{{c.id}}" label="{{c.category_name}}"></option>
+   								<option value="{{c.category_id}}" label="{{c.category_name}}"></option>
    								{% endfor %}
    							</select>
    						</div>
@@ -207,14 +207,14 @@
    							<input type="text" class="form-control" name="production_area">
    						</div>
    						<div class="col-md-6 mb-1">
-   							<label for="quantity">数量</label>
-   							<input type="text" class="form-control" name="quantity" placeholder="1袋, 1/2カット, 1本, etc">
+   							<label for="unit_quantity">数量</label>
+   							<input type="text" class="form-control" name="unit_quantity" placeholder="1袋, 1/2カット, 1本, etc">
    						</div>
    					</div>
    					<div class="row">
    						<div class="col-md-6 mb-1">
-   							<label for="price" class="text-success">価格 (税抜)</label>
-   							<input type="number" class="form-control" name="price">
+   							<label for="unit_price" class="text-success">価格 (税抜)</label>
+   							<input type="number" class="form-control" name="unit_price">
    						</div>
    						<div class="col-md-6 mb-1">
    							<label for="stock_flg" class="text-success">在庫</label>
@@ -251,7 +251,7 @@
   				<!-- 商品情報更新フォーム -->
   				<!-- 商品画像更新フォーム -->
   				<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light d-none">
-  					<input type="hidden" name="id">
+  					<input type="hidden" name="product_id">
       				<div class="mb-3">
    						<label for="img">画像</label>
    						<input type="file" class="form-control" name="img" required>
@@ -269,9 +269,9 @@
 	<!-- 更新モーダル -->
 
 	<script type="text/javascript">
-  	const deleteProduct = (id) => {
+  	const deleteProduct = (product_id) => {
   		if (window.confirm("削除しますか？")) {
-  			fetch(`products/${id}`, {method: 'DELETE'})
+  			fetch(`products/${product_id}`, {method: 'DELETE'})
   			.then(response => {
         		window.location.reload();
       		});
@@ -280,12 +280,12 @@
 
   	const setupModal = (product) => {
   		const form = document.forms.updateForm;
-  		form.product_id.value = product.id
+  		form.product_id.value = product.product_id
   		form.product_name.value = product.product_name
   		form.category_id.value = product.category_id
   		form.production_area.value = product.production_area
-  		form.quantity.value = product.quantity
-  		form.price.value = product.price
+  		form.unit_quantity.value = product.unit_quantity
+  		form.unit_price.value = product.unit_price
   		form.stock_flg.value = product.stock_flg
   		form.recommend_flg.value = product.recommend_flg
   		form.display_flg.value = product.display_flg
@@ -297,12 +297,12 @@
 
   	document.getElementById('send').addEventListener('click', () => {
   		const form = document.forms.updateForm;
-  		const id = form.product_id.value
+  		const product_id = form.product_id.value
   		const product_name = form.product_name.value
   		const category_id = form.category_id.value
   		const production_area = form.production_area.value
-  		const quantity = form.quantity.value
-  		const price = form.price.value
+  		const unit_quantity = form.unit_quantity.value
+  		const unit_price = form.unit_price.value
   		const stock_flg = form.stock_flg.value
   		const recommend_flg = form.recommend_flg.value
   		const display_flg = form.display_flg.value
@@ -313,11 +313,11 @@
   		positionY = window.pageYOffset;
     	localStorage.setItem('positionY', positionY);
 
-    	fetch(`products/${id}`, {
+    	fetch(`products/${product_id}`, {
     		method: 'POST',
     		headers: {'Content-Type': 'application/json'},
     		body: JSON.stringify({
-        		product_name, category_id, production_area, quantity, price, 
+        		product_name, category_id, production_area, unit_quantity, unit_price, 
         		stock_flg, recommend_flg, display_flg, seq, comment
         	})
       	}).then(response => {

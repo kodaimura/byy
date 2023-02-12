@@ -16,7 +16,7 @@ class GeneralRepository extends BaseRepository
         );
         $stmt->bindValue(':key1', $key1, PDO::PARAM_STR);
         $stmt->execute();
-        return ($stmt->fetch())['value'];
+        return ($stmt->fetch(PDO::FETCH_ASSOC))['value'];
     }
 
     public function updateByKey1($key1, $value) {

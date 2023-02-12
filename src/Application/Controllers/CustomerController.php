@@ -8,7 +8,7 @@ use App\Application\Controllers\BaseController;
 use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
 use App\Application\Repositories\CustomerRepository;
-use App\Application\Repositories\OrderRepository;
+use App\Application\Repositories\OrderHistoryRepository;
 use App\Application\Repositories\GeneralRepository;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
@@ -21,7 +21,7 @@ class CustomerController extends BaseController
     protected CategoryRepository $categoryRep;
     protected GeneralRepository $generalRep;
     protected CustomerRepository $customerRep;
-    protected OrderRepository $orderRep;
+    protected OrderHistoryRepository $orderRep;
 
     public function __construct(ContainerInterface $app) 
     {
@@ -29,7 +29,7 @@ class CustomerController extends BaseController
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->customerRep = $app->get(CustomerRepository::class);
-        $this->orderRep = $app->get(OrderRepository::class);
+        $this->orderRep = $app->get(OrderHistoryRepository::class);
         $this->generalRep = $app->get(GeneralRepository::class);
     }
 
@@ -53,7 +53,7 @@ class CustomerController extends BaseController
    public function order($request, $response, $args): Response
    {
         $access_token = ($request->getParsedBody())['access_token'];
-        $orders = json_decode(($request->getParsedBody())['order']);
+        $orders = json_decode(($request->getParsedBody())['orders']);
         $header = [('Authorization: Bearer ' . $access_token)];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
@@ -72,17 +72,17 @@ class CustomerController extends BaseController
             foreach ($orders as $order) {
                 $this->orderRep->upsert([
                     'customer_id' => $userId,
-                    'product_id' => $order->{'id'},
-                    'count' => $order->{'order_quantity'}
+                    'product_id' => $order->{'product_id'},
+                    'order_count' => $order->{'order_count'}
                 ]);
-                $total_price += intval($order->{'order_quantity'}) * intval($order->{'price'});
+                $total_price += intval($order->{'order_count'}) * intval($order->{'unit_price'});
             }
-
+            
             $this->customerRep->upsert([
                 'customer_id' => $userId,
                 'customer_name' => $userName,
-                'visits_count' => 1,
-                'cumulative_payment' => $total_price
+                'visit_count' => 1,
+                'total_payment' => $total_price
             ]);
         }
 

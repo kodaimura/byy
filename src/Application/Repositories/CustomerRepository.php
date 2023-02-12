@@ -15,15 +15,15 @@ class CustomerRepository extends BaseRepository
     		"SELECT 
     			customer_id,
     			customer_name,
-    			visits_count,
-    			cumulative_payment,
+    			visit_count,
+    			total_payment,
     			update_at
 		 	 FROM customer
 		 	 WHERE customer_id = :customer_id"
     	);
     	$stmt->bindValue(':customer_id', $customer_id, PDO::PARAM_STR);
     	$stmt->execute();
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function upsert($values) {
@@ -40,18 +40,18 @@ class CustomerRepository extends BaseRepository
     		"INSERT INTO customer (
     			customer_id,
     			customer_name, 
-    			visits_count,
-    			cumulative_payment
+    			visit_count,
+    			total_payment
 		 	 ) VALUES (
 		 	 	:customer_id,
 		 	 	:customer_name,
 		 	 	1,
-		 	 	:cumulative_payment
+		 	 	:total_payment
 		 	 )"
     	);
     	$stmt->bindValue(':customer_id', $values['customer_id'], PDO::PARAM_STR);
     	$stmt->bindValue(':customer_name', $values['customer_name'], PDO::PARAM_STR);
-    	$stmt->bindValue(':cumulative_payment', $values['cumulative_payment'], PDO::PARAM_INT);
+    	$stmt->bindValue(':total_payment', $values['total_payment'], PDO::PARAM_INT);
     	$stmt->execute();
     }
 
@@ -59,12 +59,12 @@ class CustomerRepository extends BaseRepository
     	$stmt = $this->db->prepare(
     		"UPDATE customer SET
     			customer_name = :customer_name,
-    			visits_count = visits_count + 1,
-    			cumulative_payment = cumulative_payment + :cumulative_payment
+    			visit_count = visit_count + 1,
+    			total_payment = total_payment + :total_payment
 		 	 WHERE customer_id = :customer_id"
     	);
     	$stmt->bindValue(':customer_name', $values['customer_name'], PDO::PARAM_STR);
-    	$stmt->bindValue(':cumulative_payment', $values['cumulative_payment'], PDO::PARAM_INT);
+    	$stmt->bindValue(':total_payment', $values['total_payment'], PDO::PARAM_INT);
     	$stmt->bindValue(':customer_id', $values['customer_id'], PDO::PARAM_STR);
     	$stmt->execute();
     }

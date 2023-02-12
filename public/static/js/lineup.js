@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('DOMContentLoaded', (event) => {
-  localStorage.setItem('order', "[]")
+  localStorage.setItem('orders', "[]")
   const positionY = localStorage.getItem('positionY');
   if (positionY !== null) {
     scrollTo(0, positionY);
@@ -41,37 +41,37 @@ const countUp = (id) => {
 }
 
 const setupModal = (product) => {
-  document.getElementById("orderQuantity").value = 0
-  document.getElementById("modalProductId").value = product.id
+  document.getElementById("orderCount").value = 0
+  document.getElementById("modalProductId").value = product.product_id
   document.getElementById("modalImg").innerHTML = `<img src="/static/img/tmp/${product.img_name}" class="rounded mx-auto d-block">`
   document.getElementById("modalProductName").innerHTML = product.product_name
   document.getElementById("modalProductionArea").innerHTML = `${product.production_area}産`
-  document.getElementById("modalQuantity").innerHTML = product.quantity
-  document.getElementById("modalPrice").innerHTML = `${product.price}`
-  document.getElementById("modalTaxPrice").innerHTML = `${Math.round(product.price * taxRate)}`
+  document.getElementById("modalUnitQuantity").innerHTML = product.unit_quantity
+  document.getElementById("modalUnitPrice").innerHTML = `${product.unit_price}`
+  document.getElementById("modalTaxPrice").innerHTML = `${Math.round(product.unit_price * taxRate)}`
 }
 
 const addToCart = () => {
-  const id = document.getElementById("modalProductId").value
-  const name = document.getElementById("modalProductName").innerHTML
-  const area = document.getElementById("modalProductionArea").innerHTML
-  const price = document.getElementById("modalPrice").innerHTML
-  const oq = parseInt(document.getElementById("orderQuantity").value)
+  const product_id = document.getElementById("modalProductId").value
+  const product_name = document.getElementById("modalProductName").innerHTML
+  const production_area = document.getElementById("modalProductionArea").innerHTML
+  const unit_price = document.getElementById("modalUnitPrice").innerHTML
+  const order_count = parseInt(document.getElementById("orderCount").value)
 
-  const orders0 = JSON.parse(localStorage.getItem('order'))
+  const orders0 = JSON.parse(localStorage.getItem('orders'))
   let orders = []
 
   let order = {
-    "id": id,
-    "product_name": name,
-    "production_area": area,
-    "price": price,
-    "order_quantity": oq
+    "product_id": product_id,
+    "product_name": product_name,
+    "production_area": production_area,
+    "unit_price": unit_price,
+    "order_count": order_count
   }
 
   for (let o of orders0) {
-    if (o.id == id) {
-      order.order_quantity += o.order_quantity
+    if (o.product_id == product_id) {
+      order.order_count += o.order_count
     } else {
       orders.push(o)
     }
@@ -79,8 +79,8 @@ const addToCart = () => {
   
   orders.push(order)
 
-  if (oq > 0) {
-    localStorage.setItem('order', JSON.stringify(orders))
+  if (order_count > 0) {
+    localStorage.setItem('orders', JSON.stringify(orders))
     displayCircle()
 
     document.getElementById("modalMessage").innerHTML = 
@@ -99,7 +99,7 @@ const addToCart = () => {
 }
 
 const setupModal2 = () => {
-  const orders = JSON.parse(localStorage.getItem('order'))
+  const orders = JSON.parse(localStorage.getItem('orders'))
 
   let contents = 
   `<table class="table">
@@ -110,12 +110,12 @@ const setupModal2 = () => {
 
   let priceSum = 0
   for (const order of orders) {
-    priceSum += (parseInt(order.price) * parseInt(order.order_quantity))
+    priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
     contents += 
     `<tr>
       <td>${order.product_name} (${order.production_area})</td>
-      <td>${order.order_quantity}</td>
-      <td>¥${order.price * order.order_quantity}</td>
+      <td>${order.order_count}</td>
+      <td>¥${order.unit_price * order.order_count}</td>
     </tr>`
   }
 
@@ -149,8 +149,8 @@ const finalizeOrder = () => {
     if(!liff.isInClient()){
       //liff.init({liffId})
       //.then(()=>{
-        const accessToken = "eyJhbGciOiJIUzI1NiJ9.R21OMMpyft6AhuAs5X1JNMr60ifruzW10kPoNPy8Xfj9ka7u1epKvcJ2b-FsovIulRPzatmgI0DbI-msbCYcQdL5Qul6cD-XFyVSGwTG7BhteN5Mcb_xqi3NQMCNTtIc.D6-ON6F7y6Kqq7JsUw42C_Qsia4E1QzzKGllFE2fjkQ"//liff.getAccessToken();
-        const orders = JSON.parse(localStorage.getItem('order'))
+        const accessToken = "eyJhbGciOiJIUzI1NiJ9.xeO1J-SEbuatwG4r5wJsF3lHaCXxcy854hqjcORpID5FJRxh-tde0YTjAxh5MpzvWPAUVELS47uFCpUDvGYSyw0dzSbBkfZo2i0-6Ms3942D1JYWSk81S_TzQwm7fohJ.s4owF5b29xE6zGy_V2Tbj_TjenzJBQ8-eaiHlttlQ6U"//liff.getAccessToken();
+        const orders = JSON.parse(localStorage.getItem('orders'))
 
         let userName = ''
 /*
@@ -169,9 +169,9 @@ const finalizeOrder = () => {
         let priceSum = 0
 
         for (const order of orders) {
-          priceSum += (parseInt(order.price) * parseInt(order.order_quantity))
+          priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
           message += 
-          `${order.product_name} (${order.production_area})  ${order.price}円×${order.order_quantity}`
+          `${order.product_name} (${order.production_area})  ${order.unit_price}円×${order.order_count}`
         }
 
         message += 
@@ -191,7 +191,7 @@ const finalizeOrder = () => {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-              order: localStorage.getItem('order'),
+              orders: localStorage.getItem('orders'),
               access_token: accessToken
             })
           })
@@ -206,7 +206,7 @@ const finalizeOrder = () => {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-              order: localStorage.getItem('order'),
+              orders: localStorage.getItem('orders'),
               access_token: accessToken
             })
           })
@@ -235,7 +235,7 @@ const setupModal3 = () => {
 }
 
 const setupModal4 = () => {
-  const orders = JSON.parse(localStorage.getItem('order'))
+  const orders = JSON.parse(localStorage.getItem('orders'))
 
   let contents = 
   `<table class="table">
@@ -246,19 +246,19 @@ const setupModal4 = () => {
 
   let priceSum = 0
   for (let i = 0; i < orders.length; i++) {
-    priceSum += parseInt(orders[i].price)
+    priceSum += parseInt(orders[i].unit_price)
     contents += 
     `<tr>
-      <td><input type="hidden" value="${orders[i].id}"></td>
+      <td><input type="hidden" value="${orders[i].product_id}"></td>
       <td>${orders[i].product_name} (${orders[i].production_area})</td>
       <td>
-      <button onclick="countDown('oq${i}')">ー</button>
-      <input type="number" id="oq${i}" min="0" max="99" value="${orders[i].order_quantity}">
-      <button onclick="countUp('oq${i}')">＋</button>
+      <button onclick="countDown('oc${i}')">ー</button>
+      <input type="number" id="oc${i}" min="0" max="99" value="${orders[i].order_count}">
+      <button onclick="countUp('oc${i}')">＋</button>
       </td>
       <td><input type="hidden" value="${orders[i].product_name}"></td>
       <td><input type="hidden" value="${orders[i].production_area}"></td>
-      <td><input type="hidden" value="${orders[i].price}"></td>
+      <td><input type="hidden" value="${orders[i].unit_price}"></td>
     </tr>`
   }
 
@@ -274,30 +274,30 @@ const cartUpdateAndSetUpModal2 = () => {
 
   const table = document.getElementById("modal4TBody")
   for (let row of table.rows) {
-    let id = row.children[0].children[0].value
-    let oq = row.children[2].children[1].value
+    let product_id = row.children[0].children[0].value
+    let order_count = row.children[2].children[1].value
     let name = row.children[3].children[0].value
     let area = row.children[4].children[0].value
-    let price = row.children[5].children[0].value
+    let unit_price = row.children[5].children[0].value
 
     let order = {
-      "id": id,
+      "product_id": product_id,
       "product_name": name,
       "production_area": area,
-      "price": price,
-      "order_quantity": oq
+      "unit_price": unit_price,
+      "order_count": order_count
     }
-    if (oq != 0) {
+    if (order_count != 0) {
       orders.push(order)
     }
   }
-  localStorage.setItem('order', JSON.stringify(orders))
+  localStorage.setItem('orders', JSON.stringify(orders))
   displayCircle()
   setupModal2()
 }
 
 const displayCircle = () => {
   document.getElementById("circle").innerHTML = 
-  (localStorage.getItem('order') != "[]")? 
+  (localStorage.getItem('orders') != "[]")? 
   `<div class="circle-inside bg-success"></div>` : "";
 }

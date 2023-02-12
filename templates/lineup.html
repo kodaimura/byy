@@ -26,9 +26,9 @@
 								{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 							</div>
 							<div class="text-end fw-bolder fs-2 text-danger lh-1">
-								<small class="text-muted fs-5"> {{p.quantity}} </small>
-								<span>¥{{p.price}}</span>
-								<span>(¥{{(p.price * tax_rate)|round}})</span>
+								<small class="text-muted fs-5"> {{p.unit_quantity}} </small>
+								<span>¥{{p.unit_price}}</span>
+								<span>(¥{{(p.unit_price * tax_rate)|round}})</span>
 							</div>
 							<hr class="text-success my-2">
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
@@ -64,9 +64,9 @@
 	<div class="nav category-tabs mb-3">
 		{% for c in categories %}
 			{% if loop.index == 1 %}
-			<a href="#{{c.id}}" class="nav-item category-tab active" data-bs-toggle="tab">{{c.category_name}}</a>
+			<a href="#{{c.category_id}}" class="nav-item category-tab active" data-bs-toggle="tab">{{c.category_name}}</a>
 			{% else %}
-    	<a href="#{{c.id}}" class="nav-item category-tab" data-bs-toggle="tab">{{c.category_name}}</a>
+    	<a href="#{{c.category_id}}" class="nav-item category-tab" data-bs-toggle="tab">{{c.category_name}}</a>
     	{% endif %}
    	{% endfor %}
 	</div>
@@ -76,13 +76,13 @@
 	<div class="tab-content mb-4">
 	{% for c in categories %}
 		{% if loop.index == 1 %}
-		<div id="{{c.id}}" class="tab-pane active show">
+		<div id="{{c.category_id}}" class="tab-pane active show">
 		{% else %}
-		<div id="{{c.id}}" class="tab-pane">
+		<div id="{{c.category_id}}" class="tab-pane">
   	{% endif %}
 			<div class="row">
     	{% for p in products %}
-    		{% if p.category_id == c.id %}
+    		{% if p.category_id == c.category_id %}
 				<div class="card col-6">
 					<img src="/static/img/tmp/{{p.img_name}}" class="rounded">
 					<div class="card-img-overlay">
@@ -95,9 +95,9 @@
 							{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 						</div>
 						<div class="text-end fw-bolder fs-4 text-danger lh-1">
-							<small class="text-muted fs-6"> {{p.quantity}} </small>
-							<span>¥{{p.price}}</span>
-							<span>(¥{{(p.price * tax_rate)|round}})</span>
+							<small class="text-muted fs-6"> {{p.unit_quantity}} </small>
+							<span>¥{{p.unit_price}}</span>
+							<span>(¥{{(p.unit_price * tax_rate)|round}})</span>
 						</div>
 						<hr class="text-success my-2">
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
@@ -140,15 +140,15 @@
 					(<span class="small" id="modalProductionArea"></span>)
 					</div>
 					<div class="text-end fw-bolder fs-3 text-danger">
-						<small class="text-muted fs-5" id="modalQuantity"></small>
-						¥<span id="modalPrice"></span> (¥<span id="modalTaxPrice"></span>)
+						<small class="text-muted fs-5" id="modalUnitQuantity"></small>
+						¥<span id="modalUnitPrice"></span> (¥<span id="modalTaxPrice"></span>)
 					</div>
 				</div>
 			</div>
     		<div class="modal-footer">
-    			<button onclick="countDown('orderQuantity')">ー</button>
-    			<input type="number" id="orderQuantity" min="0" max="99" value="0">
-    			<button onclick="countUp('orderQuantity')">＋</button>個
+    			<button onclick="countDown('orderCount')">ー</button>
+    			<input type="number" id="orderCount" min="0" max="99" value="0">
+    			<button onclick="countUp('orderCount')">＋</button>個
     			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="addToCart()">
     				&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     			</button>
