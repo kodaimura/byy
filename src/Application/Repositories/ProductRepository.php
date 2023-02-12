@@ -171,7 +171,7 @@ class ProductRepository extends BaseRepository
     	$stmt->bindValue(':product_id', $product_id, PDO::PARAM_INT);
     	$stmt->execute();
 
-    	return ($stmt->fetch(PDO::FETCH_ASSOC))['img_name'];
+    	return $stmt->fetch(PDO::FETCH_ASSOC)['img_name'];
     }
 
     public function update($product) {

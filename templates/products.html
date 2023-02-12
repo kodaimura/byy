@@ -252,7 +252,7 @@
   				<!-- 商品画像更新フォーム -->
   				<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light d-none">
   					<input type="hidden" name="product_id">
-      				<div class="mb-3">
+      			<div class="mb-3">
    						<label for="img">画像</label>
    						<input type="file" class="form-control" name="img" required>
    					</div>
@@ -292,22 +292,23 @@
   		form.seq.value = product.seq
   		form.comment.value = product.comment
 
-  		document.forms.updateImgForm.id.value = product.id
+  		document.forms.updateImgForm.product_id.value = product.product_id
   	}
 
   	document.getElementById('send').addEventListener('click', () => {
   		const form = document.forms.updateForm;
   		const product_id = form.product_id.value
-  		const product_name = form.product_name.value
+
   		const category_id = form.category_id.value
+  		const product_name = form.product_name.value
   		const production_area = form.production_area.value
   		const unit_quantity = form.unit_quantity.value
   		const unit_price = form.unit_price.value
   		const stock_flg = form.stock_flg.value
   		const recommend_flg = form.recommend_flg.value
   		const display_flg = form.display_flg.value
-  		const seq = form.seq.value
   		const comment = form.comment.value
+  		const seq = form.seq.value
 
   		//現在のスクロール位置
   		positionY = window.pageYOffset;
@@ -317,8 +318,8 @@
     		method: 'POST',
     		headers: {'Content-Type': 'application/json'},
     		body: JSON.stringify({
-        		product_name, category_id, production_area, unit_quantity, unit_price, 
-        		stock_flg, recommend_flg, display_flg, seq, comment
+        		category_id, product_name, production_area, unit_quantity, unit_price, 
+        		stock_flg, recommend_flg, display_flg, comment, seq
         	})
       	}).then(response => {
       		window.location.reload();
@@ -343,7 +344,6 @@
 				document.getElementById('product_detail').classList.add('d-none');
 				document.getElementById('switch-Button').innerHTML = 'すべて表示'
 			}
-			
 		}
 
   </script>
