@@ -10,16 +10,6 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
 return function (App $app) {
-    $app->options('/{routes:.*}', function (Request $request, Response $response) {
-        // CORS Pre-Flight OPTIONS Request Handler
-        return $response;
-    });
-
-    $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Hello world!');
-        return $response;
-    });
-
     $app->group('/wakamiya', function (Group $grp) {
         $grp->get('', CustomerController::class. ':lineupPage');
         $grp->post('/orders', CustomerController::class. ':order');
