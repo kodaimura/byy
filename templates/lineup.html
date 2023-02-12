@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}バカ安八百屋ドライブスルー注文{% endblock %}
 
 {% block content %}
 	<div class="container">
@@ -11,7 +11,7 @@
   		{% for p in recommends %}
   			{% if loop.index == 1 %}
 				<div class="carousel-item active">
-			{% else %}
+				{% else %}
 				<div class="carousel-item">
   			{% endif %}
 					<div class="card w-60 mx-auto">
@@ -134,17 +134,17 @@
       	<input type="hidden" id="modalProductId">
       	<div class="modal-body">
       		<div id="modalImg"></div>
-			<div>
-				<div class="fw-bold fs-3">
-					<span id="modalProductName"></span>
-					(<span class="small" id="modalProductionArea"></span>)
-					</div>
-					<div class="text-end fw-bolder fs-3 text-danger">
-						<small class="text-muted fs-5" id="modalUnitQuantity"></small>
-						¥<span id="modalUnitPrice"></span> (¥<span id="modalTaxPrice"></span>)
+					<div>
+						<div class="fw-bold fs-3">
+							<span id="modalProductName"></span>
+							(<span class="small" id="modalProductionArea"></span>)
+						</div>
+						<div class="text-end fw-bolder fs-3 text-danger">
+							<small class="text-muted fs-5" id="modalUnitQuantity"></small>
+							¥<span id="modalUnitPrice"></span> (¥<span id="modalTaxPrice"></span>)
+						</div>
 					</div>
 				</div>
-			</div>
     		<div class="modal-footer">
     			<button onclick="countDown('orderCount')">ー</button>
     			<input type="number" id="orderCount" min="0" max="99" value="0">
@@ -168,15 +168,14 @@
         	<h5 class="modal-title">注文確認</h5>
         	<button type="button" class="btn-close" id="modal2Close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
-      	<div class="modal-body" id="modal2Body">
-		</div>
-			<div class="modal-footer">
-				<button class="btn btn-secondary rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal4" style="z-index:1;" onclick="setupModal4()">
+      	<div class="modal-body" id="modal2Body"></div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal4" style="z-index:1;" onclick="setupModal4()">
 						&nbsp;&nbsp;変更&nbsp;&nbsp;
 					</button>
-				<button class="btn btn-info rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal3" style="z-index:1;" onclick="setupModal3()">
+					<button class="btn btn-info rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal3" style="z-index:1;" onclick="setupModal3()">
 						&nbsp;&nbsp;支払・受取設定へ&nbsp;&nbsp;
-				</button>
+					</button>
   			</div>
     	</div>
   	</div>
@@ -194,44 +193,43 @@
       	<form method="POST" onsubmit="return false" name="modal3Form">
       		<div class="modal-body">
       			<div class="mb-1">
-   					<label for="receive_time">時間</label>
-   					<select name="receive_time" class="form-select">
-   						<option value="10:00 〜 11:00" label="10:00 〜 11:00"></option>
-   						<option value="11:00 〜 12:00" label="11:00 〜 12:00"></option>
-   						<option value="12:00 〜 13:00" label="12:00 〜 13:00"></option>
-   						<option value="13:00 〜 14:00" label="13:00 〜 14:00"></option>
-   						<option value="14:00 〜 15:00" label="14:00 〜 15:00"></option>
-   						<option value="15:00 〜 16:00" label="15:00 〜 16:00"></option>
-   						<option value="16:00 〜 17:00" label="16:00 〜 17:00"></option>
-   						<option value="17:00 〜 18:00" label="17:00 〜 18:00"></option>
-   						<option value="18:00 〜 19:00" label="18:00 〜 19:00"></option>
-   					</select>
-   				</div>
+   						<label for="receive_time">時間</label>
+   						<select name="receive_time" class="form-select">
+   							<option value="10:00 〜 11:00" label="10:00 〜 11:00"></option>
+   							<option value="11:00 〜 12:00" label="11:00 〜 12:00"></option>
+   							<option value="12:00 〜 13:00" label="12:00 〜 13:00"></option>
+   							<option value="13:00 〜 14:00" label="13:00 〜 14:00"></option>
+   							<option value="14:00 〜 15:00" label="14:00 〜 15:00"></option>
+   							<option value="15:00 〜 16:00" label="15:00 〜 16:00"></option>
+   							<option value="16:00 〜 17:00" label="16:00 〜 17:00"></option>
+   							<option value="17:00 〜 18:00" label="17:00 〜 18:00"></option>
+   							<option value="18:00 〜 19:00" label="18:00 〜 19:00"></option>
+   						</select>
+   					</div>
       			<div class="mb-1">
-   					<label for="how_to_pay">支払方法</label>
-   					<select name="how_to_pay" class="form-select">
-   						<option value="現金" label="現金"></option>
-   						<option value="PayPay" label="PayPay"></option>
-   					</select>
-   				</div>
-   				<div class="mb-1">
-   					<label for="how_to_receive">受取方法</label>
-   					<select name="how_to_receive" class="form-select">
-   						<option value="ドライブスルー" label="ドライブスルー"></option>
-   						<option value="配達" label="配達"></option>
-   					</select>
-   				</div>
-   				<div class="mb-1">
-   					<label for="address">住所 <span class="text-danger small">※配達のお客様のみ</span></label>
-   					<input type="text" name="address" class="form-control">
-   				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-primary rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="finalizeOrder()">
-					&nbsp;&nbsp;注文確定&nbsp;&nbsp;
-				</button>
-  			</div>
-  		</form>
+   						<label for="how_to_pay">支払方法</label>
+   						<select name="how_to_pay" class="form-select">
+   							<option value="現金" label="現金"></option>
+   							<option value="PayPay" label="PayPay"></option>
+   						</select>
+   					</div>
+   					<div class="mb-1">
+   						<label for="how_to_receive">受取方法</label>
+   						<select name="how_to_receive" class="form-select">
+   							<option value="ドライブスルー" label="ドライブスルー"></option>
+   							<option value="配達" label="配達"></option>
+   						</select>
+   					</div>
+   					<div class="mb-1">
+   						<label for="address">住所 <span class="text-danger small">※配達のお客様のみ</span></label>
+   						<input type="text" name="address" class="form-control">
+   					</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="finalizeOrder()">&nbsp;&nbsp;注文確定&nbsp;&nbsp;
+						</button>
+  				</div>
+  			</form>
   			<div id="modal3Message" class="position-absolute top-50 start-50 translate-middle">
   			</div>
     	</div>
@@ -247,13 +245,12 @@
         	<h5 class="modal-title">注文変更</h5>
         	<button type="button" class="btn-close" id="modal4Close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
-      	<div class="modal-body" id="modal4Body">
-		</div>
-		<div class="modal-footer">
-			<button class="btn btn-success rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal2" style="z-index:1;" onclick="cartUpdateAndSetUpModal2()">
-				&nbsp;&nbsp;保存&nbsp;&nbsp;
-			</button>
-  		</div>
+      	<div class="modal-body" id="modal4Body"></div>
+				<div class="modal-footer">
+					<button class="btn btn-success rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal2" style="z-index:1;" onclick="cartUpdateAndSetUpModal2()">
+					&nbsp;&nbsp;保存&nbsp;&nbsp;
+					</button>
+  			</div>
     	</div>
   	</div>
 	</div>

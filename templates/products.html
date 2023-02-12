@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}バカ安八百屋ドライブスルー管理ページ{% endblock %}
 
 {% block content %}
-	
 	<div class="container">
 	<a href="general" class="fs-5 btn btn-secondary">その他設定</a>
 	<hr>
@@ -89,7 +88,6 @@
 						{% elseif p.stock_flg == '0' %}
 						<img src="/static/img/urikire_widget_img.png" class="w-100">
 						{% endif %}
-						
 					</div>
   				<div class="card-body position-relative pb-5">
 						<div class="card-title fw-bold lh-1">
@@ -249,6 +247,7 @@
         		<input type="button" class="btn btn-primary mt-3" id="send" value="更新">
   				</form>
   				<!-- 商品情報更新フォーム -->
+
   				<!-- 商品画像更新フォーム -->
   				<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light d-none">
   					<input type="hidden" name="product_id">
