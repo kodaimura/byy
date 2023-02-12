@@ -10,3 +10,10 @@ deny from all
   RewriteRule ^$ public/ [L]
   RewriteRule (.*) public/$1 [L]
 </IfModule>
+
+
+# 本番環境
+# SetEnv APP_ENV 'production'
+
+# ローカル環境
+SetEnv APP_ENV 'local'

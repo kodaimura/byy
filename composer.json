@@ -1,11 +1,13 @@
 {
     "require": {
         "firebase/php-jwt": "^5.5",
+        "monolog/monolog": "^3.3",
         "php-di/php-di": "^7.0",
         "slim/psr7": "^1.6",
         "slim/slim": "4.*",
         "slim/twig-view": "^3.3",
-        "tuupola/slim-jwt-auth": "^3.7"
+        "tuupola/slim-jwt-auth": "^3.7",
+        "vlucas/phpdotenv": "^5.5"
     },
     "autoload": {
         "psr-4": {

@@ -12,6 +12,12 @@ use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// .htaccess SetEnv APP_ENV
+$appEnv = getenv('APP_ENV');
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../env');
+$dotenv->load();
+
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
@@ -21,15 +27,15 @@ if (false) { // Should be set to true in production
 
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
+
+if ($appEnv == 'local') {
+    $settings = require __DIR__ . '/../app/settings_local.php';
+}
 $settings($containerBuilder);
 
 // Set up dependencies
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
-
-// Set up repositories
-$repositories = require __DIR__ . '/../app/repositories.php';
-$repositories($containerBuilder);
 
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
@@ -80,9 +86,9 @@ $errorMiddleware->setDefaultErrorHandler($errorHandler);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
 	"path" => ["/wakamiya/admin"],
 	"secure" => true,
-	"algorithm" => ["HS256"],
+	"algorithm" => $_ENV['JWT_ALG'],
     "relaxed" => ["localhost"],
-    "secret" => "supersecretkeyyoushouldnotcommittogithub"
+    "secret" => $_ENV['JWT_SECRET']
 ]));
 
 // Run App & Emit Response

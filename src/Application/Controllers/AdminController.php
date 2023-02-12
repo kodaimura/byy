@@ -43,7 +43,7 @@ class AdminController extends BaseController
         $correct_password = $this->generalRep->getOneByKey1('admin-password');
 
         if ($password === $correct_password) {
-            $token = JWT::encode(['name' => 'wakamiya'], 'supersecretkeyyoushouldnotcommittogithub', 'HS256');
+            $token = JWT::encode(['name' => 'wakamiya'], $_ENV['JWT_SECRET'],  $_ENV['JWT_ALG']);
             $cookies = (new Cookies())
             ->set('token', [
                 'value'   => $token,

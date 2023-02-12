@@ -13,7 +13,7 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
             return new Settings([
-                'displayErrorDetails' => false,
+                'displayErrorDetails' => true,
                 'logError'            => false,
                 'logErrorDetails'     => false,
                 'logger' => [
@@ -22,11 +22,11 @@ return function (ContainerBuilder $containerBuilder) {
                     'level' => Logger::DEBUG,
                 ],
                 'db' => [
-                    'driver' => $_ENV['DB_DRIVER'],
-                    'host' => $_ENV['DB_HOST'],
-                    'database' => $_ENV['DB_NAME'],
-                    'username' => $_ENV['DB_USER'],
-                    'password' => $_ENV['DB_PASS'],
+                    'driver' => $_ENV['L_DB_DRIVER'],
+                    'host' => $_ENV['L_DB_HOST'],
+                    'database' => $_ENV['L_DB_NAME'],
+                    'username' => $_ENV['L_DB_USER'],
+                    'password' => $_ENV['L_DB_PASS'],
                     'charset' => 'utf8mb4',
                     'flags' => [
                         // Turn off persistent connections
