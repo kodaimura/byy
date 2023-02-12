@@ -20,7 +20,6 @@ class HttpErrorHandler extends SlimErrorHandler
 
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getCode();
-            //$error->setDescription($exception->getMessage());
         }
 
         $response = $this->responseFactory->createResponse($statusCode);
