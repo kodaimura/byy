@@ -160,7 +160,7 @@ const finalizeOrder = () => {
 
           let message =
           `お客様氏名: ${userName}\n受け取り時刻: ${form.receive_time.value}\n受け取り方法: ${form.how_to_receive.value}\n受け取り場所: ${form.address.value}`
-          + `\n\n----ご注文内容----\n`
+          + `\n\n----------ご注文内容----------\n`
 
           let priceSum = 0
 
@@ -171,7 +171,7 @@ const finalizeOrder = () => {
           }
 
           message += 
-          `----------------\nお支払い金額: ${Math.round(priceSum * taxRate)}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
+          `------------------------------\nお支払い金額: ${Math.round(priceSum * taxRate)}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
 
           liff.sendMessages([
             {

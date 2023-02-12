@@ -37,9 +37,9 @@
 							<hr class="text-success my-2">
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
-    					<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3">
-    						<button class="btn btn-primary rounded-pill col text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;&nbsp;
-    							<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
+    					<div class="row position-absolute bottom-0 mb-2 w-100">
+    						<button class="btn btn-primary rounded-pill col text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;
+    						<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
     					</div>
   					</div>
 					</div>
@@ -101,8 +101,8 @@
 						<hr class="text-success my-2">
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
-    				<div class="row position-absolute bottom-0 start-50 translate-middle-x mb-3 gap-2">
-    					<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>
+    				<div class="row position-absolute bottom-0 mb-2 w-100">
+    					<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;
     					<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
     				</div>
   				</div>
@@ -124,7 +124,7 @@
    		<label for="category_id">分類</label>
    		<select name="category_id" class="form-select">
    			{% for c in categories %}
-   			<option value="{{c.category_id}}" label="{{c.category_name}}"></option>
+   			<option value="{{c.category_id}}" label="{{c.category_name}}">{{c.category_name}}</option>
    			{% endfor %}
    		</select>
    	</div>
@@ -152,8 +152,8 @@
    		<div class="mb-1 col-md-6">
    			<label for="recommend_flg">通常/おすすめ</label>
    			<select name="recommend_flg" class="form-select">
-   				<option value="0" label="通常"></option>
-   				<option value="1" label="おすすめ"></option>
+   				<option value="0" label="通常">通常</option>
+   				<option value="1" label="おすすめ">おすすめ</option>
    			</select>
    		</div>
    </div>
@@ -185,7 +185,7 @@
    							<label for="category_id">分類</label>
    							<select name="category_id" class="form-select">
    								{% for c in categories %}
-   								<option value="{{c.category_id}}" label="{{c.category_name}}"></option>
+   								<option value="{{c.category_id}}" label="{{c.category_name}}">{{c.category_name}}</option>
    								{% endfor %}
    							</select>
    						</div>
@@ -216,8 +216,8 @@
    						<div class="col-md-6 mb-1">
    							<label for="stock_flg" class="text-success">在庫</label>
    							<select name="stock_flg" class="form-select">
-   								<option value="1" label="あり"></option>
-   								<option value="0" label="なし(売り切れ)"></option>
+   								<option value="1" label="あり">あり</option>
+   								<option value="0" label="なし(売り切れ)">なし(売り切れ)</option>
    							</select>
    						</div>
    					</div>
@@ -226,15 +226,15 @@
    							<div class="col-md-6 mb-1">
    								<label for="recommend_flg">通常/おすすめ</label>
    								<select name="recommend_flg" class="form-select">
-   									<option value="0" label="通常"></option>
-   									<option value="1" label="おすすめ"></option>
+   									<option value="0" label="通常">通常</option>
+   									<option value="1" label="おすすめ">おすすめ</option>
    								</select>
    							</div>
    							<div class="col-md-6 mb-1">
    								<label for="display_flg">表示/非表示</label>
    								<select name="display_flg" class="form-select">
-   									<option value="1" label="表示"></option>
-   									<option value="0" label="非表示"></option>
+   									<option value="1" label="表示">表示</option>
+   									<option value="0" label="非表示">非表示</option>
    								</select>
    							</div>
    						</div>
