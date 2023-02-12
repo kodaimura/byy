@@ -146,7 +146,7 @@ const finalizeOrder = () => {
     localStorage.setItem("how_to_receive", form.how_to_receive.value)
     localStorage.setItem("address", form.address.value.trim())
 
-    if(!liff.isInClient()){
+    if(liff.isInClient()){
       liff.init({liffId})
       .then(()=>{
         const accessToken = liff.getAccessToken();
@@ -157,51 +157,46 @@ const finalizeOrder = () => {
         liff.getProfile()
         .then(profile => {
           userName = profile.displayName
-        })
 
-        let message =
-        `お客様氏名: ${userName}
-         受け取り時刻: ${form.receive_time}
-         受け取り方法: ${form.how_to_receive.value}
-         受け取り場所: ${form.address.value}
-         ----ご注文内容----`
+          let message =
+          `お客様氏名: ${userName}\n受け取り時刻: ${form.receive_time.value}\n受け取り方法: ${form.how_to_receive.value}\n受け取り場所: ${form.address.value}`
+          + `\n\n----ご注文内容----\n`
 
-        let priceSum = 0
+          let priceSum = 0
 
-        for (const order of orders) {
-          priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
+          for (const order of orders) {
+            priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
+            message += 
+            `${order.product_name} (${order.production_area})  ${order.unit_price}円×${order.order_count}\n`
+          }
+
           message += 
-          `${order.product_name} (${order.production_area})  ${order.unit_price}円×${order.order_count}`
-        }
+          `----------------\nお支払い金額: ${Math.round(priceSum * taxRate)}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
 
-        message += 
-        `----------------
-         お支払い金額: ${Math.round(priceSum * taxRate)}円（税込）
-         お支払い方法: ${form.how_to_pay.value}
-        `
-
-        liff.sendMessages([
-          {
-            type: 'text',
-            text: message,
-          },
-        ])
-        .then(() => {
-          fetch('wakamiya/orders', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              orders: localStorage.getItem('orders'),
-              access_token: accessToken
+          liff.sendMessages([
+            {
+              type: 'text',
+              text: message,
+            },
+          ])
+          .then(() => {
+            fetch('wakamiya/orders', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                orders: localStorage.getItem('orders'),
+                access_token: accessToken
+              })
             })
+            window.alert('注文が完了しました。LINEトークでご確認下さい。');
+            localStorage.setItem('orders', '[]')
+            displayCircle()
           })
-          window.alert('注文が完了しました。LINEトークでご確認下さい。');
-        })
-        .catch((error) => {
-          window.alert('申し訳ありません。注文に失敗しました。');
+          .catch((error) => {
+            window.alert('申し訳ありません。注文に失敗しました。');
+          });
         });
-      })
-
+      });
     } else {
       document.getElementById("modal3Message").innerHTML = 
       `<div class="alert alert-danger">注文できません<div>`;
@@ -209,6 +204,8 @@ const finalizeOrder = () => {
         document.getElementById("modal3Message").innerHTML = ""
       }, 3000)
     }
+
+        
   }
 }
 
