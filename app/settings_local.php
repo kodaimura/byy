@@ -38,7 +38,7 @@ return function (ContainerBuilder $containerBuilder) {
                         // Set default fetch mode to array
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                     ],
-                ]
+                ],
             ]);
         }
     ]);

@@ -53,7 +53,7 @@ $middleware($app);
 $routes = require __DIR__ . '/../app/routes.php';
 $routes($app);
 
-/** @var SettingsInterface $settings */
+/** SettingsInterface $settings */
 $settings = $container->get(SettingsInterface::class);
 
 $displayErrorDetails = $settings->get('displayErrorDetails');

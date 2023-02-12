@@ -1,22 +1,22 @@
 .category-tabs {
-	display: table;
-	width: 100%;
 	font-weight: bold;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+	width: 100%;
 }
 
 .category-tabs a {
-	display: block;
-	text-align: left;
-	color: #333;
+	display: inline-flex;
 	background-color: #fff5e5;
-	text-decoration: none;
-	padding-top: 7px;
-	padding-bottom: 7px;
+	width: 11%;
+	-ms-writing-mode: tb-rl;
 	writing-mode: vertical-rl;
-	display: table-cell;
-	vertical-align: middle;
+	color: #333;
+	text-decoration: none;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	white-space: pre;
+	align-items: center;
 }
 
 .category-tabs a:hover {

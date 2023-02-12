@@ -43,7 +43,7 @@ const countUp = (id) => {
 const setupModal = (product) => {
   document.getElementById("orderCount").value = 0
   document.getElementById("modalProductId").value = product.product_id
-  document.getElementById("modalImg").innerHTML = `<img src="/static/img/tmp/${product.img_name}" class="rounded mx-auto d-block">`
+  document.getElementById("modalImg").innerHTML = `<img src="/static/img/tmp/${product.img_name}" class="rounded img-fluid">`
   document.getElementById("modalProductName").innerHTML = product.product_name
   document.getElementById("modalProductionArea").innerHTML = `${product.production_area}産`
   document.getElementById("modalUnitQuantity").innerHTML = product.unit_quantity
@@ -147,13 +147,13 @@ const finalizeOrder = () => {
     localStorage.setItem("address", form.address.value.trim())
 
     if(!liff.isInClient()){
-      //liff.init({liffId})
-      //.then(()=>{
-        const accessToken = "eyJhbGciOiJIUzI1NiJ9.xeO1J-SEbuatwG4r5wJsF3lHaCXxcy854hqjcORpID5FJRxh-tde0YTjAxh5MpzvWPAUVELS47uFCpUDvGYSyw0dzSbBkfZo2i0-6Ms3942D1JYWSk81S_TzQwm7fohJ.s4owF5b29xE6zGy_V2Tbj_TjenzJBQ8-eaiHlttlQ6U"//liff.getAccessToken();
+      liff.init({liffId})
+      .then(()=>{
+        const accessToken = liff.getAccessToken();
         const orders = JSON.parse(localStorage.getItem('orders'))
 
         let userName = ''
-/*
+
         liff.getProfile()
         .then(profile => {
           userName = profile.displayName
@@ -201,15 +201,6 @@ const finalizeOrder = () => {
           window.alert('申し訳ありません。注文に失敗しました。');
         });
       })
-*/
-        fetch('wakamiya/orders', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              orders: localStorage.getItem('orders'),
-              access_token: accessToken
-            })
-          })
 
     } else {
       document.getElementById("modal3Message").innerHTML = 
