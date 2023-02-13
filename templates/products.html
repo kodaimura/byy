@@ -26,11 +26,11 @@
 							{% endif %}
 						</div>
 						<div class="card-body position-relative pb-5">
-							<div class="card-title fw-bold lh-1 fs-5">
+							<div class="card-title fw-bold lh-1">
 								{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 							</div>
-							<div class="text-end fw-bolder fs-5 text-danger lh-1">
-								<small class="text-muted fs-6"> {{p.unit_quantity}} </small>
+							<div class="text-end fw-bolder text-danger lh-1">
+								<small class="text-muted"> {{p.unit_quantity}} </small>
 								<span>¥{{p.unit_price}}</span>
 								<span>(¥{{(p.unit_price * tax_rate)|round}})</span>
 							</div>
@@ -90,10 +90,10 @@
 						{% endif %}
 					</div>
   				<div class="card-body position-relative pb-5">
-						<div class="card-title fw-bold lh-1 fs-5">
+						<div class="card-title fw-bold lh-1">
 							{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 						</div>
-						<div class="text-end fw-bolder fs-6 text-danger lh-1">
+						<div class="text-end fw-bolder text-danger lh-1">
 							<small class="text-muted"> {{p.unit_quantity}} </small>
 							<span>¥{{p.unit_price}}</span>
 							<span>(¥{{(p.unit_price * tax_rate)|round}})</span>

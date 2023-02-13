@@ -63,8 +63,7 @@ const addToCart = () => {
 
   let order = {
     "product_id": product_id,
-    "product_name": product_name,
-    "production_area": production_area,
+    "product_name": `${product_name}(${production_area})`,
     "unit_price": unit_price,
     "order_count": order_count
   }
@@ -113,9 +112,9 @@ const setupModal2 = () => {
     priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
     contents += 
     `<tr>
-      <td>${order.product_name} (${order.production_area})</td>
+      <td>${order.product_name}</td>
       <td>${order.order_count}</td>
-      <td>¥${order.unit_price * order.order_count}</td>
+      <td>¥${Math.round(order.unit_price * order.order_count * taxRate)}</td>
     </tr>`
   }
 
@@ -167,7 +166,7 @@ const finalizeOrder = () => {
           for (const order of orders) {
             priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
             message += 
-            `${order.product_name} (${order.production_area})  ${order.unit_price}円×${order.order_count}\n`
+            `${order.product_name} ${order.unit_price}円×${order.order_count}\n`
           }
 
           message += 
@@ -227,25 +226,21 @@ const setupModal4 = () => {
   let contents = 
   `<table class="table">
     <thead>
-      <tr><th></th><th>商品</th><th>個数</th><th></th><th></th><th></th></tr>
+      <tr><th style="display:none;"></th><th>商品</th><th>個数</th><th style="display:none;"></th></tr>
     </thead>
     <tbody id="modal4TBody">`
 
-  let priceSum = 0
   for (let i = 0; i < orders.length; i++) {
-    priceSum += parseInt(orders[i].unit_price)
     contents += 
     `<tr>
-      <td><input type="hidden" value="${orders[i].product_id}"></td>
-      <td>${orders[i].product_name} (${orders[i].production_area})</td>
-      <td>
-      <button onclick="countDown('oc${i}')">ー</button>
-      <input type="number" id="oc${i}" min="0" max="99" value="${orders[i].order_count}">
-      <button onclick="countUp('oc${i}')">＋</button>
+      <td style="display:none;"><input type="hidden" value="${orders[i].product_id}"></td>
+      <td>${orders[i].product_name}</td>
+      <td style="white-space:nowrap;">
+        <button onclick="countDown('oc${i}')">ー</button>
+        <input type="number" id="oc${i}" min="0" max="99" value="${orders[i].order_count}">
+        <button onclick="countUp('oc${i}')">＋</button>
       </td>
-      <td><input type="hidden" value="${orders[i].product_name}"></td>
-      <td><input type="hidden" value="${orders[i].production_area}"></td>
-      <td><input type="hidden" value="${orders[i].unit_price}"></td>
+      <td style="display:none;"><input type="hidden" value="${orders[i].unit_price}"></td>
     </tr>`
   }
 
@@ -262,17 +257,15 @@ const cartUpdateAndSetUpModal2 = () => {
   const table = document.getElementById("modal4TBody")
   for (let row of table.rows) {
     let product_id = row.children[0].children[0].value
+    let product_name = row.children[1].textContent
     let order_count = row.children[2].children[1].value
-    let name = row.children[3].children[0].value
-    let area = row.children[4].children[0].value
-    let unit_price = row.children[5].children[0].value
+    let unit_price = row.children[3].children[0].value
 
     let order = {
       "product_id": product_id,
-      "product_name": name,
-      "production_area": area,
+      "product_name": product_name,
       "unit_price": unit_price,
-      "order_count": order_count
+      "order_count": parseInt(order_count)
     }
     if (order_count != 0) {
       orders.push(order)
@@ -288,3 +281,15 @@ const displayCircle = () => {
   (localStorage.getItem('orders') != "[]")? 
   `<div class="circle-inside bg-success"></div>` : "";
 }
+
+let howToReceiveSelect = document.getElementById("how_to_receive");
+const confirmMsg = 
+`配達可能地域: 東区内\n配達料金: 300円〜
+土日祝は配達をしておりません。また、配達時間の指定はできません。ご了承ください。`
+howToReceiveSelect.addEventListener('change', () => {
+  if (howToReceiveSelect.selectedIndex == 1) {
+    if (!confirm(confirmMsg)) {
+      howToReceiveSelect.selectedIndex = 0;
+    }
+  }
+});
