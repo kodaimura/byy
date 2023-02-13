@@ -88,7 +88,12 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
 	"secure" => true,
 	"algorithm" => $_ENV['JWT_ALG'],
     "relaxed" => ["localhost"],
-    "secret" => $_ENV['JWT_SECRET']
+    "secret" => $_ENV['JWT_SECRET'],
+    "error" => function ($response, $args) {
+    	return $response
+    	->withHeader('Location', '/wakamiya/login')
+        ->withStatus(302);
+    }
 ]));
 
 // Run App & Emit Response
