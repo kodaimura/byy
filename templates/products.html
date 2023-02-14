@@ -8,8 +8,8 @@
 	<hr>
 	<h2>商品登録・更新</h2>
 	<!-- おすすめ商品カルーセル -->
-	<div id="recommendCarousel" class="carousel slide mb-5 carousel-dark" data-bs-ride="carousel">
-  	<div class="carousel-inner">
+	<div id="recommendCarousel" class="carousel slide mb-3 carousel-dark" data-bs-ride="carousel">
+  	<div class="carousel-inner" style="min-height: 70vh;">
   		{% for p in recommends %}
   			{% if loop.index == 1 %}
 				<div class="carousel-item active">
@@ -340,8 +340,11 @@
     	}
 
     	if (positionY !== null) {
-        scrollTo(0, positionY);
-        localStorage.removeItem('positionY');
+    		setTimeout(() => {
+      		scrollTo(0, positionY);
+        	localStorage.removeItem('positionY');
+    		}, 100)
+        
     	}
 		});
 
