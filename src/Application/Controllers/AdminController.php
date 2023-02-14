@@ -8,6 +8,7 @@ use App\Application\Controllers\BaseController;
 use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
 use App\Application\Repositories\GeneralRepository;
+use App\Application\Settings\SettingsInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -21,6 +22,7 @@ class AdminController extends BaseController
     protected ProductRepository $productRep;
     protected CategoryRepository $categoryRep;
     protected GeneralRepository $generalRep;
+    protected SettingsInterface $settings;
 
     public function __construct(ContainerInterface $app) 
     {
@@ -28,6 +30,7 @@ class AdminController extends BaseController
         $this->productRep = $app->get(ProductRepository::class);
         $this->categoryRep = $app->get(CategoryRepository::class);
         $this->generalRep = $app->get(GeneralRepository::class);
+        $this->settings = $app->get(SettingsInterface::class);
     }
 
     public function loginPage($request, $response, $args): Response
@@ -42,8 +45,9 @@ class AdminController extends BaseController
         $password = $request->getParsedBody()['password'];
         $correct_password = $this->generalRep->getOneByKey1('admin-password');
 
+        $jwtSettings = $this->settings->get('jwt');
         if ($password === $correct_password) {
-            $token = JWT::encode(['name' => 'wakamiya'], $_ENV['JWT_SECRET'],  $_ENV['JWT_ALG']);
+            $token = JWT::encode(['name' => 'wakamiya'], $jwtSettings['secret'], $jwtSettings['algorithm']);
             $cookies = (new Cookies())
             ->set('token', [
                 'value'   => $token,

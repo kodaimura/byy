@@ -61,9 +61,9 @@
 	<div class="nav category-tabs mb-3">
 		{% for c in categories %}
 			{% if loop.index == 1 %}
-			<a href="#{{c.category_id}}" class="nav-item category-tab active" data-bs-toggle="tab">{{c.category_name}}</a>
+			<a href="#{{c.category_id}}" class="nav-item category-tab active" data-bs-toggle="tab" id="categoryTab-{{c.category_id}}">{{c.category_name}}</a>
 			{% else %}
-    	<a href="#{{c.category_id}}" class="nav-item category-tab" data-bs-toggle="tab">{{c.category_name}}</a>
+    	<a href="#{{c.category_id}}" class="nav-item category-tab" data-bs-toggle="tab" id="categoryTab-{{c.category_id}}">{{c.category_name}}</a>
     	{% endif %}
    	{% endfor %}
 	</div>
@@ -194,20 +194,6 @@
    							<input type="number" class="form-control" name="seq">
    						</div>
    					</div>
-   					<div class="mb-1">
-   						<label for="product_name">商品名</label>
-   						<input type="text" class="form-control" name="product_name" required>
-   					</div>
-  					<div class="row">
-   						<div class="col-md-6 mb-1">
-   							<label for="production_area">産地</label>
-   							<input type="text" class="form-control" name="production_area">
-   						</div>
-   						<div class="col-md-6 mb-1">
-   							<label for="unit_quantity">数量</label>
-   							<input type="text" class="form-control" name="unit_quantity" placeholder="1袋, 1/2カット, 1本, etc">
-   						</div>
-   					</div>
    					<div class="row">
    						<div class="col-md-6 mb-1">
    							<label for="unit_price" class="text-success">価格 (税抜)</label>
@@ -222,6 +208,20 @@
    						</div>
    					</div>
    					<div id="product_detail" class="d-none">
+   						<div class="mb-1">
+   							<label for="product_name">商品名</label>
+   							<input type="text" class="form-control" name="product_name" required>
+   						</div>
+  						<div class="row">
+   							<div class="col-md-6 mb-1">
+   								<label for="production_area">産地</label>
+   								<input type="text" class="form-control" name="production_area">
+   							</div>
+   							<div class="col-md-6 mb-1">
+   								<label for="unit_quantity">数量</label>
+   								<input type="text" class="form-control" name="unit_quantity" placeholder="1袋, 1/2カット, 1本, etc">
+   							</div>
+   						</div>
    						<div class="row">
    							<div class="col-md-6 mb-1">
    								<label for="recommend_flg">通常/おすすめ</label>
@@ -308,27 +308,40 @@
   		const comment = form.comment.value
   		const seq = form.seq.value
 
-  		//現在のスクロール位置
-  		positionY = window.pageYOffset;
-    	localStorage.setItem('positionY', positionY);
+  		//reload後、現在位置に移動するため
+    	localStorage.setItem('positionY', window.pageYOffset);
+    	localStorage.setItem('categoryId', category_id);
 
-    	fetch(`products/${product_id}`, {
-    		method: 'POST',
-    		headers: {'Content-Type': 'application/json'},
-    		body: JSON.stringify({
+    	if (isNaN(unit_price)) {
+    		window.alert('価格には数値を入力して下さい。');
+
+    	} else {
+    		fetch(`products/${product_id}`, {
+    			method: 'POST',
+    			headers: {'Content-Type': 'application/json'},
+    			body: JSON.stringify({
         		category_id, product_name, production_area, unit_quantity, unit_price, 
         		stock_flg, recommend_flg, display_flg, comment, seq
         	})
       	}).then(response => {
       		window.location.reload();
-      	});      
+      	}); 
+    	}
+    	     
     })
 
     window.addEventListener('DOMContentLoaded', (event) => {
     	const positionY = localStorage.getItem('positionY');
+    	const categoryId = localStorage.getItem('categoryId');
+
+    	if (categoryId !== null) {
+        document.getElementById(`categoryTab-${categoryId}`).click();
+        localStorage.removeItem('categoryId');
+    	}
+
     	if (positionY !== null) {
-        	scrollTo(0, positionY);
-        	localStorage.removeItem('positionY');
+        scrollTo(0, positionY);
+        localStorage.removeItem('positionY');
     	}
 		});
 

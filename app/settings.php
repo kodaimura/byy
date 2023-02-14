@@ -39,6 +39,11 @@ return function (ContainerBuilder $containerBuilder) {
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                     ],
                 ],
+                'jwt' => [
+                    'secure' => false,
+                    'algorithm' => $_ENV['JWT_ALG'],
+                    'secret' => $_ENV['JWT_SECRET'],
+                ],
             ]);
         }
     ]);

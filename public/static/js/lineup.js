@@ -285,7 +285,8 @@ const displayCircle = () => {
 let howToReceiveSelect = document.getElementById("how_to_receive");
 const confirmMsg = 
 `配達可能地域: 東区内\n配達料金: 300円〜
-土日祝は配達をしておりません。また、配達時間の指定はできません。ご了承ください。`
+土日祝は配達をしておりません。
+また、配達時間の指定はできません。`
 howToReceiveSelect.addEventListener('change', () => {
   if (howToReceiveSelect.selectedIndex == 1) {
     if (!confirm(confirmMsg)) {

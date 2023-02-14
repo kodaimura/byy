@@ -83,12 +83,14 @@ $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $lo
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 // Add Jwt Middleware
+$jwtSettings = $settings->get('jwt');
+
 $app->add(new Tuupola\Middleware\JwtAuthentication([
 	"path" => ["/wakamiya/admin"],
-	"secure" => true,
-	"algorithm" => $_ENV['JWT_ALG'],
+	"secure" => $jwtSettings['secure'],
+	"algorithm" => $jwtSettings['algorithm'],
     "relaxed" => ["localhost"],
-    "secret" => $_ENV['JWT_SECRET'],
+    "secret" => $jwtSettings['secret'],
     "error" => function ($response, $args) {
     	return $response
     	->withHeader('Location', '/wakamiya/login')
