@@ -6,8 +6,8 @@
 	<div class="container">
 	<div id="hello-customer" class="pb-2"></div>
 	<!-- おすすめ商品カルーセル -->
-	<div id="recommendCarousel" class="carousel slide mb-5 carousel-dark" data-bs-ride="carousel">
-  	<div class="carousel-inner" style="min-height: 70vh;">
+	<div id="recommendCarousel" class="carousel slide mb-3 carousel-dark" data-bs-ride="carousel">
+  	<div class="carousel-inner">
   		{% for p in recommends %}
   			{% if loop.index == 1 %}
 				<div class="carousel-item active">
