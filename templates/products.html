@@ -90,10 +90,10 @@
 						{% endif %}
 					</div>
   				<div class="card-body position-relative pb-5">
-						<div class="card-title fw-bold lh-1">
+						<div class="card-title fw-bold lh-1" style="font-size:0.8rem">
 							{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 						</div>
-						<div class="text-end fw-bolder text-danger lh-1">
+						<div class="text-end fw-bolder text-danger lh-1" style="font-size:0.8rem">
 							<small class="text-muted"> {{p.unit_quantity}} </small>
 							<span>¥{{p.unit_price}}</span>
 							<span>(¥{{(p.unit_price * tax_rate)|round}})</span>
