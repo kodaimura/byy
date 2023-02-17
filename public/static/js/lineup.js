@@ -289,7 +289,6 @@ const setCarouselHeigjt = () => {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    setCarouselHeigjt();
     setDeliveryConfirm();
 
     if(liff.isInClient()){
@@ -307,6 +306,10 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('hello-customer').innerHTML = 
         `WEBブラウザから注文することはできません。`
     }
+});
+
+window.addEventListener('load', (event) => {
+    setCarouselHeigjt();
 });
 
 window.addEventListener('resize', setCarouselHeigjt);

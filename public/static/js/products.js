@@ -85,7 +85,7 @@ const setCarouselHeigjt = () => {
 	document.getElementById('recommendCarousel').style.height = `${maxHeight + 20}px`;
 }
 
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('load', (event) => {
 	setCarouselHeigjt();
 
 	const positionY = localStorage.getItem('positionY');
