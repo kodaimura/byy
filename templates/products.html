@@ -25,7 +25,7 @@
 							<img src="/static/img/urikire_widget_img.png" class="img-fluid">
 							{% endif %}
 						</div>
-						<div class="card-body position-relative pb-5">
+						<div class="card-body pt-2 px-3 pb-0">
 							<div class="card-title fw-bold lh-1">
 								{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 							</div>
@@ -37,9 +37,11 @@
 							<hr class="text-success my-2">
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
-    					<div class="row position-absolute bottom-0 mb-2 w-100">
-    						<button class="btn btn-primary rounded-pill col text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;
-    						<button class="btn btn-dark rounded-pill col text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
+  					</div>
+  					<div class="card-footer border-white bg-white mb-2 px-5">
+  						<div class="row">
+    						<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;
+    						<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
     					</div>
   					</div>
 					</div>
@@ -89,7 +91,7 @@
 						<img src="/static/img/urikire_widget_img.png" class="img-fluid">
 						{% endif %}
 					</div>
-  				<div class="card-body position-relative pb-5">
+  				<div class="card-body pt-2 px-2 pb-0">
 						<div class="card-title fw-bold lh-1" style="font-size:0.8rem">
 							{{p.product_name}}<span class="small">({{p.production_area}}産)</span>
 						</div>
@@ -101,7 +103,9 @@
 						<hr class="text-success my-2">
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
-    				<div class="row position-absolute bottom-0 mb-2 w-100">
+  				</div>
+  				<div class="card-footer border-white bg-white mb-2 px-5">
+  					<div class="row">
     					<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;
     					<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
     				</div>
