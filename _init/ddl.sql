@@ -25,8 +25,9 @@ CREATE TABLE IF NOT EXISTS product (
 	display_flg char(1) NOT NULL DEFAULT '1',
 	stock_flg char(1) NOT NULL DEFAULT '1',
 	recommend_flg char(1) NOT NULL DEFAULT '0',
-	img_name varchar(20),
+	img_name varchar(50),
 	seq int DEFAULT 0,
+	recommend_seq int DEFAULT 0,
 	create_at datetime default current_timestamp,
 	update_at datetime default current_timestamp on update current_timestamp
 );

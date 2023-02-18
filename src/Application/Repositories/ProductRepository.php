@@ -45,7 +45,8 @@ class ProductRepository extends BaseRepository
 		 		stock_flg, 
 		 		recommend_flg, 
 		 		img_name,
-		 		seq
+		 		seq,
+		 		recommend_seq
 		 	 FROM product
 		 	 ORDER BY seq"
     	)
@@ -67,7 +68,7 @@ class ProductRepository extends BaseRepository
 		 		img_name
 		 	 FROM product
 		 	 WHERE display_flg = '1' AND recommend_flg = '1'
-		 	 ORDER BY seq"
+		 	 ORDER BY recommend_seq"
     	)
         ->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -87,10 +88,11 @@ class ProductRepository extends BaseRepository
 		 		stock_flg, 
 		 		recommend_flg, 
 		 		img_name,
-		 		seq
+		 		seq,
+		 		recommend_seq
 		 	 FROM product
 		 	 WHERE recommend_flg = '1'
-		 	 ORDER BY seq"
+		 	 ORDER BY recommend_seq"
     	)
         ->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -109,7 +111,8 @@ class ProductRepository extends BaseRepository
 		 		stock_flg, 
 		 		recommend_flg, 
 		 		img_name,
-		 		seq
+		 		seq,
+		 		recommend_seq
 		 	 FROM product
 		 	 WHERE product_id = :product_id"
     	);
@@ -186,7 +189,8 @@ class ProductRepository extends BaseRepository
 		 		display_flg = :display_flg,
 		 		stock_flg = :stock_flg,
 		 		recommend_flg = :recommend_flg,
-		 		seq = :seq
+		 		seq = :seq,
+		 		recommend_seq = :recommend_seq
 		 	 WHERE product_id = :product_id"
     	);
     	$stmt->bindValue(':category_id', $product['category_id'], PDO::PARAM_INT);
@@ -199,6 +203,7 @@ class ProductRepository extends BaseRepository
     	$stmt->bindValue(':stock_flg', $product['stock_flg'], PDO::PARAM_STR);
     	$stmt->bindValue(':recommend_flg', $product['recommend_flg'], PDO::PARAM_STR);
     	$stmt->bindValue(':seq', $product['seq'], PDO::PARAM_INT);
+    	$stmt->bindValue(':recommend_seq', $product['recommend_seq'], PDO::PARAM_INT);
     	$stmt->bindValue(':product_id', $product['product_id'], PDO::PARAM_INT);
     	$stmt->execute();
     }

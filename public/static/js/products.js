@@ -19,10 +19,34 @@ const setupModal = (product) => {
 	form.recommend_flg.value = product.recommend_flg
 	form.display_flg.value = product.display_flg
 	form.seq.value = product.seq
+	form.recommend_seq.value = product.recommend_seq
 	form.comment.value = product.comment
 
+	switchShowSeqRecommendSeq(product.recommend_flg);
 	document.forms.updateImgForm.product_id.value = product.product_id
 }
+
+const switchShowSeqRecommendSeq = (recommend_flg) => {
+	if (recommend_flg == '0') {
+		if (document.getElementById('seq_wrap').classList.contains("d-none")) {
+			document.getElementById('seq_wrap').classList.remove('d-none');
+		}
+		if (!document.getElementById('recommend_seq_wrap').classList.contains("d-none")) {
+			document.getElementById('recommend_seq_wrap').classList.add('d-none');
+		}
+	} else {
+		if (document.getElementById('seq_wrap').classList.contains("d-none")) {
+			document.getElementById('seq_wrap').classList.remove('d-none');
+		}
+		if (document.getElementById('recommend_seq_wrap').classList.contains("d-none")) {
+			document.getElementById('recommend_seq_wrap').classList.remove('d-none');
+		}
+	}
+}
+
+document.forms.updateForm.recommend_flg.addEventListener('change', (event) => {
+	switchShowSeqRecommendSeq(event.target.value);
+});
 
 document.getElementById('send').addEventListener('click', () => {
 	const form = document.forms.updateForm;
@@ -38,6 +62,7 @@ document.getElementById('send').addEventListener('click', () => {
 	const display_flg = form.display_flg.value
 	const comment = form.comment.value
 	const seq = form.seq.value
+	const recommend_seq = form.recommend_seq.value
 
 	//reload後、現在位置に移動するため
 	localStorage.setItem('positionY', window.pageYOffset);
@@ -52,7 +77,7 @@ document.getElementById('send').addEventListener('click', () => {
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
     		category_id, product_name, production_area, unit_quantity, unit_price, 
-    		stock_flg, recommend_flg, display_flg, comment, seq
+    		stock_flg, recommend_flg, display_flg, comment, seq, recommend_seq
     	})
   	}).then(response => {
   		window.location.reload();
