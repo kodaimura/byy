@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Controllers;
 
+use DateTime;
 use App\Application\Controllers\BaseController;
 use App\Application\Repositories\ProductRepository;
 use App\Application\Repositories\CategoryRepository;
@@ -131,9 +132,9 @@ class AdminController extends BaseController
         $uploadedFiles = $request->getUploadedFiles();
         $uploadedFile = $uploadedFiles['img'];
         $fileExt = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-        $filename = 'product-' . $product_id.'.'.$fileExt;
-        $uploadedFile->moveTo('../public/static/img/tmp/' . $filename);
-        $this->productRep->updateImgNameById($product_id, $filename);
+        $img_name = $new_img_name = $this->createImgName($product_id ,$fileExt);
+        $uploadedFile->moveTo('../public/static/img/tmp/' . $img_name);
+        $this->productRep->updateImgNameById($product_id, $img_name);
 
         return $response
         ->withHeader('Location', 'products')
@@ -169,13 +170,19 @@ class AdminController extends BaseController
         $uploadedFiles = $request->getUploadedFiles();
         $uploadedFile = $uploadedFiles['img'];
         $fileExt = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-        $filename = 'product-' . $product_id.'.'.$fileExt;
-        $uploadedFile->moveTo('../public/static/img/tmp/' . $filename);
-        $this->productRep->updateImgNameById($product_id, $filename);
+        $new_img_name = $this->createImgName($product_id ,$fileExt);
+        $uploadedFile->moveTo('../public/static/img/tmp/' . $new_img_name);
+        $this->productRep->updateImgNameById($product_id, $new_img_name);
         
         return $response
         ->withHeader('Location', '../products')
         ->withStatus(302);
+    }
+
+    private function createImgName($product_id, $fileExt): string 
+    {
+        $objDateTime = new DateTime();
+        return 'product-' . $product_id.'-'.$objDateTime->format('YmdHis').'.'.$fileExt;
     }
 
 }
