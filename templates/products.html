@@ -24,7 +24,7 @@
 						{% elseif p.stock_flg == '0' %}
 						<img src="/static/img/urikire_widget_img.png" class="img-fluid  position-absolute w-75">
 						{% endif %}
-						<span class="badge position-absolute top-0 end-0 text-dark bg-info fs-5">{{p.recommend_seq}}</span>
+						<span class="badge position-absolute top-0 end-0 text-dark bg-info">{{p.recommend_seq}}</span>
 					</div>
 					<div class="card-body pt-2 px-3 pb-0">
 						<div class="card-title fw-bold lh-1">
@@ -91,7 +91,7 @@
 						{% elseif p.stock_flg == '0' %}
 						<img src="/static/img/urikire_widget_img.png" class="img-fluid position-absolute w-75">
 						{% endif %}
-						<span class="badge position-absolute top-0 end-0 text-dark bg-warning fs-5">{{p.seq}}</span>
+						<span class="badge position-absolute top-0 end-0 text-dark bg-warning">{{p.seq}}</span>
 					</div>
   					<div class="card-body pt-2 px-2 pb-0">
 						<div class="card-title fw-bold lh-1" style="font-size:0.8rem">
@@ -273,7 +273,7 @@
   			<!-- 商品画像更新フォーム -->
       	</div>
       	<div class="modal-footer">
-        	<button type="button" onclick="switchShowDetail()" id="switch-Button">すべて表示</button>
+        	<button type="button" class="btn btn-secondary" onclick="switchShowDetail()" id="switch-Button">すべて表示</button>
       	</div>
     	</div>
   	</div>
