@@ -85,22 +85,24 @@ const setCarouselHeigjt = () => {
 	document.getElementById('recommendCarousel').style.height = `${maxHeight + 20}px`;
 }
 
-window.addEventListener('load', (event) => {
-	setCarouselHeigjt();
+document.addEventListener('readystatechange', (event) => {
+	if (document.readyState === 'complete') {
+		setCarouselHeigjt();
 
-	const positionY = localStorage.getItem('positionY');
-	const categoryId = localStorage.getItem('categoryId');
+		const positionY = localStorage.getItem('positionY');
+		const categoryId = localStorage.getItem('categoryId');
 	
-	if (categoryId !== null) {
-	document.getElementById(`categoryTab-${categoryId}`).click();
-	localStorage.removeItem('categoryId');
-	}
+		if (categoryId !== null) {
+			document.getElementById(`categoryTab-${categoryId}`).click();
+			localStorage.removeItem('categoryId');
+		}
 	
-	if (positionY !== null) {
-		setTimeout(() => {
-		scrollTo(0, positionY);
-		localStorage.removeItem('positionY');
-		}, 100)
+		if (positionY !== null) {
+			setTimeout(() => {
+				scrollTo(0, positionY);
+				localStorage.removeItem('positionY');
+			}, 100)
+		}
 	}
 });
 

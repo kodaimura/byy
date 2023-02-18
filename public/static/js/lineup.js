@@ -288,7 +288,8 @@ const setCarouselHeigjt = () => {
     document.getElementById('recommendCarousel').style.height = `${maxHeight + 20}px`;
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
+    localStorage.setItem('orders', '[]');
     setDeliveryConfirm();
 
     if(liff.isInClient()){
@@ -308,8 +309,17 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+/*
+// スマホだとloadイベント使えなかった
 window.addEventListener('load', (event) => {
     setCarouselHeigjt();
 });
+*/
+
+document.addEventListener('readystatechange', (event) => {
+    if (document.readyState === 'complete') {
+        setCarouselHeigjt();
+    }
+})
 
 window.addEventListener('resize', setCarouselHeigjt);

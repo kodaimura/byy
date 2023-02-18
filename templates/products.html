@@ -38,7 +38,7 @@
     					<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     					<hr class="text-success my-2">
   					</div>
-  					<div class="card-footer border-white bg-white mb-2 px-5">
+  					<div class="card-footer border-white bg-white pt-0">
   						<div class="row">
     						<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;
     						<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
@@ -104,7 +104,7 @@
     				<div class="card-text lh-1" style="font-size:0.8rem">{{p.comment}}</div>
     				<hr class="text-success my-2">
   				</div>
-  				<div class="card-footer border-white bg-white mb-2 px-5">
+  				<div class="card-footer border-white bg-white pt-0">
   					<div class="row">
     					<button class="btn btn-primary rounded-pill col btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setupModal({{p|json_encode()}})" style="z-index:1">編集</button>&nbsp;
     					<button class="btn btn-dark rounded-pill col btn-sm text-nowrap" onclick="deleteProduct({{p.product_id}})" style="z-index:1">削除</button>
@@ -248,19 +248,19 @@
    						</div>
    					</div>
         		<input type="button" class="btn btn-primary mt-3" id="send" value="更新">
-  				</form>
-  				<!-- 商品情報更新フォーム -->
+  			</form>
+  			<!-- 商品情報更新フォーム -->
 
-  				<!-- 商品画像更新フォーム -->
-  				<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light d-none">
-  					<input type="hidden" name="product_id">
+  			<!-- 商品画像更新フォーム -->
+  			<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light d-none">
+  				<input type="hidden" name="product_id">
       			<div class="mb-3">
-   						<label for="img">画像</label>
-   						<input type="file" class="form-control" name="img" required>
-   					</div>
-   					<input type="submit" class="btn btn-success" value="画像変更">
-  				</form>
-  				<!-- 商品画像更新フォーム -->
+   					<label for="img">画像</label>
+   					<input type="file" class="form-control" name="img" required>
+   				</div>
+   				<input type="submit" class="btn btn-success" value="画像変更">
+  			</form>
+  			<!-- 商品画像更新フォーム -->
       	</div>
       	<div class="modal-footer">
         	<button type="button" onclick="switchShowDetail()" id="switch-Button">すべて表示</button>
