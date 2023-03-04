@@ -8,7 +8,7 @@
 	<hr>
 	<h2>商品登録・更新</h2>
 	<!-- おすすめ商品カルーセル -->
-	<div id="recommendCarousel" class="carousel slide mb-3 carousel-dark" data-bs-ride="carousel">
+	<div id="recommendCarousel" class="carousel slide mb-3 carousel-dark" data-bs-ride="carousel" data-bs-interval="9000">
   	<div class="carousel-inner">
   		{% for p in recommends %}
   			{% if loop.index == 1 %}
@@ -183,16 +183,23 @@
         	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       	</div>
       	<div class="modal-body">
+      		<!-- 商品画像更新フォーム -->
+  			<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-3 card bg-light">
+  				<input type="hidden" name="product_id">
+      			<div class="mb-3">
+   					<label for="img">画像</label>
+   					<input type="file" class="form-control" name="img" required>
+   				</div>
+   				<input type="submit" class="btn btn-success" value="画像変更">
+  			</form>
+  			<!-- 商品画像更新フォーム -->
+
       		<!-- 商品情報更新フォーム -->
         	<form name="updateForm" onsubmit="return false" class="mx-3 px-4 py-3 card bg-light">
         		<input type="hidden" name="product_id">
         		<div class="mb-1">
-   					<label for="category_id">分類</label>
-   					<select name="category_id" class="form-select">
-   						{% for c in categories %}
-   						<option value="{{c.category_id}}" label="{{c.category_name}}">{{c.category_name}}</option>
-   						{% endfor %}
-   					</select>
+   					<label for="product_name">商品名</label>
+   					<input type="text" class="form-control" name="product_name" required>
    				</div>
    				<div class="row">
    					<div class="col-md-6 mb-1">
@@ -203,7 +210,7 @@
    					</div>
    					<div class="col-md-6 mb-1">
    						<div id="recommend_seq_wrap" class="d-none">
-   							<label for="recommend_seq">ソート [<span class="text-info small">TOP</span>]</label>
+   							<label for="recommend_seq">ソート [<span class="text-info small">おすすめ</span>]</label>
    							<input type="number" class="form-control" name="recommend_seq">
    						</div>
    					</div>
@@ -223,8 +230,12 @@
    				</div>
    				<div id="product_detail" class="d-none">
    					<div class="mb-1">
-   						<label for="product_name">商品名</label>
-   						<input type="text" class="form-control" name="product_name" required>
+   						<label for="category_id">分類</label>
+   						<select name="category_id" class="form-select">
+   							{% for c in categories %}
+   							<option value="{{c.category_id}}" label="{{c.category_name}}">	{{c.category_name}}</option>
+   							{% endfor %}
+   						</select>
    					</div>
   					<div class="row">
    						<div class="col-md-6 mb-1">
@@ -260,17 +271,6 @@
         		<input type="button" class="btn btn-primary mt-3" id="send" value="更新">
   			</form>
   			<!-- 商品情報更新フォーム -->
-
-  			<!-- 商品画像更新フォーム -->
-  			<form name="updateImgForm" method="post" action="products/img" enctype="multipart/form-data" class="mx-3 px-4 py-3 my-5 card bg-light d-none">
-  				<input type="hidden" name="product_id">
-      			<div class="mb-3">
-   					<label for="img">画像</label>
-   					<input type="file" class="form-control" name="img" required>
-   				</div>
-   				<input type="submit" class="btn btn-success" value="画像変更">
-  			</form>
-  			<!-- 商品画像更新フォーム -->
       	</div>
       	<div class="modal-footer">
         	<button type="button" class="btn btn-secondary" onclick="switchShowDetail()" id="switch-Button">すべて表示</button>

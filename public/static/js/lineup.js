@@ -1,5 +1,8 @@
 const liffId = '1657838706-OK1dZMXG';
 const taxRate = parseFloat(document.getElementById('tax_rate').value);
+const deliveryFeeThreshold = 1500;
+const deliveryFeeLow = 300;
+const deliveryFeeHigh = 400;
 
 
 const countDown = (id) => {
@@ -139,15 +142,27 @@ const finalizeOrder = () => {
                     + `\n\n----------ご注文内容----------\n`
     
                     let priceSum = 0
+                    let count = 0
     
                     for (const order of orders) {
                         priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
+                        count += parseInt(order.order_count)
                         message += 
                         `${order.product_name} ${order.unit_price}円×${order.order_count}\n`
                     }
-    
+                    const taxPrice = Math.round(priceSum * taxRate)
+                    let deliveryFee = 0
+
+                    message += `合計点数：${count}点\n`
+                    message += `合計金額：${priceSum}円\n------------------------------\n`
+
+                    if (form.how_to_receive.value == "配達") {
+                        deliveryFee += (priceSum >= deliveryFeeThreshold)? deliveryFeeLow : deliveryFeeHigh
+                        message += `配達料金：${deliveryFee}円（税込）\n`
+                    }
+
                     message += 
-                    `------------------------------\nお支払い金額: ${Math.round(priceSum * taxRate)}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
+                    `お支払い金額: ${taxPrice + deliveryFee}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
     
                     liff.sendMessages([
                     {
@@ -265,8 +280,10 @@ const displayCircle = () => {
 
 const setDeliveryConfirm = () => {
     let howToReceiveSelect = document.getElementById("how_to_receive");
-    const confirmMsg = 
-    `配達可能地域: 東区内\n配達料金: 300円〜\n土日祝は配達をしておりません。\nまた、配達時間の指定はできません。`
+    let confirmMsg = 
+    `エリア：東区限定\n配達料金：${deliveryFeeLow}円\n`
+    confirmMsg += `(お買上げが${deliveryFeeThreshold}円未満の場合 ${deliveryFeeHigh}円)\n`
+    confirmMsg += `また、配達時間の指定はできません。`
     howToReceiveSelect.addEventListener('change', () => {
         if (howToReceiveSelect.selectedIndex == 1) {
             if (!confirm(confirmMsg)) {

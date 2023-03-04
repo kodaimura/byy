@@ -6,7 +6,7 @@
 	<div class="container">
 	<div id="hello-customer" class="pb-2"></div>
 	<!-- おすすめ商品カルーセル -->
-	<div id="recommendCarousel" class="carousel slide mb-3 carousel-dark" data-bs-ride="carousel">
+	<div id="recommendCarousel" class="carousel slide mb-3 carousel-dark" data-bs-ride="carousel" data-bs-interval="9000">
   	<div class="carousel-inner">
   		{% for p in recommends %}
   			{% if loop.index == 1 %}
@@ -36,11 +36,11 @@
   					</div>
   					<div class="card-footer border-white bg-white pt-0 text-center position-relative">
     					{% if p.stock_flg == '0' %}
-    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" disabled>
+    					<button class="btn rounded-pill btn-sm text-nowrap text-white cart-btn" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" disabled>
     					&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     					</button>
     					{% else %}
-    					<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p|json_encode()}})">
+    					<button class="btn rounded-pill btn-sm text-nowrap text-white cart-btn" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p|json_encode()}})">
     					&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     					</button>
     					{% endif %}
@@ -105,11 +105,11 @@
   				</div>
   				<div class="card-footer position-relative border-white bg-white pt-0 text-center">
     				{% if p.stock_flg == '0' %}
-    				<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" disabled>
+    				<button class="btn rounded-pill btn-sm text-nowrap text-white cart-btn" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" disabled>
     					&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     				</button>
     				{% else %}
-    				<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p|json_encode()}})">
+    				<button class="btn rounded-pill btn-sm text-nowrap text-white cart-btn" data-bs-toggle="modal" data-bs-target="#modal" style="z-index:1;font-size:0.7rem" onclick="setupModal({{p|json_encode()}})">
     					&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     				</button>
     				{% endif %}
@@ -149,7 +149,7 @@
     			<button onclick="countDown('orderCount')">ー</button>
     			<input type="number" id="orderCount" min="0" max="99" value="0">
     			<button onclick="countUp('orderCount')">＋</button>個
-    			<button class="btn btn-warning rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="addToCart()">
+    			<button class="btn cart-btn rounded-pill btn-sm text-nowrap text-white" style="z-index:1;" onclick="addToCart()">
     				&nbsp;<span class="material-icons">add_shopping_cart</span>&nbsp;カートに追加&nbsp;&nbsp;
     			</button>
   			</div>
@@ -217,7 +217,7 @@
    						<label for="how_to_receive">受取方法</label>
    						<select name="how_to_receive" class="form-select" id="how_to_receive">
    							<option value="ドライブスルー" label="ドライブスルー">ドライブスルー</option>
-   							<option value="配達" label="配達">配達</option>
+   							<option value="配達" label="配達(平日のみ)">配達(平日のみ)</option>
    						</select>
    					</div>
    					<div class="mb-1">

@@ -88,11 +88,9 @@ document.getElementById('send').addEventListener('click', () => {
 
 const switchShowDetail = () => {
 	if (document.getElementById('product_detail').classList.contains("d-none")) {
-		document.forms.updateImgForm.classList.remove('d-none');
 		document.getElementById('product_detail').classList.remove('d-none');
 		document.getElementById('switch-Button').innerHTML = '簡易表示'
 	} else {
-		document.forms.updateImgForm.classList.add('d-none');
 		document.getElementById('product_detail').classList.add('d-none');
 		document.getElementById('switch-Button').innerHTML = 'すべて表示'
 	}
