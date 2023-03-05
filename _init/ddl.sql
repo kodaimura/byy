@@ -50,3 +50,12 @@ CREATE TABLE IF NOT EXISTS customer (
 	update_at datetime default current_timestamp on update current_timestamp,
 	PRIMARY KEY(customer_id)
 );
+
+CREATE TABLE IF NOT EXISTS slot_daily (
+	customer_id varchar(100),
+	result char(2),
+	used_flg char(1),
+	create_at datetime default current_timestamp,
+	update_at datetime default current_timestamp on update current_timestamp,
+	PRIMARY KEY(customer_id)
+);

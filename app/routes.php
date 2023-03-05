@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Application\Controllers\AdminController;
 use App\Application\Controllers\CustomerController;
+use App\Application\Controllers\SlotController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -13,6 +14,8 @@ return function (App $app) {
     $app->group('/wakamiya', function (Group $grp) {
         $grp->get('', CustomerController::class. ':lineupPage');
         $grp->post('/orders', CustomerController::class. ':order');
+        $grp->get('/slot', SlotController::class. ':slotPage');
+        $grp->post('/slot', SlotController::class. ':slot');
 
         $grp->get('/login', AdminController::class. ':loginPage');
         $grp->post('/login', AdminController::class. ':login');
