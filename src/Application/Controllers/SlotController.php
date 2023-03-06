@@ -47,12 +47,11 @@ class SlotController extends BaseController
 
             $userId = "aa";
             $daily = $this->slotDailyRep->get($userId);
-            $this->logger->info(json_encode($daily));
             if (!$daily) {
                 return $response->withStatus(400);
             }
             $this->slotDailyRep->delete($userId);
-            $result = getSlotResult() ;
+            $result = getSlotResult();
             $this->slotDailyRep->insert($userId, 1);
         }
         $response->getBody()->write(json_encode(["result" => $result]));
@@ -62,7 +61,7 @@ class SlotController extends BaseController
 
    private function getSlotResult() 
    {
-        return "888"
+        return "888";
    }
 
 }

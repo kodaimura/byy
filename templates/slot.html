@@ -1,12 +1,64 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+	<title>毎日回してお得に買い物!!バカ安ルーレット！</title>
+	<link rel="stylesheet" href="/static/css/odometer.css" />
+	<script src="/static/js/odometer.js"></script>
+	<link rel="stylesheet" href="/static/css/slot.css">
+</head>
+<body>
+<div class="wrapper">
+<img src="/static/img/slottop.png" class="slottop">
+<div class="slot">
+<div id="odometer" class="odometer"></div>
+<input type="image" src="/static/img/slotbutton.png" class="slotbutton" id="slotbutton">
 
-{% block title %}バカ安八百屋ルーレット{% endblock %}
+</div>
+<img src="/static/img/slotatari.png" class="slotatari">
+</div>
 
-{% block content %}
+<div class="youtube-frame-wrapper">
+	<iframe class="youtube-frame" src="https://www.youtube.com/embed/f5jveIO2GPM" frameborder="0"></iframe>
+</div>
 
-スロットページ
+<script type="text/javascript">
+	const liffId = '1657838706-OK1dZMXG';
+	odometer.innerHTML = 888
 
-<form method="post">
-	<input type="submit" value="ルーレット">
-</form>
-{% endblock %}
+	document.getElementById('slotbutton').addEventListener("click", () => {
+		const slotDone = localStorage.getItem('slotdone');
+		if (slotDone) {
+			alert("1日1回までです")
+		} else {
+			const result = parseInt(Math.random() * (999 - 100) + 100);
+			localStorage.setItem('slotdone', true);
+
+			odometer.innerHTML = result;
+
+			if(liff.isInClient()){
+            	liff.init({liffId})
+            	.then(()=>{
+            		const accessToken = liff.getAccessToken();
+            	    fetch('wakamiya/slot', {
+            	    	method: 'POST',
+            	    	headers: {'Content-Type': 'application/json'},
+            	    	body: JSON.stringify({
+            	    		result: result,
+            	    		access_token: accessToken
+            	    	})
+            	    })
+            	    .then(response => {
+            	    	if (response.ok) {
+	
+            	    	}
+            	    })  
+            	})
+        	}
+		}
+		
+	})
+</script>
+</body>
+</html>
