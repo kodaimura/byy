@@ -28,10 +28,10 @@ class SlotController extends BaseController
         return $response;
     }
 
-   public function slot($request, $response, $args): Response
+   public function postSlot($request, $response, $args): Response
    {
         $access_token = ($request->getParsedBody())['access_token'];
-        $orders = json_decode(($request->getParsedBody())['orders']);
+        $result = json_decode(($request->getParsedBody())['result']);
         $header = [('Authorization: Bearer ' . $access_token)];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
@@ -45,23 +45,15 @@ class SlotController extends BaseController
         if ($errno === CURLE_OK) {
             $userId = $res['userId'];
 
-            $userId = "aa";
             $daily = $this->slotDailyRep->get($userId);
             if (!$daily) {
                 return $response->withStatus(400);
             }
             $this->slotDailyRep->delete($userId);
-            $result = getSlotResult();
-            $this->slotDailyRep->insert($userId, 1);
+            $this->slotDailyRep->insert($userId, $result);
         }
-        $response->getBody()->write(json_encode(["result" => $result]));
 
-        return $response->withHeader('Content-Type', 'application/json');
-   }
-
-   private function getSlotResult() 
-   {
-        return "888";
+        return $response;
    }
 
 }

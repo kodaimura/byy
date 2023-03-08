@@ -14,7 +14,18 @@
 <div class="slot">
 <div id="odometer" class="odometer"></div>
 <input type="image" src="/static/img/slotbutton.png" class="slotbutton" id="slotbutton">
-
+<audio id="drum_roll_audio">
+    <source src="/static/audio/drum_roll.mp3" type="audio/mp3">
+</audio>
+<audio id="drum_roll_end_audio">
+    <source src="/static/audio/drum_roll_end.mp3" type="audio/mp3">
+</audio>
+<audio id="hit_audio">
+    <source src="/static/audio/hit.mp3" type="audio/mp3">
+</audio>
+<audio id="miss_audio">
+    <source src="/static/audio/miss.mp3" type="audio/mp3">
+</audio>
 </div>
 <img src="/static/img/slotatari.png" class="slotatari">
 </div>
@@ -27,16 +38,64 @@
 	const liffId = '1657838706-OK1dZMXG';
 	odometer.innerHTML = 888
 
-	document.getElementById('slotbutton').addEventListener("click", () => {
+	const hitRates = [0.005, 0.01, 0.013, 0.013, 0.02, 0.033, 0.05, 0.05];
+	const hitValues = [777, 808, 831, 888, 222, 111, 555, 333];
+	const missValues = [775, 779, 805, 223, 221, 112, 110, 556, 554, 334, 331, 553, 220, 102, 324];
+	let result;
+
+	const slot = () => {
+		x = Math.random();
+
+		const sumf = (sum, num) => sum + num;
+
+		if (x <= hitRates.slice(0,1).reduce(sumf,0)) {
+			return hitValues[0];
+		} else if (x <= hitRates.slice(0,2).reduce(sumf,0)) {
+			return hitValues[1];
+		} else if  (x <= hitRates.slice(0,3).reduce(sumf,0)) {
+			return hitValues[2];
+		} else if  (x <= hitRates.slice(0,4).reduce(sumf,0)) {
+			return hitValues[3];
+		} else if  (x <= hitRates.slice(0,5).reduce(sumf,0)) {
+			return hitValues[4];
+		} else if  (x <= hitRates.slice(0,6).reduce(sumf,0)) {
+			return hitValues[5];
+		} else if  (x <= hitRates.slice(0,7).reduce(sumf,0)) {
+			return hitValues[6];
+		} else if  (x <= hitRates.slice(0,8).reduce(sumf,0)) {
+			return hitValues[7];
+		} else {
+			return missValues[Math.floor(Math.random() * missValues.length)];
+		}
+	}
+
+	odometer.addEventListener('odometerdone', () => {
+		document.getElementById('drum_roll_audio').pause();
+		document.getElementById('drum_roll_audio').currentTime = 0;
+		document.getElementById('drum_roll_end_audio').play();
+
+		setTimeout(() => {
+			if (hitValues.includes(result)) {
+				document.getElementById('hit_audio').play();
+			} else {
+				document.getElementById('miss_audio').play();
+			}
+		}, 1000);
+
+	});
+
+	document.getElementById('slotbutton').addEventListener("click", async () => {
 		const slotDone = localStorage.getItem('slotdone');
 		if (slotDone) {
 			alert("1日1回までです")
 		} else {
-			const result = parseInt(Math.random() * (999 - 100) + 100);
+			document.getElementById('drum_roll_audio').play();
+			result = slot();
 			localStorage.setItem('slotdone', true);
 
 			odometer.innerHTML = result;
-
+			
+/*
 			if(liff.isInClient()){
             	liff.init({liffId})
             	.then(()=>{
@@ -55,7 +114,7 @@
             	    	}
             	    })  
             	})
-        	}
+        	}*/
 		}
 		
 	})
