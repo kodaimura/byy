@@ -51,10 +51,11 @@ CREATE TABLE IF NOT EXISTS customer (
 	PRIMARY KEY(customer_id)
 );
 
-CREATE TABLE IF NOT EXISTS slot_daily (
+CREATE TABLE IF NOT EXISTS coupon (
 	customer_id varchar(100),
-	result char(2),
+	coupon_id char(2),
 	used_flg char(1),
+	deadline datetime,
 	create_at datetime default current_timestamp,
 	update_at datetime default current_timestamp on update current_timestamp,
 	PRIMARY KEY(customer_id)

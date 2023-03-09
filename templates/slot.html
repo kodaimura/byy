@@ -10,6 +10,7 @@
 </head>
 <body>
 <div class="wrapper">
+	<input type="hidden" id="slotrates" value="{{slotrates}}">
 	<img src="/static/img/slottop.png" class="slottop">
 	<div class="slot">
 		<div id="odometer" class="odometer"></div>
@@ -34,90 +35,6 @@
 	<iframe class="youtube-frame" src="https://www.youtube.com/embed/f5jveIO2GPM" frameborder="0"></iframe>
 </div>
 
-<script type="text/javascript">
-	const liffId = '1657838706-OK1dZMXG';
-	odometer.innerHTML = 888
-
-	const slotrates = "{{slotrates}}";
-	const hitRates = slotrates.split(',').map(x => {return x/100});
-	const hitValues = [777, 808, 831, 888, 222, 111, 555, 333];
-	const missValues = [775, 779, 805, 223, 221, 112, 110, 546, 554, 334, 331, 553, 220, 102, 324];
-	let result;
-	console.log(hitRates)
-
-	const slot = () => {
-		x = Math.random();
-
-		const sumf = (sum, num) => sum + num;
-		if (x <= hitRates.slice(0,1).reduce(sumf,0)) {
-			return hitValues[0];
-		} else if (x <= hitRates.slice(0,2).reduce(sumf,0)) {
-			return hitValues[1];
-		} else if  (x <= hitRates.slice(0,3).reduce(sumf,0)) {
-			return hitValues[2];
-		} else if  (x <= hitRates.slice(0,4).reduce(sumf,0)) {
-			return hitValues[3];
-		} else if  (x <= hitRates.slice(0,5).reduce(sumf,0)) {
-			return hitValues[4];
-		} else if  (x <= hitRates.slice(0,6).reduce(sumf,0)) {
-			return hitValues[5];
-		} else if  (x <= hitRates.slice(0,7).reduce(sumf,0)) {
-			return hitValues[6];
-		} else if  (x <= hitRates.slice(0,8).reduce(sumf,0)) {
-			return hitValues[7];
-		} else {
-			return missValues[Math.floor(Math.random() * missValues.length)];
-		}
-	}
-
-	odometer.addEventListener('odometerdone', () => {
-		document.getElementById('drum_roll_audio').pause();
-		document.getElementById('drum_roll_audio').currentTime = 0;
-		document.getElementById('drum_roll_end_audio').play();
-
-		setTimeout(() => {
-			if (hitValues.includes(result)) {
-				document.getElementById('hit_audio').play();
-			} else {
-				document.getElementById('miss_audio').play();
-			}
-		}, 800);
-
-	});
-
-	document.getElementById('slotbutton').addEventListener("click", async () => {
-		const slotDone = localStorage.getItem('slotdone');
-		if (slotDone) {
-			alert("1日1回までです")
-		} else {
-			document.getElementById('drum_roll_audio').play();
-			result = slot();
-			localStorage.setItem('slotdone', true);
-
-			odometer.innerHTML = result;
-			
-			if(liff.isInClient()){
-            	liff.init({liffId})
-            	.then(()=>{
-            		const accessToken = liff.getAccessToken();
-            	    fetch('wakamiya/slot', {
-            	    	method: 'POST',
-            	    	headers: {'Content-Type': 'application/json'},
-            	    	body: JSON.stringify({
-            	    		result: result,
-            	    		access_token: accessToken
-            	    	})
-            	    })
-            	    .then(response => {
-            	    	if (response.ok) {
-	
-            	    	}
-            	    })  
-            	})
-        	}
-		}
-		
-	})
-</script>
+<script src="/static/js/slot.js"></script>
 </body>
 </html>

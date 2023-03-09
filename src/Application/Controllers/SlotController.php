@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Controllers;
 
 use App\Application\Controllers\BaseController;
-use App\Application\Repositories\SlotDailyRepository;
+use App\Application\Repositories\CouponRepository;
 use App\Application\Repositories\GeneralRepository;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
@@ -14,12 +14,12 @@ use Slim\Views\Twig;
 
 class SlotController extends BaseController
 {
-    protected SlotDailyRepository $slotDailyRep;
+    protected CouponRepository $couponRep;
 
     public function __construct(ContainerInterface $app) 
     {
         parent::__construct($app->get(LoggerInterface::class));
-        $this->slotDailyRep = $app->get(SlotDailyRepository::class);
+        $this->couponRep = $app->get(CouponRepository::class);
         $this->generalRep = $app->get(GeneralRepository::class);
     }
 
@@ -34,10 +34,10 @@ class SlotController extends BaseController
         return $response;
     }
 
-   public function postSlot($request, $response, $args): Response
+   public function postCoupon($request, $response, $args): Response
    {
         $access_token = ($request->getParsedBody())['access_token'];
-        $result = json_decode(($request->getParsedBody())['result']);
+        $coupon_id = ($request->getParsedBody())['coupon_id'];
         $header = [('Authorization: Bearer ' . $access_token)];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
@@ -47,16 +47,16 @@ class SlotController extends BaseController
         $res = json_decode(curl_exec($curl), true);
         $errno = curl_errno($curl);
         curl_close($curl);
-
+        
         if ($errno === CURLE_OK) {
             $userId = $res['userId'];
-
-            $daily = $this->slotDailyRep->get($userId);
-            if (!$daily) {
+            $coupon = $this->couponRep->get($userId);
+            $this->logger->info(json_encode($coupon));
+            if ($coupon !== false) {
                 return $response->withStatus(400);
             }
-            $this->slotDailyRep->delete($userId);
-            $this->slotDailyRep->insert($userId, $result);
+            $this->couponRep->delete($userId);
+            $this->couponRep->insert($userId, $coupon_id);
         }
 
         return $response;

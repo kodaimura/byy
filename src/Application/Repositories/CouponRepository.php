@@ -7,20 +7,20 @@ namespace App\Application\Repositories;
 use \PDO;
 use Psr\Container\ContainerInterface;
 
-class SlotDailyRepository extends BaseRepository
+class CouponRepository extends BaseRepository
 {
 
     public function get($customer_id) {
     	$stmt = $this->db->prepare(
     		"SELECT 
     			customer_id,
-                result,
+                coupon_id,
                 used_flg,
                 create_at,
                 update_at
-               FROM slot_daily 
+               FROM coupon 
               WHERE customer_id = :customer_id 
-                AND (create_at > NOW() - INTERVAL 12 HOUR)"
+                AND deadline > NOW()"
         );
         $stmt->bindValue(':customer_id', $customer_id, PDO::PARAM_STR);
         $stmt->execute();
@@ -29,7 +29,7 @@ class SlotDailyRepository extends BaseRepository
 
     public function delete($customer_id) {
         $stmt = $this->db->prepare(
-            "DELETE FROM slot_daily WHERE customer_id = :customer_id"
+            "DELETE FROM coupon WHERE customer_id = :customer_id"
         );
         $stmt->bindValue(':customer_id', $customer_id, PDO::PARAM_STR);
         $stmt->execute();
@@ -37,7 +37,7 @@ class SlotDailyRepository extends BaseRepository
 
     public function updateUsedFlg($customer_id) {
         $stmt = $this->db->prepare(
-    		"UPDATE slot_daily SET
+    		"UPDATE coupon SET
                 used_flg = '1'
 		 	 WHERE customer_id = :customer_id"
     	);
@@ -45,20 +45,22 @@ class SlotDailyRepository extends BaseRepository
     	$stmt->execute();
     }
 
-    public function insert($customer_id, $result) {
+    public function insert($customer_id, $coupon_id) {
         $stmt = $this->db->prepare(
-            "INSERT INTO slot_daily (
+            "INSERT INTO coupon (
                 customer_id,
-                result,
-                used_flg
+                coupon_id,
+                used_flg,
+                deadline
              ) VALUES (
                 :customer_id,
-                :result,
-                '0'
+                :coupon_id,
+                '0',
+                NOW() + INTERVAL 12 HOUR
              )"
         );
         $stmt->bindValue(':customer_id', $customer_id, PDO::PARAM_STR);
-        $stmt->bindValue(':result', $result, PDO::PARAM_STR);
+        $stmt->bindValue(':coupon_id', $coupon_id, PDO::PARAM_STR);
         $stmt->execute();
     }
 }

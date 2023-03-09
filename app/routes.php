@@ -15,7 +15,7 @@ return function (App $app) {
         $grp->get('', CustomerController::class. ':lineupPage');
         $grp->post('/orders', CustomerController::class. ':order');
         $grp->get('/slot', SlotController::class. ':slotPage');
-        $grp->post('/slot', SlotController::class. ':slot');
+        $grp->post('/coupons', SlotController::class. ':postCoupon');
 
         $grp->get('/login', AdminController::class. ':loginPage');
         $grp->post('/login', AdminController::class. ':login');
