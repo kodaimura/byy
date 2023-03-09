@@ -6,6 +6,7 @@ namespace App\Application\Controllers;
 
 use App\Application\Controllers\BaseController;
 use App\Application\Repositories\SlotDailyRepository;
+use App\Application\Repositories\GeneralRepository;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -19,12 +20,17 @@ class SlotController extends BaseController
     {
         parent::__construct($app->get(LoggerInterface::class));
         $this->slotDailyRep = $app->get(SlotDailyRepository::class);
+        $this->generalRep = $app->get(GeneralRepository::class);
     }
 
     public function slotPage($request, $response, $args): Response
     {
+        $slotrates = $this->generalRep->getAllByKey1('slot-rate');
+        $slotrates_value = array_map(function ($x) {return $x['value'];} ,$slotrates);
         $twig = Twig::create('../templates');
-        $response = $twig->render($response, 'slot.html', []);
+        $response = $twig->render($response, 'slot.html', [
+            'slotrates' => implode(',', $slotrates_value)
+        ]);
         return $response;
     }
 

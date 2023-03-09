@@ -10,24 +10,24 @@
 </head>
 <body>
 <div class="wrapper">
-<img src="/static/img/slottop.png" class="slottop">
-<div class="slot">
-<div id="odometer" class="odometer"></div>
-<input type="image" src="/static/img/slotbutton.png" class="slotbutton" id="slotbutton">
-<audio id="drum_roll_audio">
-    <source src="/static/audio/drum_roll.mp3" type="audio/mp3">
-</audio>
-<audio id="drum_roll_end_audio">
-    <source src="/static/audio/drum_roll_end.mp3" type="audio/mp3">
-</audio>
-<audio id="hit_audio">
-    <source src="/static/audio/hit.mp3" type="audio/mp3">
-</audio>
-<audio id="miss_audio">
-    <source src="/static/audio/miss.mp3" type="audio/mp3">
-</audio>
-</div>
-<img src="/static/img/slotatari.png" class="slotatari">
+	<img src="/static/img/slottop.png" class="slottop">
+	<div class="slot">
+		<div id="odometer" class="odometer"></div>
+		<input type="image" src="/static/img/slotbutton.png" class="slotbutton" id="slotbutton">
+		<audio id="drum_roll_audio">
+		    <source src="/static/audio/drum_roll.mp3" type="audio/mp3">
+		</audio>
+		<audio id="drum_roll_end_audio">
+		    <source src="/static/audio/drum_roll_end.mp3" type="audio/mp3">
+		</audio>
+		<audio id="hit_audio">
+		    <source src="/static/audio/hit.mp3" type="audio/mp3">
+		</audio>
+		<audio id="miss_audio">
+		    <source src="/static/audio/miss.mp3" type="audio/mp3">
+		</audio>
+	</div>
+	<img src="/static/img/slotatari.png" class="slotatari">
 </div>
 
 <div class="youtube-frame-wrapper">
@@ -38,16 +38,17 @@
 	const liffId = '1657838706-OK1dZMXG';
 	odometer.innerHTML = 888
 
-	const hitRates = [0.005, 0.01, 0.013, 0.013, 0.02, 0.033, 0.05, 0.05];
+	const slotrates = "{{slotrates}}";
+	const hitRates = slotrates.split(',').map(x => {return x/100});
 	const hitValues = [777, 808, 831, 888, 222, 111, 555, 333];
-	const missValues = [775, 779, 805, 223, 221, 112, 110, 556, 554, 334, 331, 553, 220, 102, 324];
+	const missValues = [775, 779, 805, 223, 221, 112, 110, 546, 554, 334, 331, 553, 220, 102, 324];
 	let result;
+	console.log(hitRates)
 
 	const slot = () => {
 		x = Math.random();
 
 		const sumf = (sum, num) => sum + num;
-
 		if (x <= hitRates.slice(0,1).reduce(sumf,0)) {
 			return hitValues[0];
 		} else if (x <= hitRates.slice(0,2).reduce(sumf,0)) {
@@ -80,7 +81,7 @@
 			} else {
 				document.getElementById('miss_audio').play();
 			}
-		}, 1000);
+		}, 800);
 
 	});
 
@@ -95,7 +96,6 @@
 
 			odometer.innerHTML = result;
 			
-/*
 			if(liff.isInClient()){
             	liff.init({liffId})
             	.then(()=>{
@@ -114,7 +114,7 @@
             	    	}
             	    })  
             	})
-        	}*/
+        	}
 		}
 		
 	})

@@ -24,6 +24,7 @@ return function (App $app) {
             $grp1->get('/general', AdminController::class. ':generalPage');
             $grp1->post('/tax', AdminController::class. ':updateTax');
             $grp1->post('/password', AdminController::class. ':updatePassword');
+            $grp1->post('/slotrates/{rate_id}', AdminController::class. ':updateSlotRate');
             $grp1->post('/categories/{category_id}', AdminController::class. ':updateCategory');
 
             $grp1->group('/products', function(Group $grp2) {

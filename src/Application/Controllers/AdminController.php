@@ -74,11 +74,14 @@ class AdminController extends BaseController
         $password = $this->generalRep->getOneByKey1('admin-password');
         $tax = $this->generalRep->getOneByKey1('tax');
         $categories = $this->categoryRep->getAll();
+        $slotrates = $this->generalRep->getAllByKey1('slot-rate');
+
         $twig = Twig::create('../templates');
         $response = $twig->render($response, 'general.html', [
             'password' => $password,
             'tax' => $tax,
-            'categories' => $categories
+            'categories' => $categories,
+            'slotrates' => $slotrates
         ]);
         return $response;
     }
@@ -96,6 +99,16 @@ class AdminController extends BaseController
         $tax = $request->getParsedBody()['tax'];
         $this->generalRep->updateByKey1('tax', $tax);
         return $response;
+    }
+
+    public function updateSlotRate($request, $response, $args): Response
+    {
+        $rate = $request->getParsedBody()['rate'];
+        $rate_id = $args['rate_id'];
+        $this->generalRep->updateByKey1Key2('slot-rate', $rate_id, $rate);
+        return $response
+        ->withHeader('Location', '../general')
+        ->withStatus(302);
     }
 
     public function updateCategory($request, $response, $args): Response
