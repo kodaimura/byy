@@ -4,6 +4,7 @@ const slotrates = document.getElementById('slotrates').value;
 const hitRates = slotrates.split(',').map(x => {return x/100});
 const hitValues = [777, 808, 831, 888, 222, 111, 555, 333];
 const missValues = [775, 779, 805, 223, 221, 112, 110, 546, 554, 334, 331, 553, 220, 102, 324];
+let isHit = false;
 odometer.innerHTML = 888;
 
 const slot = () => {
@@ -31,33 +32,35 @@ const slot = () => {
 	}
 }
 
+odometer.addEventListener('odometerdone', () => {
+	document.getElementById('drum_roll_audio').pause();
+	document.getElementById('drum_roll_audio').currentTime = 0;
+	document.getElementById('drum_roll_end_audio').currentTime = 0;
+	document.getElementById('drum_roll_end_audio').play();
 
+	setTimeout(() => {
+		if (isHit) {
+			document.getElementById('hit_audio').play();
+			party.confetti(document.getElementById("odometer"));
+		} else {
+			document.getElementById('miss_audio').play();
+		}
+	}, 600);
+});
 
 document.getElementById('slotbutton').addEventListener("click", async () => {
-	const slotDone = localStorage.getItem('slotdone');
-	if (slotDone) {
-		alert("1日1回までです")
+	let now = new Date();
+	const slotLastDate = localStorage.getItem('slot_last_date');
+	if (slotLastDate > now.setHours(now.getHours() - 12).toLocaleString()) {
+		alert("12時間に一度しか回せません。");
 	} else {
+		odometer.innerHTML = 788
 		document.getElementById('drum_roll_audio').play();
 		const result = slot();
-		const isHit = hitValues.includes(result);
+		isHit = hitValues.includes(result);
 		const couponId = getCouponId(result);
 
-		localStorage.setItem('slotdone', true);
-
-		odometer.addEventListener('odometerdone', () => {
-			document.getElementById('drum_roll_audio').pause();
-			document.getElementById('drum_roll_audio').currentTime = 0;
-			document.getElementById('drum_roll_end_audio').play();
-
-			setTimeout(() => {
-				if (isHit) {
-					document.getElementById('hit_audio').play();
-				} else {
-					document.getElementById('miss_audio').play();
-				}
-			}, 800);
-		});
+		localStorage.setItem('slot_last_date', (new Date()).toLocaleString());
 
 		odometer.innerHTML = result;
 		
@@ -213,7 +216,7 @@ const sendCoupon = (username, message) => {
 			        },
 			        {
 			          "type": "text",
-			          "text": "【使い方】レジにてこのクーポンをお見せ下さい。ドライブスルー、配達をご利用のお客様は、注文ページでクーポンを選択して下さい。",
+			          "text": "【使い方】レジにてこのクーポンをお見せ下さい。ドライブスルー、配達をご利用のお客様は、注文ページでクーポンをご利用下さい。",
 			          "wrap": true,
 			          "margin": "md",
 			          "size": "sm"
