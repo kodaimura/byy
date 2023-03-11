@@ -11,7 +11,7 @@ body {
 }
 
 .slotbutton {
-	width: 70%;
+	width: 80%;
 	background-size: cover;
 	margin-top: 40px;
 	margin-bottom: 40px;
@@ -22,10 +22,8 @@ body {
 }
 
 #odometer{
-	width: 80%;
-	font-size: 22.5vw;
-	margin-left: 5%;
-	margin-right: 5%;
+	width: 85%;
+	font-size: 22vw;
 	margin-top: 10vh;
 }
 

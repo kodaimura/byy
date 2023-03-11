@@ -1,11 +1,11 @@
-const liffId = '1657838706-OK1dZMXG';
+const liffId = '1657838706-ZMqeNn5l';
 
 const slotrates = document.getElementById('slotrates').value;
 const hitRates = slotrates.split(',').map(x => {return x/100});
 const hitValues = [777, 808, 831, 888, 222, 111, 555, 333];
 const missValues = [775, 779, 805, 223, 221, 112, 110, 546, 554, 334, 331, 553, 220, 102, 324];
 let isHit = false;
-odometer.innerHTML = 888;
+odometer.innerHTML = 123;
 
 const slot = () => {
 	x = Math.random();
@@ -42,19 +42,26 @@ odometer.addEventListener('odometerdone', () => {
 		if (isHit) {
 			document.getElementById('hit_audio').play();
 			party.confetti(document.getElementById("odometer"));
+
+			setTimeout(() => {
+				alert("🎉おめでとうございます🎉\nクーポンを送信しました。");
+			}, 2200);
 		} else {
 			document.getElementById('miss_audio').play();
+			setTimeout(() => {
+				alert("ありがとうございます。\nまたの挑戦お待ちしております！");
+			}, 1700);
 		}
-	}, 600);
+	}, 900);
 });
 
 document.getElementById('slotbutton').addEventListener("click", async () => {
 	let now = new Date();
 	const slotLastDate = localStorage.getItem('slot_last_date');
 	if (slotLastDate > now.setHours(now.getHours() - 12).toLocaleString()) {
-		alert("12時間に一度しか回せません。");
+		alert("12時間に一回しか挑戦できません。");
 	} else {
-		odometer.innerHTML = 788
+		odometer.innerHTML = 123
 		document.getElementById('drum_roll_audio').play();
 		const result = slot();
 		isHit = hitValues.includes(result);
@@ -75,20 +82,19 @@ document.getElementById('slotbutton').addEventListener("click", async () => {
         		}
 
         		const accessToken = liff.getAccessToken();
-        	    fetch('/wakamiya/coupons', {
-        	    	method: 'POST',
-        	    	headers: {'Content-Type': 'application/json'},
-        	    	body: JSON.stringify({
-        	    		coupon_id: couponId,
-        	    		access_token: accessToken
-        	    	})
-        	    }).catch(error => {
-        	    	console.error(error)
-        	    }); 
-        	})
-    	}
-	}
-	
+        		fetch('/wakamiya/coupons', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify({
+						coupon_id: couponId,
+						access_token: accessToken
+					})
+				}).catch(error => {
+					console.error(error)
+				}); 
+			})
+        }
+    }
 })
 
 const getFormatDate = () => {
@@ -197,7 +203,7 @@ const sendCoupon = (username, message) => {
 			        {
 			          "type": "text",
 			          "text": message,
-			          "size": "xxl",
+			          "size": "xl",
 			          "weight": "bold",
 			          "margin": "md",
 			          "decoration": "underline",
@@ -216,7 +222,7 @@ const sendCoupon = (username, message) => {
 			        },
 			        {
 			          "type": "text",
-			          "text": "【使い方】レジにてこのクーポンをお見せ下さい。ドライブスルー、配達をご利用のお客様は、注文ページでクーポンをご利用下さい。",
+			          "text": "【使い方】ドライブスルー、配達をご利用のお客様は、注文ページでクーポンをご利用下さい。または、レジにてこのクーポンをお見せ下さい。",
 			          "wrap": true,
 			          "margin": "md",
 			          "size": "sm"
