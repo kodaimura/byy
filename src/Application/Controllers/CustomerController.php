@@ -10,6 +10,7 @@ use App\Application\Repositories\CategoryRepository;
 use App\Application\Repositories\CustomerRepository;
 use App\Application\Repositories\OrderHistoryRepository;
 use App\Application\Repositories\GeneralRepository;
+use App\Application\Repositories\CouponRepository;
 use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -22,6 +23,7 @@ class CustomerController extends BaseController
     protected GeneralRepository $generalRep;
     protected CustomerRepository $customerRep;
     protected OrderHistoryRepository $orderRep;
+    protected CouponRepository $couponRep;
 
     public function __construct(ContainerInterface $app) 
     {
@@ -31,6 +33,7 @@ class CustomerController extends BaseController
         $this->customerRep = $app->get(CustomerRepository::class);
         $this->orderRep = $app->get(OrderHistoryRepository::class);
         $this->generalRep = $app->get(GeneralRepository::class);
+        $this->couponRep = $app->get(CouponRepository::class);
     }
 
     public function lineupPage($request, $response, $args): Response
@@ -87,6 +90,28 @@ class CustomerController extends BaseController
         }
 
         return $response;
+   }
+
+   public function getCoupon($request, $response, $args): Response
+   {
+        $access_token = ($request->getParsedBody())['access_token'];
+        $header = [('Authorization: Bearer ' . $access_token)];
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); 
+        $res = json_decode(curl_exec($curl), true);
+        $errno = curl_errno($curl);
+        curl_close($curl);
+
+        if ($errno === CURLE_OK) {
+            $userId = $res['userId'];
+            $coupon = $this->couponRep->get($userId);
+            $coupon_id = $coupon? $coupon['coupon_id'] : "0";
+        }
+        $response->getBody()->write(json_encode(['coupon_id' => $coupon_id]));
+        return $response->withHeader('Content-Type', 'application/json');;
    }
 
 }

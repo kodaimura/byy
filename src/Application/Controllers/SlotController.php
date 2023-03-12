@@ -15,6 +15,7 @@ use Slim\Views\Twig;
 class SlotController extends BaseController
 {
     protected CouponRepository $couponRep;
+    protected GeneralRepository $generalRep;
 
     public function __construct(ContainerInterface $app) 
     {

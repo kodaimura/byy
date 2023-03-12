@@ -13,6 +13,7 @@ use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 return function (App $app) {
     $app->group('/wakamiya', function (Group $grp) {
         $grp->get('', CustomerController::class. ':lineupPage');
+        $grp->post('/coupon', CustomerController::class. ':getCoupon');
         $grp->post('/orders', CustomerController::class. ':order');
         $grp->get('/slot', SlotController::class. ':slotPage');
         $grp->post('/coupons', SlotController::class. ':postCoupon');

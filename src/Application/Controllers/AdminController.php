@@ -178,7 +178,6 @@ class AdminController extends BaseController
         $product_id = ($request->getParsedBody())['product_id'];
         $img_name = $this->productRep->getImgNameById($product_id);
         unlink('../public/static/img/tmp/' . $img_name);
-        $this->logger->info($img_name);
 
         $uploadedFiles = $request->getUploadedFiles();
         $uploadedFile = $uploadedFiles['img'];

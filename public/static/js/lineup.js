@@ -9,14 +9,14 @@ const countDown = (id) => {
     let input = document.getElementById(id);
     input.value = 
     (isNaN(input.value) || input.value == "" || input.value == "0")? 
-    0 : parseInt(input.value) - 1;
+    0 : Math.round(input.value) - 1;
 }
 
 const countUp = (id) => {
     let input = document.getElementById(id);
     input.value = 
     (isNaN(input.value) || input.value == "")? 
-    1 : parseInt(input.value) + 1
+    1 : Math.round(input.value) + 1
 }
 
 const setupModal = (product) => {
@@ -35,7 +35,7 @@ const addToCart = () => {
     const product_name = document.getElementById("modalProductName").innerHTML
     const production_area = document.getElementById("modalProductionArea").innerHTML
     const unit_price = document.getElementById("modalUnitPrice").innerHTML
-    const order_count = parseInt(document.getElementById("orderCount").value)
+    const order_count = Math.round(document.getElementById("orderCount").value)
 
     const orders0 = JSON.parse(localStorage.getItem('orders'))
     let orders = []
@@ -88,7 +88,7 @@ const setupModal2 = () => {
 
     let priceSum = 0
     for (const order of orders) {
-        priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
+        priceSum += (Math.round(order.unit_price) * Math.round(order.order_count))
         contents += 
         `<tr>
         <td>${order.product_name}</td>
@@ -111,90 +111,94 @@ const setupModal2 = () => {
     document.getElementById("modal2Body").innerHTML = contents
 }
 
+const getDeliveryFee = (priceSum) => {
+    return (priceSum >= deliveryFeeThreshold)? deliveryFeeLow : deliveryFeeHigh
+}
+
 const finalizeOrder = () => {
     const form = document.forms.modal3Form;
-    if (form.how_to_receive.value == "配達" && form.address.value.trim() == "") {
+
+    localStorage.setItem("how_to_pay", form.how_to_pay.value)
+    localStorage.setItem("how_to_receive", form.how_to_receive.value)
+    localStorage.setItem("address", form.address.value.trim())
+
+    if(liff.isInClient()){
+        liff.init({liffId})
+        .then(()=>{
+            const accessToken = liff.getAccessToken();
+            const orders = JSON.parse(localStorage.getItem('orders'))
+
+            let userName = ''
+
+            liff.getProfile()
+            .then(profile => {
+                userName = profile.displayName
+                let message =
+                `お客様氏名: ${userName}\n受け取り時刻: ${form.receive_time.value}\n`
+                + `受け取り方法: ${form.how_to_receive.value}\n受け取り場所: ${form.address.value}`
+                + `\n\n----------ご注文内容----------\n`
+
+                let priceSum = 0
+                let count = 0
+
+                for (const order of orders) {
+                    priceSum += (Math.round(order.unit_price) * Math.round(order.order_count))
+                    count += Math.round(order.order_count)
+                    message += 
+                    `${order.product_name} ${order.unit_price}円×${order.order_count}\n`
+                }
+                const taxPrice = Math.round(priceSum * taxRate)
+                let deliveryFee = 0
+                let couponDiscountFee = 0
+
+                if (form.coupon.value === "8") {
+                    count += 1
+                    message += `もやし(無料クーポン) x1\n`
+
+                } else if (form.coupon.value !== "0") {
+                    couponDiscountFee = getCouponDiscountFee(form.coupon.value)
+                    message += `${getCouponText} -${couponDiscountFee}\n`
+                }
+
+                message += `合計点数：${count}点\n`
+                message += `合計金額：${priceSum - couponDiscountFee}円\n------------------------------\n`
+                if (form.how_to_receive.value === "配達") {
+                    deliveryFee = getDeliveryFee(priceSum)
+                    message += `配達料金：${deliveryFee}円（税込）\n`
+                }
+                message += 
+                `お支払い金額: ${taxPrice + deliveryFee - couponDiscountFee}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
+
+                liff.sendMessages([
+                {
+                    type: 'text',
+                    text: message,
+                },
+                ])
+                .then(() => {
+
+                    fetch('wakamiya/orders', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            orders: localStorage.getItem('orders'),
+                            access_token: accessToken
+                        })
+                    })
+                    window.alert('注文が完了しました。LINEトークでご確認下さい。');
+                    location.reload();
+                })
+                .catch((error) => {
+                    window.alert('申し訳ありません。注文に失敗しました。');
+                });
+            });
+        });
+    } else {
         document.getElementById("modal3Message").innerHTML = 
-        `<div class="alert alert-danger">配達の場合は住所を入力してください<div>`;
-        form.address.focus();
+        `<div class="alert alert-danger">注文できません<div>`;
         setTimeout(() => {
             document.getElementById("modal3Message").innerHTML = ""
         }, 3000)
-
-    } else {
-        localStorage.setItem("how_to_pay", form.how_to_pay.value)
-        localStorage.setItem("how_to_receive", form.how_to_receive.value)
-        localStorage.setItem("address", form.address.value.trim())
-        if(liff.isInClient()){
-            liff.init({liffId})
-            .then(()=>{
-                const accessToken = liff.getAccessToken();
-                const orders = JSON.parse(localStorage.getItem('orders'))
-    
-                let userName = ''
-    
-                liff.getProfile()
-                .then(profile => {
-                    userName = profile.displayName
-                    let message =
-                    `お客様氏名: ${userName}\n受け取り時刻: ${form.receive_time.value}\n`
-                    + `受け取り方法: ${form.how_to_receive.value}\n受け取り場所: ${form.address.value}`
-                    + `\n\n----------ご注文内容----------\n`
-    
-                    let priceSum = 0
-                    let count = 0
-    
-                    for (const order of orders) {
-                        priceSum += (parseInt(order.unit_price) * parseInt(order.order_count))
-                        count += parseInt(order.order_count)
-                        message += 
-                        `${order.product_name} ${order.unit_price}円×${order.order_count}\n`
-                    }
-                    const taxPrice = Math.round(priceSum * taxRate)
-                    let deliveryFee = 0
-
-                    message += `合計点数：${count}点\n`
-                    message += `合計金額：${priceSum}円\n------------------------------\n`
-
-                    if (form.how_to_receive.value == "配達") {
-                        deliveryFee += (priceSum >= deliveryFeeThreshold)? deliveryFeeLow : deliveryFeeHigh
-                        message += `配達料金：${deliveryFee}円（税込）\n`
-                    }
-
-                    message += 
-                    `お支払い金額: ${taxPrice + deliveryFee}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
-    
-                    liff.sendMessages([
-                    {
-                        type: 'text',
-                        text: message,
-                    },
-                    ])
-                    .then(() => {
-    
-                        fetch('wakamiya/orders', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                orders: localStorage.getItem('orders'),
-                                access_token: accessToken
-                            })
-                        })
-                        window.alert('注文が完了しました。LINEトークでご確認下さい。');
-                        location.reload();
-                    })
-                    .catch((error) => {
-                        window.alert('申し訳ありません。注文に失敗しました。');
-                    });
-                });
-            });
-        } else {
-            document.getElementById("modal3Message").innerHTML = 
-            `<div class="alert alert-danger">注文できません<div>`;
-            setTimeout(() => {
-                document.getElementById("modal3Message").innerHTML = ""
-            }, 3000)
-        }
     }
 }
 
@@ -208,7 +212,7 @@ const setupModal3 = () => {
     } else {
         form.how_to_receive.value = "ドライブスルー"
         form.address.value = ""
-    }
+    }      
 }
 
 const setupModal4 = () => {
@@ -260,7 +264,7 @@ const cartUpdateAndSetUpModal2 = () => {
             "product_id": product_id,
             "product_name": product_name,
             "unit_price": unit_price,
-            "order_count": parseInt(order_count)
+            "order_count": Math.round(order_count)
         }
         if (order_count != 0) {
             orders.push(order)
@@ -269,6 +273,87 @@ const cartUpdateAndSetUpModal2 = () => {
     localStorage.setItem('orders', JSON.stringify(orders))
     displayCircle()
     setupModal2()
+}
+
+const openModal5 = () => {
+    const form = document.forms.modal3Form;
+    if (form.how_to_receive.value == "配達" && form.address.value.trim() == "") {
+        document.getElementById("modal3Message").innerHTML = 
+        `<div class="alert alert-danger">配達の場合は住所を入力してください<div>`;
+        form.address.focus();
+        setTimeout(() => {
+            document.getElementById("modal3Message").innerHTML = ""
+        }, 3000)
+
+    } else {
+        const modal3 = bootstrap.Modal.getInstance('#modal3');
+        modal3.hide();
+        const modal5 = new bootstrap.Modal(document.getElementById('modal5'));
+        modal5.show();
+
+        setupModal5();
+    }
+}
+
+const setupModal5 = () => {
+    const orders = JSON.parse(localStorage.getItem('orders'))
+    const form = document.forms.modal3Form;
+
+    let contents = 
+    `<table class="table">
+    <thead>
+        <tr><th>商品</th><th>個数</th><th>小計</th></tr>
+    </thead>
+    <tbody>`
+
+    let priceSum = 0
+    let deliveryFee = 0
+    let couponDiscountFee = 0
+
+    for (const order of orders) {
+        priceSum += Math.round(order.unit_price * order.order_count * taxRate)
+        contents += 
+        `<tr>
+        <td>${order.product_name}</td>
+        <td>${order.order_count}</td>
+        <td>¥${Math.round(order.unit_price * order.order_count * taxRate)}</td>
+        </tr>`
+    }
+
+    const couponId = form.coupon.value
+    if (couponId !== "0") {
+        
+        couponDiscountFee = getCouponDiscountFee(priceSum, couponId)
+        contents += 
+        `<tr>
+        <td><small class="text-muted">${getCouponText(couponId)}</small></td>
+        <td>${(couponId === "8")? "1" : ""}</td>
+        <td>${(couponId === "8")? "¥0" : -couponDiscountFee}</td>
+        </tr>`
+    }
+
+    if (form.how_to_receive.value === "配達") {
+        deliveryFee = getDeliveryFee(priceSum)
+        contents += 
+        `<tr>
+        <td><small class="text-muted">配達料</small></td>
+        <td></td>
+        <td>¥${deliveryFee}</td>
+        </tr>`
+    }
+
+    contents += 
+    `</tbody>
+    <tfooter>
+        <tr>
+        <td>合計(税込)</td>
+        <td></td>
+        <td class="text-danger">¥${priceSum + deliveryFee - couponDiscountFee}</td>
+        </tr>
+    </tfooter>
+    <table>`
+
+    document.getElementById("modal5Body").innerHTML = contents
 }
 
 const displayCircle = () => {
@@ -293,7 +378,7 @@ const setDeliveryConfirm = () => {
     });
 }
 
-const setCarouselHeigjt = () => {
+const setCarouselHeight = () => {
     const items = document.getElementsByClassName('carousel-item');
     let maxHeight = 0;
 
@@ -304,6 +389,75 @@ const setCarouselHeigjt = () => {
     }
     document.getElementById('recommendCarousel').style.height = `${maxHeight + 20}px`;
 }
+
+
+const getCouponText = (couponId) => {
+    switch (couponId) {
+    case "1": 
+        return "30%OFFクーポン";
+    case "2":
+        return "20%OFFクーポン";
+    case "3": 
+        return "10%OFFクーポン";
+    case "4": 
+        return "15%OFFクーポン";
+    case "5": 
+        return "8%OFFクーポン";
+    case "6":
+        return "5%OFFクーポン";
+    case "7": 
+        return "3%OFFクーポン";
+    case "8":
+        return "もやし1袋無料";
+    case "0":
+        return "利用しない";
+    default:
+        return "-"
+    } 
+}
+
+const getCouponDiscountFee = (sum, couponId) => {
+    console.log(sum)
+    console.log(couponId)
+
+    switch (couponId) {
+    case "1": 
+        return Math.round(sum * 0.3);
+    case "2":
+        return Math.round(sum * 0.2);
+    case "3": 
+        return Math.round(sum * 0.1);
+    case "4": 
+        return Math.round(sum * 0.15);
+    case "5": 
+        return Math.round(sum * 0.08);
+    case "6":
+        return Math.round(sum * 0.05);
+    case "7": 
+        return Math.round(sum * 0.03);
+    case "8":
+        return 0;
+    case "0":
+        return 0;
+    default:
+        return 0;
+    } 
+}
+
+/*
+// スマホだとloadイベント使えなかった
+window.addEventListener('load', (event) => {
+    setCarouselHeigjt();
+});
+*/
+
+document.addEventListener('readystatechange', (event) => {
+    if (document.readyState === 'complete') {
+        setCarouselHeight();
+    }
+})
+
+window.addEventListener('resize', setCarouselHeight);
 
 document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('orders', '[]');
@@ -319,24 +473,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('hello-customer').innerHTML = 
                 `${profile.displayName}様、ご来店ありがとうございます。`
             })
-        })
+
+            fetch(`/wakamiya/coupon`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    access_token: liff.getAccessToken()
+                })})
+            .then(response => response.json())
+            .then(data => {
+                let cId = data['coupon_id'];
+                if (cId !== "0") {
+                    let pulldown = document.getElementById("coupon");
+                    let option = document.createElement("option");
+                    let text = getCouponText(cId);
+                    option.label = text;
+                    option.text = text;
+                    option.value = cId;
+                    option.selected = true;
+                    pulldown.appendChild(option);
+                } 
+            }).catch(console.error)
+        });
     } else {
         document.getElementById('hello-customer').innerHTML = 
         `WEBブラウザから注文することはできません。`
     }
 });
 
-/*
-// スマホだとloadイベント使えなかった
-window.addEventListener('load', (event) => {
-    setCarouselHeigjt();
-});
-*/
 
-document.addEventListener('readystatechange', (event) => {
-    if (document.readyState === 'complete') {
-        setCarouselHeigjt();
-    }
-})
-
-window.addEventListener('resize', setCarouselHeigjt);
+let pulldown = document.getElementById("coupon");
+let option = document.createElement("option");
+let text = getCouponText("8");
+option.label = text;
+option.text = text;
+option.value = "8";
+option.selected = true;
+pulldown.appendChild(option);
