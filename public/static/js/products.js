@@ -1,3 +1,4 @@
+//商品削除
 const deleteProduct = (product_id) => {
 	if (window.confirm("削除しますか？")) {
 		fetch(`products/${product_id}`, {method: 'DELETE'})
@@ -7,6 +8,7 @@ const deleteProduct = (product_id) => {
 	}
 }
 
+//更新モーダルのセットアップ
 const setupModal = (product) => {
 	const form = document.forms.updateForm;
 	form.product_id.value = product.product_id
@@ -26,6 +28,7 @@ const setupModal = (product) => {
 	document.forms.updateImgForm.product_id.value = product.product_id
 }
 
+//おすすめ商品か通常商品かで更新モーダルに表示する項目(ソート)を切り替える
 const switchShowSeqRecommendSeq = (recommend_flg) => {
 	if (recommend_flg == '0') {
 		if (document.getElementById('seq_wrap').classList.contains("d-none")) {
@@ -44,10 +47,12 @@ const switchShowSeqRecommendSeq = (recommend_flg) => {
 	}
 }
 
+//更新モーダルでおすすめと通常を切り替えた際の処理
 document.forms.updateForm.recommend_flg.addEventListener('change', (event) => {
 	switchShowSeqRecommendSeq(event.target.value);
 });
 
+//更新モーダル更新ボタン押下時
 document.getElementById('send').addEventListener('click', () => {
 	const form = document.forms.updateForm;
 	const product_id = form.product_id.value
@@ -86,6 +91,7 @@ document.getElementById('send').addEventListener('click', () => {
 	     
 })
 
+//更新モーダルで詳細表示と簡易表示を切り替える
 const switchShowDetail = () => {
 	if (document.getElementById('product_detail').classList.contains("d-none")) {
 		document.getElementById('product_detail').classList.remove('d-none');
@@ -96,6 +102,7 @@ const switchShowDetail = () => {
 	}
 }
 
+//カルーセルの高さを要素の一番高いものに合わせる
 const setCarouselHeigjt = () => {
 	const items = document.getElementsByClassName('carousel-item');
 	let maxHeight = 0;
@@ -108,6 +115,8 @@ const setCarouselHeigjt = () => {
 	document.getElementById('recommendCarousel').style.height = `${maxHeight + 20}px`;
 }
 
+//画面の読み込み状況によるイベント処理
+//全て読み込んだ段階でカルーセルの高さを決定する
 document.addEventListener('readystatechange', (event) => {
 	if (document.readyState === 'complete') {
 		setCarouselHeigjt();
@@ -129,4 +138,5 @@ document.addEventListener('readystatechange', (event) => {
 	}
 });
 
+//画面の幅が変わるたびにカルーセルの高さを変更する
 window.addEventListener('resize', setCarouselHeigjt);

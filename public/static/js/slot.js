@@ -7,6 +7,7 @@ const missValues = [775, 779, 805, 223, 221, 112, 110, 546, 554, 334, 331, 553, 
 let isHit = false;
 odometer.innerHTML = 123;
 
+//スロットを回した結果の3桁の整数
 const slot = () => {
 	x = Math.random();
 
@@ -32,6 +33,7 @@ const slot = () => {
 	}
 }
 
+//スロットのアニメーションが止まった時の処理
 odometer.addEventListener('odometerdone', () => {
 	document.getElementById('drum_roll_audio').pause();
 	document.getElementById('drum_roll_audio').currentTime = 0;
@@ -55,6 +57,7 @@ odometer.addEventListener('odometerdone', () => {
 	}, 900);
 });
 
+//スロットボタン押下時の処理
 document.getElementById('slotbutton').addEventListener("click", async () => {
 	let now = new Date();
 	const slotLastDate = localStorage.getItem('slot_last_date');
@@ -97,6 +100,7 @@ document.getElementById('slotbutton').addEventListener("click", async () => {
     }
 })
 
+//現在日時を取得
 const getFormatDate = () => {
 	let now  = new Date();
 	let Year = now.getFullYear();
@@ -108,6 +112,7 @@ const getFormatDate = () => {
 	return  Year + "年" + Month + "月" + Day + "日" + Hour + "時" + Min + "分";
 }
 
+//クーポンIDからクーポン用の当たりメッセージを取得
 const getCouponMessage = (couponId) => {
 	switch (couponId) {
 	case 1: 
@@ -129,6 +134,7 @@ const getCouponMessage = (couponId) => {
 	} 
 }
 
+//スロットの結果からクーポンIDを取得
 const getCouponId = (result) => {
 	switch (result) {
 	case 777: 
@@ -152,6 +158,7 @@ const getCouponId = (result) => {
 	} 
 }
 
+//クーポンをLINEトークに送信
 const sendCoupon = (username, message) => { 
 	if (liff.isInClient()) {
 		liff.sendMessages([{

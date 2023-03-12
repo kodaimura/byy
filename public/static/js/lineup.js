@@ -5,6 +5,7 @@ const deliveryFeeLow = 300;
 const deliveryFeeHigh = 400;
 
 
+//商品の注文数カウントダウン
 const countDown = (id) => {
     let input = document.getElementById(id);
     input.value = 
@@ -12,6 +13,7 @@ const countDown = (id) => {
     0 : Math.round(input.value) - 1;
 }
 
+//商品の注文数カウントアップ
 const countUp = (id) => {
     let input = document.getElementById(id);
     input.value = 
@@ -19,6 +21,7 @@ const countUp = (id) => {
     1 : Math.round(input.value) + 1
 }
 
+//商品数入力モーダルのセットアップ
 const setupModal = (product) => {
     document.getElementById("orderCount").value = 0
     document.getElementById("modalProductId").value = product.product_id
@@ -30,6 +33,7 @@ const setupModal = (product) => {
     document.getElementById("modalTaxPrice").innerHTML = `${Math.round(product.unit_price * taxRate)}`
 }
 
+//商品をカートに追加
 const addToCart = () => {
     const product_id = document.getElementById("modalProductId").value
     const product_name = document.getElementById("modalProductName").innerHTML
@@ -76,6 +80,7 @@ const addToCart = () => {
     }
 }
 
+//注文確認モーダルのセットアップ
 const setupModal2 = () => {
     const orders = JSON.parse(localStorage.getItem('orders'))
 
@@ -111,10 +116,12 @@ const setupModal2 = () => {
     document.getElementById("modal2Body").innerHTML = contents
 }
 
+//配達量の取得(注文料金により変わる)
 const getDeliveryFee = (priceSum) => {
     return (priceSum >= deliveryFeeThreshold)? deliveryFeeLow : deliveryFeeHigh
 }
 
+//注文確定処理
 const finalizeOrder = () => {
     const form = document.forms.modal3Form;
     const receiveTime = form.receive_time.value;
@@ -202,6 +209,7 @@ const finalizeOrder = () => {
     }
 }
 
+//支払・受取設定モーダルのセットアップ
 const setupModal3 = () => {
     const form = document.forms.modal3Form;
     form.how_to_pay.value = 
@@ -215,6 +223,7 @@ const setupModal3 = () => {
     }      
 }
 
+//注文変更モーダルのセットアップ
 const setupModal4 = () => {
     const orders = JSON.parse(localStorage.getItem('orders'))
 
@@ -250,6 +259,7 @@ const setupModal4 = () => {
     document.getElementById("modal4Body").innerHTML = contents
 }
 
+//注文変更モーダルでの注文数変更処理
 const updateCart = () => {
     let orders = []
     const table = document.getElementById("modal4TBody")
@@ -274,6 +284,7 @@ const updateCart = () => {
     displayCircle()
 }
 
+//最終確認モーダルを開く
 const openModal5 = () => {
     const form = document.forms.modal3Form;
     const howToPay = form.how_to_pay.value;
@@ -302,6 +313,7 @@ const openModal5 = () => {
     }
 }
 
+//最終確認モーダルのセットアップ
 const setupModal5 = () => {
     const orders = JSON.parse(localStorage.getItem('orders'))
     const form = document.forms.modal3Form;
@@ -363,19 +375,22 @@ const setupModal5 = () => {
     document.getElementById("modal5Body").innerHTML = contents
 }
 
+//注文が入った時のマークの表示
 const displayCircle = () => {
     document.getElementById("circle").innerHTML = 
     (localStorage.getItem('orders') != "[]")? 
     `<div class="circle-inside bg-success"></div>` : "";
 }
 
-
+//配達説明の設定
 const setDeliveryConfirm = () => {
     let howToReceiveSelect = document.getElementById("how_to_receive");
     let confirmMsg = 
     `エリア：東区限定\n配達料金：${deliveryFeeLow}円\n`
     confirmMsg += `(お買上げが${deliveryFeeThreshold}円未満の場合 ${deliveryFeeHigh}円)\n`
     confirmMsg += `また、配達時間の指定はできません。`
+
+    //配達が選択された時の処理
     howToReceiveSelect.addEventListener('change', () => {
         if (howToReceiveSelect.selectedIndex == 1) {
             if (!confirm(confirmMsg)) {
@@ -385,6 +400,7 @@ const setDeliveryConfirm = () => {
     });
 }
 
+//カルーセルの高さを設定
 const setCarouselHeight = () => {
     const items = document.getElementsByClassName('carousel-item');
     let maxHeight = 0;
@@ -398,6 +414,7 @@ const setCarouselHeight = () => {
 }
 
 
+//クーポンIDからクーポンのテキストを取得
 const getCouponText = (couponId) => {
     switch (couponId) {
     case "1": 
@@ -423,6 +440,7 @@ const getCouponText = (couponId) => {
     } 
 }
 
+//クーポンIDから割引額を算出
 const getCouponDiscountFee = (sum, couponId) => {
     switch (couponId) {
     case "1": 
@@ -454,6 +472,7 @@ window.addEventListener('load', (event) => {
     setCarouselHeigjt();
 });
 */
+
 
 document.addEventListener('readystatechange', (event) => {
     if (document.readyState === 'complete') {
