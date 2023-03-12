@@ -57,6 +57,7 @@ class CustomerController extends BaseController
    {
         $access_token = ($request->getParsedBody())['access_token'];
         $orders = json_decode(($request->getParsedBody())['orders']);
+        $coupon_id = json_decode(($request->getParsedBody())['coupon_id']);
         $header = [('Authorization: Bearer ' . $access_token)];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://api.line.me/v2/profile');
@@ -87,6 +88,10 @@ class CustomerController extends BaseController
                 'visit_count' => 1,
                 'total_payment' => $total_price
             ]);
+
+            if ($coupon_id !== "0") {
+                $this->couponRep->updateUsedFlg($userId);
+            }
         }
 
         return $response;

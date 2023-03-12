@@ -20,6 +20,7 @@ class CouponRepository extends BaseRepository
                 update_at
                FROM coupon 
               WHERE customer_id = :customer_id 
+                AND used_flg = '0'
                 AND deadline > NOW()"
         );
         $stmt->bindValue(':customer_id', $customer_id, PDO::PARAM_STR);

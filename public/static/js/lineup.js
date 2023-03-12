@@ -93,12 +93,12 @@ const setupModal2 = () => {
 
     let priceSum = 0
     for (const order of orders) {
-        priceSum += (Math.round(order.unit_price) * Math.round(order.order_count))
+        priceSum += (Math.round(order.unit_price * taxRate) * parseInt(order.order_count))
         contents += 
         `<tr>
         <td>${order.product_name}</td>
         <td>${order.order_count}</td>
-        <td>¥${Math.round(order.unit_price * order.order_count * taxRate)}</td>
+        <td>¥${(Math.round(order.unit_price * taxRate) * parseInt(order.order_count))}</td>
         </tr>`
     }
 
@@ -108,7 +108,7 @@ const setupModal2 = () => {
         <tr>
         <td>合計(税込)</td>
         <td></td>
-        <td class="text-danger">¥${Math.round(priceSum * taxRate)}</td>
+        <td class="text-danger">¥${priceSum}</td>
         </tr>
     </tfooter>
     <table>`
@@ -150,32 +150,31 @@ const finalizeOrder = () => {
                 let count = 0
 
                 for (const order of orders) {
-                    priceSum += (Math.round(order.unit_price) * Math.round(order.order_count))
-                    count += Math.round(order.order_count)
+                    priceSum += (Math.round(order.unit_price * taxRate) * parseInt(order.order_count))
+                    count += parseInt(order.order_count)
                     message += 
-                    `${order.product_name} ${order.unit_price}円×${order.order_count}\n`
+                    `${order.product_name} ${Math.round(order.unit_price * taxRate)}円×${order.order_count}\n`
                 }
-                const taxPrice = Math.round(priceSum * taxRate)
                 let deliveryFee = 0
                 let couponDiscountFee = 0
 
                 if (couponId === "8") {
                     count += 1
-                    message += `もやし(無料クーポン) x1\n`
+                    message += `もやし(無料クーポン)  x1\n`
 
                 } else if (couponId !== "0") {
-                    couponDiscountFee = getCouponDiscountFee(couponId)
-                    message += `${getCouponText} -${couponDiscountFee}\n`
+                    couponDiscountFee = getCouponDiscountFee(getNonTaxedPrice(priceSum), couponId)
+                    message += `${getCouponText(couponId)} -${couponDiscountFee}\n`
                 }
 
-                message += `合計点数：${count}点\n`
-                message += `合計金額：${priceSum - couponDiscountFee}円\n------------------------------\n`
+                message += `\n合計点数：${count}点\n`
+                message += `小計額：${priceSum - couponDiscountFee}円\n------------------------------\n`
                 if (howToReceive === "配達") {
-                    deliveryFee = getDeliveryFee(priceSum)
+                    deliveryFee = getDeliveryFee(getNonTaxedPrice(priceSum))
                     message += `配達料金：${deliveryFee}円（税込）\n`
                 }
                 message += 
-                `お支払い金額: ${taxPrice + deliveryFee - couponDiscountFee}円（税込）\nお支払い方法: ${howToPay}`
+                `お支払い金額: ${priceSum + deliveryFee - couponDiscountFee}円（税込）\nお支払い方法: ${howToPay}`
 
                 liff.sendMessages([
                 {
@@ -190,6 +189,7 @@ const finalizeOrder = () => {
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             orders: localStorage.getItem('orders'),
+                            coupon_id: couponId,
                             access_token: accessToken
                         })
                     })
@@ -330,19 +330,19 @@ const setupModal5 = () => {
     let couponDiscountFee = 0
 
     for (const order of orders) {
-        priceSum += Math.round(order.unit_price * order.order_count * taxRate)
+        priceSum += (Math.round(order.unit_price * taxRate) * parseInt(order.order_count))
         contents += 
         `<tr>
         <td>${order.product_name}</td>
         <td>${order.order_count}</td>
-        <td>¥${Math.round(order.unit_price * order.order_count * taxRate)}</td>
+        <td>¥${(Math.round(order.unit_price * taxRate) * parseInt(order.order_count))}</td>
         </tr>`
     }
 
     const couponId = form.coupon.value
     if (couponId !== "0") {
         
-        couponDiscountFee = getCouponDiscountFee(priceSum, couponId)
+        couponDiscountFee = getCouponDiscountFee(getNonTaxedPrice(priceSum), couponId)
         contents += 
         `<tr>
         <td><small class="text-muted">${getCouponText(couponId)}</small></td>
@@ -352,7 +352,7 @@ const setupModal5 = () => {
     }
 
     if (form.how_to_receive.value === "配達") {
-        deliveryFee = getDeliveryFee(priceSum)
+        deliveryFee = getDeliveryFee(getNonTaxedPrice(priceSum))
         contents += 
         `<tr>
         <td><small class="text-muted">配達料</small></td>
@@ -388,7 +388,7 @@ const setDeliveryConfirm = () => {
     let confirmMsg = 
     `エリア：東区限定\n配達料金：${deliveryFeeLow}円\n`
     confirmMsg += `(お買上げが${deliveryFeeThreshold}円未満の場合 ${deliveryFeeHigh}円)\n`
-    confirmMsg += `また、配達時間の指定はできません。`
+    confirmMsg += `配達時間の指定はできません。また、土日祝の配達は行なっておりません。`
 
     //配達が選択された時の処理
     howToReceiveSelect.addEventListener('change', () => {
@@ -464,6 +464,11 @@ const getCouponDiscountFee = (sum, couponId) => {
     default:
         return 0;
     } 
+}
+
+//税込価格から税抜き価格を算出
+const getNonTaxedPrice = (priceSum) => {
+    return Math.round(priceSum * (2 - taxRate));
 }
 
 /*

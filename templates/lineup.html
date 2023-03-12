@@ -61,7 +61,7 @@
 	<!-- おすすめ商品カルーセル -->
 
 	<!-- カテゴリータブ -->
-	<div class="nav category-tabs mb-3">
+	<div class="nav category-tabs mb-3" ontouchstart="">
 	{% for c in categories %}
 		{% if loop.index == 1 %}
 		<a href="#{{c.category_id}}" class="nav-item category-tab active" data-bs-toggle="tab">{{c.category_name}}</a>
@@ -216,12 +216,12 @@
 							<label for="how_to_receive">受取方法</label>
 							<select name="how_to_receive" class="form-select" id="how_to_receive">
 								<option value="ドライブスルー" label="ドライブスルー">ドライブスルー</option>
-								<option value="配達" label="配達(平日のみ)">配達(平日のみ)</option>
+								<option value="配達" label="配達（平日のみ）">配達(平日のみ)</option>
 							</select>
 						</div>
 						<div class="mb-1">
 							<label for="address">住所 <span class="text-danger small">※配達のお客様のみ</span></label>
-							<input type="text" name="address" class="form-control">
+							<input type="text" name="address" class="form-control" placeholder="東区限定">
 						</div>
 						<div class="mb-1">
 							<label for="coupon">クーポン</label>

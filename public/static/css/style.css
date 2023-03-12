@@ -54,3 +54,7 @@
 .cart-btn {
 	background-color: #f08300;
 }
+
+.form-control::placeholder {
+  color: #bbb;
+}

@@ -51,12 +51,6 @@ class SlotController extends BaseController
         
         if ($errno === CURLE_OK) {
             $userId = $res['userId'];
-            /* ここまではしなくていいか
-            $coupon = $this->couponRep->get($userId);
-            if ($coupon !== false) {
-                return $response->withStatus(400);
-            }
-            */
             $this->couponRep->delete($userId);
             $this->couponRep->insert($userId, $coupon_id);
         }
