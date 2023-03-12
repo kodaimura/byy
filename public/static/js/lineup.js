@@ -117,12 +117,13 @@ const getDeliveryFee = (priceSum) => {
 
 const finalizeOrder = () => {
     const form = document.forms.modal3Form;
+    const receiveTime = form.receive_time.value;
+    const howToPay = form.how_to_pay.value;
+    const howToReceive = form.how_to_receive.value;
+    const address = form.address.value.trim();
+    const couponId = form.coupon.value;
 
-    localStorage.setItem("how_to_pay", form.how_to_pay.value)
-    localStorage.setItem("how_to_receive", form.how_to_receive.value)
-    localStorage.setItem("address", form.address.value.trim())
-
-    if(liff.isInClient()){
+    if(liff.isInClient()) {
         liff.init({liffId})
         .then(()=>{
             const accessToken = liff.getAccessToken();
@@ -134,8 +135,8 @@ const finalizeOrder = () => {
             .then(profile => {
                 userName = profile.displayName
                 let message =
-                `お客様氏名: ${userName}\n受け取り時刻: ${form.receive_time.value}\n`
-                + `受け取り方法: ${form.how_to_receive.value}\n受け取り場所: ${form.address.value}`
+                `お客様氏名: ${userName}\n受け取り時刻: ${receiveTime}\n`
+                + `受け取り方法: ${howToReceive}\n受け取り場所: ${address}`
                 + `\n\n----------ご注文内容----------\n`
 
                 let priceSum = 0
@@ -151,23 +152,23 @@ const finalizeOrder = () => {
                 let deliveryFee = 0
                 let couponDiscountFee = 0
 
-                if (form.coupon.value === "8") {
+                if (couponId === "8") {
                     count += 1
                     message += `もやし(無料クーポン) x1\n`
 
-                } else if (form.coupon.value !== "0") {
-                    couponDiscountFee = getCouponDiscountFee(form.coupon.value)
+                } else if (couponId !== "0") {
+                    couponDiscountFee = getCouponDiscountFee(couponId)
                     message += `${getCouponText} -${couponDiscountFee}\n`
                 }
 
                 message += `合計点数：${count}点\n`
                 message += `合計金額：${priceSum - couponDiscountFee}円\n------------------------------\n`
-                if (form.how_to_receive.value === "配達") {
+                if (howToReceive === "配達") {
                     deliveryFee = getDeliveryFee(priceSum)
                     message += `配達料金：${deliveryFee}円（税込）\n`
                 }
                 message += 
-                `お支払い金額: ${taxPrice + deliveryFee - couponDiscountFee}円（税込）\nお支払い方法: ${form.how_to_pay.value}`
+                `お支払い金額: ${taxPrice + deliveryFee - couponDiscountFee}円（税込）\nお支払い方法: ${howToPay}`
 
                 liff.sendMessages([
                 {
@@ -194,10 +195,9 @@ const finalizeOrder = () => {
             });
         });
     } else {
-        document.getElementById("modal3Message").innerHTML = 
-        `<div class="alert alert-danger">注文できません<div>`;
+        document.getElementById("modal5Message").innerHTML = `<div class="alert alert-danger">注文できません<div>`;
         setTimeout(() => {
-            document.getElementById("modal3Message").innerHTML = ""
+            document.getElementById("modal5Message").innerHTML = ""
         }, 3000)
     }
 }
@@ -250,7 +250,7 @@ const setupModal4 = () => {
     document.getElementById("modal4Body").innerHTML = contents
 }
 
-const cartUpdateAndSetUpModal2 = () => {
+const updateCart = () => {
     let orders = []
     const table = document.getElementById("modal4TBody")
 
@@ -272,17 +272,20 @@ const cartUpdateAndSetUpModal2 = () => {
     }
     localStorage.setItem('orders', JSON.stringify(orders))
     displayCircle()
-    setupModal2()
 }
 
 const openModal5 = () => {
     const form = document.forms.modal3Form;
-    if (form.how_to_receive.value == "配達" && form.address.value.trim() == "") {
+    const howToPay = form.how_to_pay.value;
+    const howToReceive = form.how_to_receive.value;
+    const address = form.address.value.trim();
+
+    if (howToReceive == "配達" && address == "") {
         document.getElementById("modal3Message").innerHTML = 
         `<div class="alert alert-danger">配達の場合は住所を入力してください<div>`;
         form.address.focus();
         setTimeout(() => {
-            document.getElementById("modal3Message").innerHTML = ""
+            document.getElementById("modal3Message").innerHTML = "";
         }, 3000)
 
     } else {
@@ -292,6 +295,10 @@ const openModal5 = () => {
         modal5.show();
 
         setupModal5();
+
+        localStorage.setItem("how_to_pay", howToPay);
+        localStorage.setItem("how_to_receive", howToReceive);
+        localStorage.setItem("address", address);
     }
 }
 
@@ -417,9 +424,6 @@ const getCouponText = (couponId) => {
 }
 
 const getCouponDiscountFee = (sum, couponId) => {
-    console.log(sum)
-    console.log(couponId)
-
     switch (couponId) {
     case "1": 
         return Math.round(sum * 0.3);
@@ -500,13 +504,3 @@ document.addEventListener('DOMContentLoaded', () => {
         `WEBブラウザから注文することはできません。`
     }
 });
-
-
-let pulldown = document.getElementById("coupon");
-let option = document.createElement("option");
-let text = getCouponText("8");
-option.label = text;
-option.text = text;
-option.value = "8";
-option.selected = true;
-pulldown.appendChild(option);

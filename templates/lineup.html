@@ -189,8 +189,8 @@
       	<div class="modal-header">
         	<h5 class="modal-title">支払・受取設定</h5>
         	<button type="button" class="btn-close" id="modal3Close" data-bs-dismiss="modal" aria-label="Close"></button>
-      	</div>
-      	<form method="POST" onsubmit="return false" name="modal3Form">
+        </div>
+		<form onsubmit="return false" name="modal3Form">
       		<div class="modal-body">
       			<div class="mb-1">
    					<label for="receive_time">時間</label>
@@ -239,9 +239,8 @@
 					&nbsp;&nbsp;次へ&nbsp;&nbsp;
 				</button>
   			</div>
-  			</form>
-  			<div id="modal3Message" class="position-absolute top-50 start-50 translate-middle">
-  			</div>
+  		</form>
+  		<div id="modal3Message" class="position-absolute top-50 start-50 translate-middle"></div>
     	</div>
   	</div>
 	</div>
@@ -257,7 +256,10 @@
       	</div>
       	<div class="modal-body" id="modal4Body"></div>
 			<div class="modal-footer">
-				<button class="btn btn-success rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal2" style="z-index:1;" onclick="cartUpdateAndSetUpModal2()">
+				<button class="btn btn-secondary rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal2" style="z-index:1;" onclick="setupModal2()">
+					&nbsp;&nbsp;戻る&nbsp;&nbsp;
+				</button>
+				<button class="btn btn-success rounded-pill btn-sm text-nowrap text-white" data-bs-toggle="modal" data-bs-target="#modal2" style="z-index:1;" onclick="updateCart();setupModal2();">
 				&nbsp;&nbsp;保存&nbsp;&nbsp;
 				</button>
   			</div>
@@ -283,7 +285,8 @@
 					&nbsp;&nbsp;注文確定&nbsp;&nbsp;
 				</button>
   			</div>
-    	</div>
+  		</div>
+		<div id="modal5Message" class="position-absolute top-50 start-50 translate-middle"></div>
   	</div>
 	</div>
 	<!-- 最終確認モーダル -->
