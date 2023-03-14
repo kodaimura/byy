@@ -59,9 +59,12 @@ odometer.addEventListener('odometerdone', () => {
 
 //スロットボタン押下時の処理
 document.getElementById('slotbutton').addEventListener("click", async () => {
-	let now = new Date();
 	const slotLastDate = localStorage.getItem('slot_last_date');
-	if (slotLastDate > now.setHours(now.getHours() - 12).toLocaleString()) {
+
+	let date = new Date();
+	date.setHours(date.getHours() - 12);
+
+	if (slotLastDate !== null && (new Date(slotLastDate)) > date) {
 		alert("12時間に一回しか挑戦できません。");
 	} else {
 		odometer.innerHTML = 123
