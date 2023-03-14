@@ -194,7 +194,7 @@ const finalizeOrder = () => {
                         })
                     })
                     window.alert('注文が完了しました。LINEトークでご確認下さい。');
-                    location.reload();
+                    window.close();
                 })
                 .catch((error) => {
                     window.alert('申し訳ありません。注文に失敗しました。');
